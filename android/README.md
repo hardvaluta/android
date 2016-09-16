@@ -1,1 +1,1 @@
-Strålande. Informativt
+Vår app
