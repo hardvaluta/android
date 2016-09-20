@@ -1,12 +1,15 @@
 package hardvaluta.unnamed;
 
 import android.annotation.SuppressLint;
+import android.net.ConnectivityManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.firebase.client.Firebase;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -106,6 +109,8 @@ public class Start extends AppCompatActivity {
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
         findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+
+        DatabaseHandler database = new DatabaseHandler(this);
     }
 
     @Override
