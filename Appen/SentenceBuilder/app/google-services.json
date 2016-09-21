@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "774513766690",
+    "firebase_url": "https://sentencebuilder-855f0.firebaseio.com",
+    "project_id": "sentencebuilder-855f0",
+    "storage_bucket": "sentencebuilder-855f0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:774513766690:android:ff9d75dfaa4a2871",
+        "android_client_info": {
+          "package_name": "com.hardvaluta.sentencebuilder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "774513766690-jiiik3mml5lrigvrv828joa3nrgs3n9m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaL78-Wu_nNK-Bp7PVZ8yK1Atfe1T2HVg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
