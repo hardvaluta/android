@@ -40,7 +40,7 @@ public class MainActivity extends Activity {
         buttonD = (Button) findViewById(R.id.button4);
         textView = (TextView) findViewById(R.id.textView);
 
-        client.reqQuestion(1, new VolleyCallback() {
+        client.reqQuestion(1, new VolleyCallback<Question>() {
 
             public void onSuccessResponse(Question q) {
                 buttonA.setText(q.getA());

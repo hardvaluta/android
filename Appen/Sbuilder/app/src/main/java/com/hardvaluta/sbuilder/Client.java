@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -18,8 +19,11 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONStringer;
 
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Queue;
 
 /**
@@ -75,7 +79,38 @@ public class Client{
                     }
                 }
         );
-
         queue.add(getRequest);
+    }
+
+    public void reqUser(int id, final VolleyCallback callback){
+        String t_url = url;
+        t_url += ("user/all/list");
+        JsonArrayRequest getRequest = new JsonArrayRequest(Request.Method.GET, t_url, null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            JSONObject jsonQ = response.getJSONObject(0);
+                            User u = new User(jsonQ.getString("username"), jsonQ.getInt("score"), jsonQ.getInt("games"));
+
+                            callback.onSuccessResponse(u);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+                }
+        );
+        queue.add(getRequest);
+    }
+
+    public void updateUser(int id, final VolleyCallback callback) {
+
     }
 }
