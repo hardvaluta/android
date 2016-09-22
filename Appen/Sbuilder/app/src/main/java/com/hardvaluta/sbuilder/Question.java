@@ -6,9 +6,9 @@ package com.hardvaluta.sbuilder;
 public class Question {
 
 
-    private String A, B, C, D, correctAns, qText;
-    public Question(String A, String B, String C, String D, String correctAns, String qText){
-        this.A = A; this.B = B; this.C = C; this.D = D; this.correctAns = correctAns; this.qText = qText;
+    private String A, B, C, D, text;
+    public Question(String A, String B, String C, String D, String text){
+        this.A = A; this.B = B; this.C = C; this.D = D; this.text = text;
     }
 
     public String getA() {
@@ -27,11 +27,7 @@ public class Question {
         return D;
     }
 
-    public String getCorrectAns() {
-        return correctAns;
-    }
-
-    public String getqText() {
-        return qText;
+    public String getText() {
+        return text;
     }
 }
