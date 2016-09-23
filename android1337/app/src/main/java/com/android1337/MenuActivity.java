@@ -32,7 +32,7 @@ public class MenuActivity extends AppCompatActivity implements TextToSpeech.OnIn
     private int currentSentence = 0;
     private int maxScore = 0;
     private boolean finishedSentence = false;
-
+    String test;
     private TextView textView;
     private Button wordButton1;
     private Button wordButton2;
@@ -54,6 +54,23 @@ public class MenuActivity extends AppCompatActivity implements TextToSpeech.OnIn
         wordButton3 = ((Button)findViewById(R.id.wordButton3));
         wordButton4 = ((Button)findViewById(R.id.wordButton4));
         nextSentenceButton = ((Button)findViewById(R.id.nextSentenceButton));
+
+        Client client = Client.getInstance(this.getApplicationContext());
+
+
+        client.reqQuestion(1, new VolleyCallback<Question>() {
+
+            public void onSuccessResponse(Question q) {
+                test=q.getA();
+                wordButton1.setText(q.getA());
+                wordButton2.setText(q.getB());
+                wordButton3.setText(q.getC());
+                wordButton4.setText(q.getD());
+                textView.setText(q.getText());
+            }
+        });
+
+        System.out.println(test);
 
         wordButton1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,7 +107,7 @@ public class MenuActivity extends AppCompatActivity implements TextToSpeech.OnIn
             }
         });
 
-        nextSentence();
+       // nextSentence();
 
         tts = new TextToSpeech(this, this);
     }
