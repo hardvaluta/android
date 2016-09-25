@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Random;
 
 /**
  * Created by victor on 2016-09-22.
@@ -60,8 +61,16 @@ public class Client{
                     @Override
                     public void onResponse(JSONArray response) {
                         try {
+                            JSONObject jsonQ;
+                            int nrObjects = response.length();
+                            if(nrObjects==1){
+                                jsonQ=response.getJSONObject(0);
+                            }
+                            else{
+                                Random random = new Random();
+                                jsonQ = response.getJSONObject(random.nextInt(nrObjects-1));
+                            }
 
-                            JSONObject jsonQ = response.getJSONObject(0);
                             Question q = new Question(jsonQ.getString("answer_a"), jsonQ.getString("answer_b"), jsonQ.getString("answer_c"),
                                     jsonQ.getString("answer_d"), jsonQ.getString("text"));
 
