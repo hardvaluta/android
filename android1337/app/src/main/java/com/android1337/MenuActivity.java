@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.android.Sentence;
+import com.android1337.Sentence;
 
 import java.util.ArrayList;
 import java.util.Arrays;
