@@ -58,7 +58,7 @@ public class MenuActivity extends AppCompatActivity implements TextToSpeech.OnIn
         Client client = Client.getInstance(this.getApplicationContext());
 
 
-        client.reqQuestion(1, new VolleyCallback<Question>() {
+        client.requestData(Client.QUESTION, 1, new VolleyCallback<Question>() {
 
             public void onSuccessResponse(Question q) {
                 test=q.getA();

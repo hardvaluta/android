@@ -2,15 +2,23 @@ package com.android1337;
 
 import android.app.Application;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Cache;
+import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.BasicNetwork;
+import com.android.volley.toolbox.DiskBasedCache;
+import com.android.volley.toolbox.HurlStack;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
@@ -34,12 +42,27 @@ import java.util.Random;
 
 public class Client{
 
-    private RequestQueue queue;
+
     private String url;
+
     private static Client client;
+    private Cache cache;
+    private Network network;
+    private RequestQueue queue;
+    private User user;
+
+    public static final int USER = 0x01;
+    public static final int QUESTION = 0x02;
+    public static final int IMAGE = 0x03;
 
     private Client(Context context){
-        queue = Volley.newRequestQueue(context);
+
+        cache = new DiskBasedCache(context.getCacheDir(), 1024 * 1024);
+        network = new BasicNetwork(new HurlStack());
+
+        queue = new RequestQueue(cache, network);
+        queue.start();
+
         url = "http://philiplaine.com/";
     }
 
@@ -52,74 +75,91 @@ public class Client{
     }
 
 
-    public void reqQuestion(int id, final VolleyCallback callback){
-        String t_url = url;
-        t_url += ("question/"+id);
+    public void requestData(int toRequest, int id, final VolleyCallback callback){
+        String t_url;
 
-        JsonArrayRequest getRequest = new JsonArrayRequest(Request.Method.GET, t_url, null,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        try {
-                            JSONObject jsonQ;
-                            int nrObjects = response.length();
-                            if(nrObjects==1){
-                                jsonQ=response.getJSONObject(0);
+        switch(toRequest){
+
+            case USER:
+                t_url = url + "user/" + id;
+
+                JsonArrayRequest getUserRequest = new JsonArrayRequest(Request.Method.GET, t_url, null,
+                        (response) ->  {
+                                try {
+                                    JSONObject jsonQ = response.getJSONObject(0);
+                                    User u = new User(jsonQ.getString("username"), jsonQ.getInt("score"), jsonQ.getInt("games"));
+
+                                    callback.onSuccessResponse(u);
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                        }, (error) -> {}
+                );
+
+                queue.add(getUserRequest);
+                break;
+
+            case QUESTION:
+                t_url = url + "question/" + id;
+
+                requestData(USER, 0, new VolleyCallback<User>(){
+                    public void onSuccessResponse(User u) {
+                        user=u;
+                    }
+                });
+
+                JsonArrayRequest getQuestionRequest = new JsonArrayRequest(Request.Method.GET, t_url, null,
+                        (response) -> {
+                            try {
+                                JSONObject jsonQ;
+                                int nrObjects = response.length();
+                                if(nrObjects==1){
+                                    jsonQ=response.getJSONObject(0);
+                                }
+                                else{
+                                    Random random = new Random();
+                                    jsonQ = response.getJSONObject(random.nextInt(nrObjects-1));
+                                }
+
+                                Question q = new Question(jsonQ.getString("answer_a"), jsonQ.getString("answer_b"), jsonQ.getString("answer_c"),
+                                        jsonQ.getString("answer_d"), jsonQ.getString("text"));
+
+                                callback.onSuccessResponse(q);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                            else{
-                                Random random = new Random();
-                                jsonQ = response.getJSONObject(random.nextInt(nrObjects-1));
-                            }
 
-                            Question q = new Question(jsonQ.getString("answer_a"), jsonQ.getString("answer_b"), jsonQ.getString("answer_c"),
-                                    jsonQ.getString("answer_d"), jsonQ.getString("text"));
+                        }, (error) -> {}
+                );
 
-                            callback.onSuccessResponse(q);
+                queue.add(getQuestionRequest);
+                break;
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
 
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                    }
-                }
-        );
-        queue.add(getRequest);
-    }
+            case IMAGE:
+                t_url = url + "image/" + id;
 
-    public void reqUser(int id, final VolleyCallback callback){
-        String t_url = url;
-        t_url += ("user/all/list");
-        JsonArrayRequest getRequest = new JsonArrayRequest(Request.Method.GET, t_url, null,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        try {
-                            JSONObject jsonQ = response.getJSONObject(0);
-                            User u = new User(jsonQ.getString("username"), jsonQ.getInt("score"), jsonQ.getInt("games"));
+                ImageRequest getImageRequest = new ImageRequest(t_url,
+                        (bitmap) -> callback.onSuccessResponse(bitmap),
+                        0, 0, ImageView.ScaleType.CENTER_INSIDE, null,
+                        (error) -> {}
+                );
 
-                            callback.onSuccessResponse(u);
+                queue.add(getImageRequest);
+                break;
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
 
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                    }
-                }
-        );
-        queue.add(getRequest);
+            default:
+                break;
+        }
+
     }
 
     public void updateUser(int id, final VolleyCallback callback) {
-
+        /*TO DO*/
     }
+
 }
