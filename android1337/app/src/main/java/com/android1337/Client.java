@@ -74,20 +74,23 @@ public class Client{
 
 
     public void requestData(int toRequest, int id, final VolleyCallback callback){
-        String t_url;
+        String t_url = url;
 
         switch(toRequest){
 
             case USER:
-                t_url = url + "user/" + id;
+                t_url += "user/" + id;
 
                 JsonArrayRequest getUserRequest = new JsonArrayRequest(Request.Method.GET, t_url, null,
                         (response) ->  {
                                 try {
-                                    JSONObject jsonQ = response.getJSONObject(0);
-                                    User u = new User(jsonQ.getString("username"), jsonQ.getInt("score"), jsonQ.getInt("games"));
 
-                                    callback.onSuccessResponse(u);
+                                    JSONObject jsonQ = response.getJSONObject(0);
+
+                                    callback.onSuccessResponse( new User (
+                                            jsonQ.getString("username"),
+                                            jsonQ.getInt("score"),
+                                            jsonQ.getInt("games") ) );
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -100,17 +103,18 @@ public class Client{
                 break;
 
             case QUESTION:
-                t_url = url + "question/" + id;
+                t_url += "question/" + id;
 
                 JsonArrayRequest getQuestionRequest = new JsonArrayRequest(Request.Method.GET, t_url, null,
                         (response) -> {
+
                             try {
-
                                 JSONObject jsonQ = response.getJSONObject(0);
-                                Question q = new Question(jsonQ.getString("answer_a"), jsonQ.getString("answer_b"), jsonQ.getString("answer_c"),
-                                        jsonQ.getString("answer_d"), jsonQ.getString("text"));
 
-                                callback.onSuccessResponse(q);
+                                callback.onSuccessResponse( new Question (
+                                        jsonQ.getString("answer_a"), jsonQ.getString("answer_b"),
+                                        jsonQ.getString("answer_c"), jsonQ.getString("answer_d"),
+                                        jsonQ.getString("text") ) );
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -124,11 +128,11 @@ public class Client{
 
 
             case IMAGE:
-                t_url = url + "image/" + id;
+                t_url += "image/" + id;
 
                 ImageRequest getImageRequest = new ImageRequest(t_url,
-                        (bitmap) -> callback.onSuccessResponse(bitmap),
-                        0, 0, ImageView.ScaleType.CENTER_INSIDE, null,
+                        (response) -> callback.onSuccessResponse(response),
+                        0, 0, ImageView.ScaleType.CENTER_INSIDE, Bitmap.Config.ARGB_8888,
                         (error) -> {}
                 );
 
