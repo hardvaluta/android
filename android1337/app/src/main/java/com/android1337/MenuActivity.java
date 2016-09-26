@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android1337.Sentence;
@@ -39,6 +40,7 @@ public class MenuActivity extends AppCompatActivity implements TextToSpeech.OnIn
     private Button wordButton3;
     private Button wordButton4;
     private Button nextSentenceButton;
+    private ImageView qImage;
     private int currentSentenceIdx = 0;
     private Integer[] wordButtonIdArray = new Integer[]{R.id.wordButton1, R.id.wordButton2, R.id.wordButton3, R.id.wordButton4};
 
@@ -54,6 +56,7 @@ public class MenuActivity extends AppCompatActivity implements TextToSpeech.OnIn
         wordButton3 = ((Button)findViewById(R.id.wordButton3));
         wordButton4 = ((Button)findViewById(R.id.wordButton4));
         nextSentenceButton = ((Button)findViewById(R.id.nextSentenceButton));
+        qImage = (ImageView)findViewById(R.id.questionImage);
 
         Client client = Client.getInstance(this.getApplicationContext());
 
@@ -67,6 +70,13 @@ public class MenuActivity extends AppCompatActivity implements TextToSpeech.OnIn
                 wordButton3.setText(q.getC());
                 wordButton4.setText(q.getD());
                 textView.setText(q.getText());
+                /*
+                client.requestData(Client.IMAGE, q.getImageId(), new VolleyCallback<Bitmap>(){
+                    public void onSuccessResponse(Bitmap bitmap){
+                        qImage.setImageBitmap(bitmap);
+                    }
+                })
+                 */
             }
         });
 
