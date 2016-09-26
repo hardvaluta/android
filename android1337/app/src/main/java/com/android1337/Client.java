@@ -2,8 +2,10 @@ package com.android1337;
 
 import android.app.Application;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -16,6 +18,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
@@ -48,6 +51,7 @@ public class Client{
 
     public static final int USER = 0x01;
     public static final int QUESTION = 0x02;
+    public static final int IMAGE = 0x03;
 
     private Client(Context context){
 
@@ -75,13 +79,10 @@ public class Client{
         switch(toRequest){
 
             case USER:
-
                 t_url = url + "user/" + id;
 
                 JsonArrayRequest getUserRequest = new JsonArrayRequest(Request.Method.GET, t_url, null,
-                        new Response.Listener<JSONArray>() {
-                            @Override
-                            public void onResponse(JSONArray response) {
+                        (response) ->  {
                                 try {
                                     JSONObject jsonQ = response.getJSONObject(0);
                                     User u = new User(jsonQ.getString("username"), jsonQ.getInt("score"), jsonQ.getInt("games"));
@@ -92,49 +93,48 @@ public class Client{
                                     e.printStackTrace();
                                 }
 
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                            }
-                        }
+                        }, (error) -> {}
                 );
-                queue.add(getUserRequest);
 
+                queue.add(getUserRequest);
                 break;
 
             case QUESTION:
-
                 t_url = url + "question/" + id;
 
                 JsonArrayRequest getQuestionRequest = new JsonArrayRequest(Request.Method.GET, t_url, null,
-                        new Response.Listener<JSONArray>() {
-                            @Override
-                            public void onResponse(JSONArray response) {
-                                try {
+                        (response) -> {
+                            try {
 
-                                    JSONObject jsonQ = response.getJSONObject(0);
-                                    Question q = new Question(jsonQ.getString("answer_a"), jsonQ.getString("answer_b"), jsonQ.getString("answer_c"),
-                                            jsonQ.getString("answer_d"), jsonQ.getString("text"));
+                                JSONObject jsonQ = response.getJSONObject(0);
+                                Question q = new Question(jsonQ.getString("answer_a"), jsonQ.getString("answer_b"), jsonQ.getString("answer_c"),
+                                        jsonQ.getString("answer_d"), jsonQ.getString("text"));
 
-                                    callback.onSuccessResponse(q);
+                                callback.onSuccessResponse(q);
 
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                            }
-                        }
+
+                        }, (error) -> {}
                 );
-                queue.add(getQuestionRequest);
 
+                queue.add(getQuestionRequest);
                 break;
+
+
+            case IMAGE:
+                t_url = url + "image/" + id;
+
+                ImageRequest getImageRequest = new ImageRequest(t_url,
+                        (bitmap) -> callback.onSuccessResponse(bitmap),
+                        0, 0, ImageView.ScaleType.CENTER_INSIDE, null,
+                        (error) -> {}
+                );
+
+                queue.add(getImageRequest);
+                break;
+
 
             default:
                 break;
