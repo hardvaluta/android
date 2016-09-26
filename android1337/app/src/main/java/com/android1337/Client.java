@@ -7,10 +7,15 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Cache;
+import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.BasicNetwork;
+import com.android.volley.toolbox.DiskBasedCache;
+import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
@@ -33,14 +38,25 @@ import java.util.Queue;
 
 public class Client{
 
-    private RequestQueue queue;
+
     private String url;
+
     private static Client client;
+    private Cache cache;
+    private Network network;
+    private RequestQueue queue;
+
     public static final int USER = 0x01;
     public static final int QUESTION = 0x02;
 
     private Client(Context context){
-        queue = Volley.newRequestQueue(context);
+
+        cache = new DiskBasedCache(context.getCacheDir(), 1024 * 1024);
+        network = new BasicNetwork(new HurlStack());
+
+        queue = new RequestQueue(cache, network);
+        queue.start();
+
         url = "http://philiplaine.com/";
     }
 
@@ -127,6 +143,7 @@ public class Client{
     }
 
     public void updateUser(int id, final VolleyCallback callback) {
-
+        /*TO DO*/
     }
+
 }
