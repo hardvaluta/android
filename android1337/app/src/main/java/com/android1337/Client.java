@@ -3,6 +3,8 @@ package com.android1337;
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -148,6 +150,15 @@ public class Client{
 
     public void updateUser(int id, final VolleyCallback callback) {
         /*TO DO*/
+    }
+
+    private boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager)
+                context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
 }

@@ -1,5 +1,6 @@
 package com.android1337;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
@@ -72,11 +73,10 @@ public class MenuActivity extends AppCompatActivity implements TextToSpeech.OnIn
                 textView.setText(q.getText());
                 /*
                 client.requestData(Client.IMAGE, q.getImageId(), new VolleyCallback<Bitmap>(){
-                    public void onSuccessResponse(Bitmap bitmap){
-                        qImage.setImageBitmap(bitmap);
+                    public void onSuccessResponse(Bitmap bm){
+                        qImage.setImageBitmap(bm);
                     }
-                })
-                 */
+                });*/
             }
         });
 
