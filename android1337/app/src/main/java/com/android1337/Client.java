@@ -29,7 +29,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONStringer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
@@ -74,6 +76,28 @@ public class Client{
         return client;
     }
 
+    private int selectDifficulty(){
+        return 100; //Placeholder until different difficulties are added
+
+        /*********Actual code***********/
+        /*requestData(USER, 0, new VolleyCallback<User>(){
+            public void onSuccessResponse(User u) {
+                user=u;
+            }
+        });
+
+        int difficulties[] = {100,200,300,400,500,600};
+        ArrayList<Integer> availableDifficulties =new ArrayList<Integer>();
+        for(int difficulty : difficulties){
+            if(difficulty<=user.getScore()){
+                availableDifficulties.add(difficulty);
+            }
+        }
+        Random random=new Random();
+
+        return availableDifficulties.get(random.nextInt(availableDifficulties.size()-1));*/
+    }
+
 
     public void requestData(int toRequest, int id, final VolleyCallback callback){
         String t_url;
@@ -102,26 +126,25 @@ public class Client{
                 break;
 
             case QUESTION:
-                t_url = url + "question/" + id;
+                t_url = url + "question/random";
 
-                requestData(USER, 0, new VolleyCallback<User>(){
-                    public void onSuccessResponse(User u) {
-                        user=u;
-                    }
-                });
+                JSONObject jRequest = new JSONObject();
+                JSONArray jArray=new JSONArray();
 
-                JsonArrayRequest getQuestionRequest = new JsonArrayRequest(Request.Method.GET, t_url, null,
+                try{
+                    jRequest.put("difficulty", 1);
+                    jRequest.put("count", 1);
+                    jArray.put(jRequest.get("difficulty"));
+                    jArray.put(jRequest.get("count"));
+                }catch(JSONException e){
+
+                }
+
+                JsonArrayRequest getQuestionRequest = new JsonArrayRequest(Request.Method.GET, t_url, jArray,
                         (response) -> {
                             try {
                                 JSONObject jsonQ;
-                                int nrObjects = response.length();
-                                if(nrObjects==1){
-                                    jsonQ=response.getJSONObject(0);
-                                }
-                                else{
-                                    Random random = new Random();
-                                    jsonQ = response.getJSONObject(random.nextInt(nrObjects-1));
-                                }
+                                jsonQ = response.getJSONObject(0);
 
                                 Question q = new Question(jsonQ.getString("answer_a"), jsonQ.getString("answer_b"), jsonQ.getString("answer_c"),
                                         jsonQ.getString("answer_d"), jsonQ.getString("text"));
