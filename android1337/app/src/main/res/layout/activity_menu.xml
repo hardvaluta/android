@@ -108,5 +108,23 @@
             android:layout_weight="0.04"
             android:contextClickable="false" />
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight="0.06" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Poäng: "
+            android:id="@+id/scoreTextView"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.06"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
+
     </LinearLayout>
+
 </RelativeLayout>

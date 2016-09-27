@@ -65,6 +65,15 @@
                 app:srcCompat="@mipmap/singleplayericon"
                 android:onClick="singlePlayerMenu"/>
 
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Total poäng: "
+                android:id="@+id/totalScoreTextView"
+                android:layout_gravity="bottom"
+                android:layout_weight="1" />
+
             <ImageButton
                 android:id="@+id/multiPlayerButton"
                 android:layout_width="0dp"

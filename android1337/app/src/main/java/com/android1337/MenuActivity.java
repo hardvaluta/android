@@ -1,12 +1,14 @@
 package com.android1337;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android1337.Sentence;
@@ -40,6 +42,7 @@ public class MenuActivity extends AppCompatActivity implements TextToSpeech.OnIn
     private Button wordButton3;
     private Button wordButton4;
     private Button nextSentenceButton;
+    private TextView scoreTextView;
     private int currentSentenceIdx = 0;
     private Integer[] wordButtonIdArray = new Integer[]{R.id.wordButton1, R.id.wordButton2, R.id.wordButton3, R.id.wordButton4};
 
@@ -59,7 +62,7 @@ public class MenuActivity extends AppCompatActivity implements TextToSpeech.OnIn
         wordButton3 = ((Button)findViewById(R.id.wordButton3));
         wordButton4 = ((Button)findViewById(R.id.wordButton4));
         nextSentenceButton = ((Button)findViewById(R.id.nextSentenceButton));
-
+        scoreTextView = (TextView) findViewById(R.id.scoreTextView);
         Client client = Client.getInstance(this.getApplicationContext());
 
 
@@ -118,16 +121,22 @@ public class MenuActivity extends AppCompatActivity implements TextToSpeech.OnIn
     }
 
     private void wordButtonPressed(int buttonIdPressed) {
+        SharedPreferences settings = getSharedPreferences(MainMenu.PREF_FILE_NAME, 0);
+        int totalScore = settings.getInt("totalScore", 0);
         if (finishedSentence == false) {
             ((Button) findViewById(wordButtonIdArray[0])).setBackgroundColor(Color.GREEN);
             if (buttonIdPressed == wordButtonIdArray[0]) {
                 currentScore++;
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putInt("totalScore", ++totalScore);
+                editor.commit();
             } else {
                 ((Button) findViewById(buttonIdPressed)).setBackgroundColor(Color.RED);
             }
             maxScore++;
-            nextSentenceButton.setText(currentScore + "/" + maxScore);
+            scoreTextView.setText("Poäng: "+currentScore+"/"+maxScore);
             finishedSentence = true;
+
         }
             tts.speak(((Button)findViewById(buttonIdPressed)).getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
 
@@ -166,138 +175,5 @@ public class MenuActivity extends AppCompatActivity implements TextToSpeech.OnIn
             Log.e("TTS", "uppstart kaputt");
         }
     }
-
-    /*
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game);
-
-        Intent intent = getIntent();
-        //String message = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
-        TextView textView = new TextView(this);
-        textView.setTextSize(40);
-        //textView.setText(message);
-
-        //ViewGroup layout = (ViewGroup) findViewById(R.id.);
-        //layout.addView(textView);
-    //}
-
-    //public GameActivity() {
-        createSentenceList();
-
-        textView = ((TextView)findViewById(R.id.textView));
-        wordButton1 = ((Button)findViewById(R.id.wordButton1));
-        wordButton2 = ((Button)findViewById(R.id.wordButton2));
-        wordButton3 = ((Button)findViewById(R.id.wordButton3));
-        wordButton4 = ((Button)findViewById(R.id.wordButton4));
-        nextSentenceButton = ((Button)findViewById(R.id.nextSentenceButton));
-
-        wordButton1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                checkForCorrectAnswer(1);
-            }
-        });
-        wordButton2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                checkForCorrectAnswer(2);
-            }
-        });
-        wordButton3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                checkForCorrectAnswer(3);
-            }
-        });
-        wordButton4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                checkForCorrectAnswer(4);
-            }
-        });
-        nextSentenceButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(finishedSentence) {
-                    showNextSentence();
-                    finishedSentence = false;
-                }
-            }
-        });
-
-        showNextSentence();
-
-    }
-
-    private void createSentenceList() {
-
-        for (int i = 0; i < preString.length; i++) {
-            sentenceList.add(new Sentence(preString[i], Arrays.asList(words[i]), postString[i]));
-        }
-    }
-
-    private void showNextSentence() {
-        if (currentSentence >= sentenceList.size() - 1) {
-            showSentence(sentenceList.get(currentSentence++));
-        } else {
-            textView.setText("Score: " + currentScore + ", max: " + maxScore);
-        }
-    }
-
-    private void showSentence(Sentence s) {
-
-        textView.setText(s.toString());
-        wordButton1.setText(s.wordList.get(1));
-        wordButton1.setBackgroundColor(Color.parseColor("GRAY"));
-        wordButton2.setText(s.wordList.get(2));
-        wordButton2.setBackgroundColor(Color.parseColor("GRAY"));
-        wordButton3.setText(s.wordList.get(3));
-        wordButton3.setBackgroundColor(Color.parseColor("GRAY"));
-        wordButton4.setText(s.wordList.get(4));
-        wordButton4.setBackgroundColor(Color.parseColor("GRAY"));
-        correctButtonIndex = 1;
-
-    }
-
-    private void checkForCorrectAnswer(int chosenButtonIndex) {
-        if (correctButtonIndex != chosenButtonIndex) {
-            switch (chosenButtonIndex) {
-                case 1:
-                    wordButton1.setBackgroundColor(Color.parseColor("RED"));
-                    break;
-                case 2:
-                    wordButton2.setBackgroundColor(Color.parseColor("RED"));
-                    break;
-                case 3:
-                    wordButton3.setBackgroundColor(Color.parseColor("RED"));
-                    break;
-                case 4:
-                    wordButton4.setBackgroundColor(Color.parseColor("RED"));
-                    break;
-            }
-        } else {
-            currentScore++;
-        }
-        maxScore++;
-        switch (correctButtonIndex) {
-            case 1:
-                wordButton1.setBackgroundColor(Color.parseColor("GREEN"));
-                break;
-            case 2:
-                wordButton2.setBackgroundColor(Color.parseColor("GREEN"));
-                break;
-            case 3:
-                wordButton3.setBackgroundColor(Color.parseColor("GREEN"));
-                break;
-            case 4:
-                wordButton4.setBackgroundColor(Color.parseColor("GREEN"));
-                break;
-        }
-        finishedSentence = true;
-
-    }
-*/
 
 }
