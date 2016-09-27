@@ -29,10 +29,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONStringer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Random;
 
 /**
  * Created by victor on 2016-09-22.
@@ -72,7 +75,6 @@ public class Client{
         return client;
     }
 
-
     public void requestData(int toRequest, int id, final VolleyCallback callback){
         String t_url;
 
@@ -100,17 +102,35 @@ public class Client{
                 break;
 
             case QUESTION:
-                t_url = url + "question/" + id;
+                t_url = url + "question/random";
 
-                JsonArrayRequest getQuestionRequest = new JsonArrayRequest(Request.Method.GET, t_url, null,
+                JSONObject jRequest = new JSONObject();
+                JSONArray jArray=new JSONArray();
+
+                try{
+                    jRequest.put("difficulty", 1);
+                    jRequest.put("count", id);
+                    jArray.put(jRequest.get("difficulty"));
+                    jArray.put(jRequest.get("count"));
+                }catch(JSONException e){
+
+                }
+
+                JsonArrayRequest getQuestionRequest = new JsonArrayRequest(Request.Method.GET, t_url, jArray,
                         (response) -> {
                             try {
+                                JSONObject jsonQ;
+                                ArrayList<Question> questionArray=new ArrayList<Question>();
 
-                                JSONObject jsonQ = response.getJSONObject(0);
-                                Question q = new Question(jsonQ.getString("answer_a"), jsonQ.getString("answer_b"), jsonQ.getString("answer_c"),
-                                        jsonQ.getString("answer_d"), jsonQ.getString("text"));
+                                for(int n=0; n<response.length();n++){
+                                    jsonQ = response.getJSONObject(n);
+                                    Question q = new Question(jsonQ.getString("answer_a"), jsonQ.getString("answer_b"), jsonQ.getString("answer_c"),
+                                            jsonQ.getString("answer_d"), jsonQ.getString("text"));
+                                    questionArray.add(q);
+                                }
 
-                                callback.onSuccessResponse(q);
+
+                                callback.onSuccessResponse(questionArray);
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -140,6 +160,7 @@ public class Client{
                 break;
         }
 
+>>>>>>> William
     }
 
     public void updateUser(int id, final VolleyCallback callback) {
