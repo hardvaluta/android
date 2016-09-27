@@ -133,7 +133,7 @@ public class Client{
 
                 try{
                     jRequest.put("difficulty", 1);
-                    jRequest.put("count", 1);
+                    jRequest.put("count", id);
                     jArray.put(jRequest.get("difficulty"));
                     jArray.put(jRequest.get("count"));
                 }catch(JSONException e){
@@ -144,12 +144,17 @@ public class Client{
                         (response) -> {
                             try {
                                 JSONObject jsonQ;
-                                jsonQ = response.getJSONObject(0);
+                                ArrayList<Question> questionArray=new ArrayList<Question>();
 
-                                Question q = new Question(jsonQ.getString("answer_a"), jsonQ.getString("answer_b"), jsonQ.getString("answer_c"),
-                                        jsonQ.getString("answer_d"), jsonQ.getString("text"));
+                                for(int n=0; n<response.length();n++){
+                                    jsonQ = response.getJSONObject(n);
+                                    Question q = new Question(jsonQ.getString("answer_a"), jsonQ.getString("answer_b"), jsonQ.getString("answer_c"),
+                                            jsonQ.getString("answer_d"), jsonQ.getString("text"));
+                                    questionArray.add(q);
+                                }
 
-                                callback.onSuccessResponse(q);
+
+                                callback.onSuccessResponse(questionArray);
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
