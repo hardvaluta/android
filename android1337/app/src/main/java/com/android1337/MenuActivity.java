@@ -1,5 +1,6 @@
 package com.android1337;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
@@ -48,6 +49,10 @@ public class MenuActivity extends AppCompatActivity implements TextToSpeech.OnIn
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+
+        Intent intent = getIntent();
+
+
         textView = ((TextView)findViewById(R.id.textView));
         wordButton1 = ((Button)findViewById(R.id.wordButton1));
         wordButton2 = ((Button)findViewById(R.id.wordButton2));
