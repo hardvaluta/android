@@ -18,7 +18,8 @@ through intuitive game experiences.
 
 
 ::Backlog
-Can be found in the Projects section of the repositories android and backend.
+Can be found on our public Trello board - https://trello.com/b/l0f1ql1E/android
+
 
 
 Sprintmöte den 23 september 2016
