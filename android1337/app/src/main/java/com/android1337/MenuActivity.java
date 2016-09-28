@@ -125,11 +125,11 @@ public class MenuActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
     private void wordButtonPressed(int buttonIdPressed) {
         if (finishedSentence == false) {
-            ((Button) findViewById(wordButtonIdArray[0])).setBackgroundColor(Color.GREEN);
+            findViewById(wordButtonIdArray[0]).setBackgroundColor(Color.GREEN);
             if (buttonIdPressed == wordButtonIdArray[0]) {
                 currentScore++;
             } else {
-                ((Button) findViewById(buttonIdPressed)).setBackgroundColor(Color.RED);
+                findViewById(buttonIdPressed).setBackgroundColor(Color.RED);
             }
             maxScore++;
             nextSentenceButton.setText(currentScore + "/" + maxScore);

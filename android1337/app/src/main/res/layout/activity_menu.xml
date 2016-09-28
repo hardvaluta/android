@@ -33,6 +33,14 @@
             android:layout_weight="0.07"
             android:gravity="center_vertical|center_horizontal" />
 
+        <ImageView
+            android:layout_width="288dp"
+            android:layout_height="162dp"
+            android:id="@+id/questionImage"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.06"
+            android:src="@android:drawable/star_big_on" />
+
         <Space
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

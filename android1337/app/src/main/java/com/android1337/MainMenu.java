@@ -34,20 +34,4 @@ public class MainMenu extends AppCompatActivity
         ((TextView)findViewById(R.id.totalScoreTextView)).setText("Total poäng: "+settings.getInt("totalScore", 0));
 
     }
-
-
-/*
-    public void singlePlayerMenu (View view){
-        Intent intent = new Intent (this, MenuActivity.class);
-        startActivity(intent);
-    }*/
-
-    /*
-    public void singlePlayerMenu(View view) {
-        Intent intent = new Intent(this, MenuActivity.class);
-        /*EditText editText = (EditText) findViewById(R.id.edit_message);
-        String message = editText.getText().toString();
-        intent.putExtra(EXTRA_MESSAGE, message);
-        startActivity(intent);
-    }*/
 }
