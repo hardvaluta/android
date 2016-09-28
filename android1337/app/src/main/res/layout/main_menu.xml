@@ -32,8 +32,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight=".50"
                 android:scaleType="fitCenter"
-                android:background="@drawable/iconborder1"
-                app:srcCompat="@mipmap/homeicon1" />
+                android:background="@drawable/iconborder"
+                app:srcCompat="@mipmap/homeicon" />
 
             <ImageButton
                 android:id="@+id/settingsButton"
@@ -41,8 +41,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight=".50"
                 android:scaleType="fitCenter"
-                android:background="@drawable/iconborder1"
-                app:srcCompat="@mipmap/settingsicon1" />
+                android:background="@drawable/iconborder"
+                app:srcCompat="@mipmap/settingsicon" />
 
         </LinearLayout>
 
@@ -60,9 +60,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
-                android:background="@drawable/iconborder1"
+                android:background="@drawable/iconborder"
                 android:scaleType="fitCenter"
-                app:srcCompat="@mipmap/singleplayericon1"/>
+                app:srcCompat="@mipmap/singleplayericon"/>
 
             <TextView
                 android:layout_width="0dp"
@@ -79,9 +79,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
-                android:background="@drawable/iconborder1"
+                android:background="@drawable/iconborder"
                 android:scaleType="fitCenter"
-                app:srcCompat="@mipmap/multiplayericon1" />
+                app:srcCompat="@mipmap/multiplayericon" />
 
         </LinearLayout>
     </LinearLayout>
