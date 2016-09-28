@@ -3,6 +3,8 @@ package com.android1337;
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -29,10 +31,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONStringer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Random;
 
 /**
  * Created by victor on 2016-09-22.
@@ -72,22 +77,24 @@ public class Client{
         return client;
     }
 
-
     public void requestData(int toRequest, int id, final VolleyCallback callback){
-        String t_url;
+        String t_url = url;
 
         switch(toRequest){
 
             case USER:
-                t_url = url + "user/" + id;
+                t_url += "user/" + id;
 
                 JsonArrayRequest getUserRequest = new JsonArrayRequest(Request.Method.GET, t_url, null,
                         (response) ->  {
                                 try {
-                                    JSONObject jsonQ = response.getJSONObject(0);
-                                    User u = new User(jsonQ.getString("username"), jsonQ.getInt("score"), jsonQ.getInt("games"));
 
-                                    callback.onSuccessResponse(u);
+                                    JSONObject jsonQ = response.getJSONObject(0);
+
+                                    callback.onSuccessResponse( new User (
+                                            jsonQ.getString("username"),
+                                            jsonQ.getInt("score"),
+                                            jsonQ.getInt("games") ) );
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -100,17 +107,38 @@ public class Client{
                 break;
 
             case QUESTION:
-                t_url = url + "question/" + id;
 
-                JsonArrayRequest getQuestionRequest = new JsonArrayRequest(Request.Method.GET, t_url, null,
+                t_url += "question/random";
+                JSONObject jRequest = new JSONObject();
+                JSONArray jArray=new JSONArray();
+
+                try{
+
+                    jRequest.put("difficulty", 1);
+                    jRequest.put("count", id);
+                    jArray.put(jRequest.get("difficulty"));
+                    jArray.put(jRequest.get("count"));
+
+                } catch(JSONException e) { }
+
+                JsonArrayRequest getQuestionRequest = new JsonArrayRequest(Request.Method.GET, t_url, jArray,
                         (response) -> {
                             try {
+                                JSONObject jsonQ;
+                                ArrayList<Question> questionArray=new ArrayList<Question>();
 
-                                JSONObject jsonQ = response.getJSONObject(0);
-                                Question q = new Question(jsonQ.getString("answer_a"), jsonQ.getString("answer_b"), jsonQ.getString("answer_c"),
-                                        jsonQ.getString("answer_d"), jsonQ.getString("text"));
+                                for(int n=0; n<response.length(); n++){
 
-                                callback.onSuccessResponse(q);
+                                    jsonQ = response.getJSONObject(n);
+                                    questionArray.add( new Question (
+                                            jsonQ.getString("answer_a"), jsonQ.getString("answer_b"),
+                                            jsonQ.getString("answer_c"), jsonQ.getString("answer_d"),
+                                            jsonQ.getString("text")));
+                                }
+
+
+                                callback.onSuccessResponse(questionArray);
+
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -124,11 +152,11 @@ public class Client{
 
 
             case IMAGE:
-                t_url = url + "image/" + id;
+                t_url += "image/" + id;
 
                 ImageRequest getImageRequest = new ImageRequest(t_url,
-                        (bitmap) -> callback.onSuccessResponse(bitmap),
-                        0, 0, ImageView.ScaleType.CENTER_INSIDE, null,
+                        (response) -> callback.onSuccessResponse(response),
+                        0, 0, ImageView.ScaleType.CENTER_INSIDE, Bitmap.Config.ARGB_8888,
                         (error) -> {}
                 );
 
@@ -144,6 +172,15 @@ public class Client{
 
     public void updateUser(int id, final VolleyCallback callback) {
         /*TO DO*/
+    }
+
+    public boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager)
+                context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
 }
