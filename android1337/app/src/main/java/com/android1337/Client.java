@@ -109,6 +109,7 @@ public class Client{
 
                 JsonArrayRequest getQuestionRequest = new JsonArrayRequest(Request.Method.GET, t_url, null,
                         (response) -> {
+<<<<<<< Updated upstream
 
                             try {
                                 JSONObject jsonQ = response.getJSONObject(0);
@@ -117,6 +118,37 @@ public class Client{
                                         jsonQ.getString("answer_a"), jsonQ.getString("answer_b"),
                                         jsonQ.getString("answer_c"), jsonQ.getString("answer_d"),
                                         jsonQ.getString("text") ) );
+=======
+
+                            try {
+
+                                JSONObject jsonQ;
+                                ArrayList<Question> questionArray=new ArrayList<Question>();
+
+                                for(int n=0; n<response.length(); n++){
+
+                                    jsonQ = response.getJSONObject(n);
+                                    requestData(IMAGE, jsonQ.getInt("image_id"), (o -> {
+
+                                        try {
+
+                                            questionArray.add( new Question (
+                                                    jsonQ.getString("answer_a"),
+                                                    jsonQ.getString("answer_b"),
+                                                    jsonQ.getString("answer_c"),
+                                                    jsonQ.getString("answer_d"),
+                                                    jsonQ.getString("text"),
+                                                    (Bitmap) o ) );
+
+                                            if(questionArray.size() == id)
+                                                callback.onSuccessResponse(questionArray);
+
+                                        } catch (JSONException e) { }
+
+                                    }));
+
+                                }
+>>>>>>> Stashed changes
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
