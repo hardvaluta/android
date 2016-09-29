@@ -72,13 +72,7 @@ public class MenuActivity extends AppCompatActivity implements TextToSpeech.OnIn
                 wordButton3.setText(q.getC());
                 wordButton4.setText(q.getD());
                 textView.setText(q.getText());
-                //textView.callOnClick();
-                /*
-                client.requestData(Client.IMAGE, q.getImageId(), new VolleyCallback<Bitmap>(){
-                    public void onSuccessResponse(Bitmap bm){
-                        qImage.setImageBitmap(bm);
-                    }
-                });*/
+                qImage.setImageBitmap(q.getImg());
             }
         });
 

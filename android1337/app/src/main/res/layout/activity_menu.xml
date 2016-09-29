@@ -38,8 +38,7 @@
             android:layout_height="81dp"
             android:id="@+id/questionImage"
             android:layout_gravity="center_horizontal"
-            android:layout_weight="0.06"
-            android:src="@android:drawable/star_big_on" />
+            android:layout_weight="0.06" />
 
         <Space
             android:layout_width="match_parent"

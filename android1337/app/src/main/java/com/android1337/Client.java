@@ -124,25 +124,35 @@ public class Client{
                 JsonArrayRequest getQuestionRequest = new JsonArrayRequest(Request.Method.GET, t_url, jArray,
                         (response) -> {
                             try {
-                                JSONObject jsonQ;
+
                                 ArrayList<Question> questionArray=new ArrayList<Question>();
 
-                                for(int n=0; n<response.length(); n++){
+                                for(int n = 0; n < response.length(); n++){
 
-                                    jsonQ = response.getJSONObject(n);
-                                    questionArray.add( new Question (
-                                            jsonQ.getString("answer_a"), jsonQ.getString("answer_b"),
-                                            jsonQ.getString("answer_c"), jsonQ.getString("answer_d"),
-                                            jsonQ.getString("text")));
+                                    System.out.println("n är: "+n);
+                                    JSONObject jsonQ = response.getJSONObject(n);
+                                    requestData(IMAGE, jsonQ.getInt("image"), (o -> {
+
+                                        try {
+
+                                            questionArray.add( new Question (
+                                                    jsonQ.getString("answer_a"),
+                                                    jsonQ.getString("answer_b"),
+                                                    jsonQ.getString("answer_c"),
+                                                    jsonQ.getString("answer_d"),
+                                                    jsonQ.getString("text"),
+                                                    (Bitmap) o ) );
+
+                                            if(questionArray.size() == id)
+                                                callback.onSuccessResponse(questionArray);
+
+                                        } catch (JSONException e) { }
+
+                                    }));
+
                                 }
 
-
-                                callback.onSuccessResponse(questionArray);
-
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                            } catch (JSONException e) { }
 
                         }, (error) -> {}
                 );
@@ -156,7 +166,7 @@ public class Client{
 
                 ImageRequest getImageRequest = new ImageRequest(t_url,
                         (response) -> callback.onSuccessResponse(response),
-                        0, 0, ImageView.ScaleType.CENTER_INSIDE, Bitmap.Config.ARGB_8888,
+                        0, 0, ImageView.ScaleType.FIT_XY, Bitmap.Config.ARGB_8888,
                         (error) -> {}
                 );
 
