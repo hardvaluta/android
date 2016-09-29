@@ -31,6 +31,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONStringer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -109,25 +110,14 @@ public class Client{
 
                 JsonArrayRequest getQuestionRequest = new JsonArrayRequest(Request.Method.GET, t_url, null,
                         (response) -> {
-<<<<<<< Updated upstream
-
-                            try {
-                                JSONObject jsonQ = response.getJSONObject(0);
-
-                                callback.onSuccessResponse( new Question (
-                                        jsonQ.getString("answer_a"), jsonQ.getString("answer_b"),
-                                        jsonQ.getString("answer_c"), jsonQ.getString("answer_d"),
-                                        jsonQ.getString("text") ) );
-=======
 
                             try {
 
-                                JSONObject jsonQ;
                                 ArrayList<Question> questionArray=new ArrayList<Question>();
 
-                                for(int n=0; n<response.length(); n++){
+                                for(int n = 0; n < response.length(); n++){
 
-                                    jsonQ = response.getJSONObject(n);
+                                    JSONObject jsonQ = response.getJSONObject(n);
                                     requestData(IMAGE, jsonQ.getInt("image_id"), (o -> {
 
                                         try {
@@ -148,7 +138,6 @@ public class Client{
                                     }));
 
                                 }
->>>>>>> Stashed changes
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
