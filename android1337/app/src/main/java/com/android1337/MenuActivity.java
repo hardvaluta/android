@@ -1,11 +1,13 @@
 package com.android1337;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android1337.Sentence;
@@ -39,6 +41,7 @@ public class MenuActivity extends AppCompatActivity implements TextToSpeech.OnIn
     private Button wordButton3;
     private Button wordButton4;
     private Button nextSentenceButton;
+    private ImageView qImage;
     private int currentSentenceIdx = 0;
     private Integer[] wordButtonIdArray = new Integer[]{R.id.wordButton1, R.id.wordButton2, R.id.wordButton3, R.id.wordButton4};
 
@@ -54,23 +57,50 @@ public class MenuActivity extends AppCompatActivity implements TextToSpeech.OnIn
         wordButton3 = ((Button)findViewById(R.id.wordButton3));
         wordButton4 = ((Button)findViewById(R.id.wordButton4));
         nextSentenceButton = ((Button)findViewById(R.id.nextSentenceButton));
+        qImage = (ImageView)findViewById(R.id.questionImage);
 
         Client client = Client.getInstance(this.getApplicationContext());
 
 
-        client.reqQuestion(1, new VolleyCallback<Question>() {
+        client.requestData(Client.QUESTION, 1, new VolleyCallback<ArrayList<Question>>() {
 
-            public void onSuccessResponse(Question q) {
+            public void onSuccessResponse(ArrayList<Question> qArray) {
+                Question q=qArray.get(0);
                 test=q.getA();
                 wordButton1.setText(q.getA());
                 wordButton2.setText(q.getB());
                 wordButton3.setText(q.getC());
                 wordButton4.setText(q.getD());
                 textView.setText(q.getText());
+                qImage.setImageBitmap(q.getImg());
             }
         });
 
         System.out.println(test);
+
+        //Text-To-Speech on "Question" click
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String tmpString;
+                //String tmpString2 = "Erik spelar ______ med sina vänner.";
+                //tmpString = tmpString2;
+                tmpString = textView.getText().toString();
+                String parts[] = tmpString.split("______");
+                tts.speak(parts[0].toString(), TextToSpeech.QUEUE_FLUSH, null);
+                while (tts.isSpeaking())
+                {
+                    try
+                    {
+                        Thread.sleep(200);
+                    } catch (InterruptedException ex)
+                    {
+                        Thread.currentThread().interrupt();
+                    }
+                }
+                tts.speak(parts[1].toString(), TextToSpeech.QUEUE_FLUSH, null);
+            }
+        });
 
         wordButton1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,11 +144,11 @@ public class MenuActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
     private void wordButtonPressed(int buttonIdPressed) {
         if (finishedSentence == false) {
-            ((Button) findViewById(wordButtonIdArray[0])).setBackgroundColor(Color.GREEN);
+            findViewById(wordButtonIdArray[0]).setBackgroundColor(Color.GREEN);
             if (buttonIdPressed == wordButtonIdArray[0]) {
                 currentScore++;
             } else {
-                ((Button) findViewById(buttonIdPressed)).setBackgroundColor(Color.RED);
+                findViewById(buttonIdPressed).setBackgroundColor(Color.RED);
             }
             maxScore++;
             nextSentenceButton.setText(currentScore + "/" + maxScore);
@@ -150,8 +180,16 @@ public class MenuActivity extends AppCompatActivity implements TextToSpeech.OnIn
     @Override
     public void onInit(int status){
         if (status == TextToSpeech.SUCCESS){
-            Locale lang   = tts.getLanguage();
+
+            //Denna raden sätter ibland till eng_USA i emulator i varje fall vilket förstör TTS
+            //funktionaliteten
+            Locale lang2   = tts.getLanguage();
+
+            //Bättre att sätta sv direkt; Har inte mobilen det så fungerar inte TTS och borde
+            //stängas av imho. Thoughts?
+            Locale lang = new Locale("sv");
             int result = tts.setLanguage(lang);
+
             if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                 Log.e("TTS", "inget språkstöd");
             }else {
