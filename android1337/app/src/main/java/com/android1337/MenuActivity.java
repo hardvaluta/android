@@ -155,7 +155,6 @@ public class MenuActivity extends AppCompatActivity implements TextToSpeech.OnIn
             finishedSentence = true;
         }
             tts.speak(((Button)findViewById(buttonIdPressed)).getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
-
     }
 
     private void nextSentence() {

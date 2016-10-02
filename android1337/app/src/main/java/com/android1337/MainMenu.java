@@ -26,7 +26,7 @@ public class MainMenu extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                startActivity(new Intent(MainMenu.this, MenuActivity.class));
+                startActivity(new Intent(MainMenu.this, ChooseGameActivity.class));
             }
         });
 
