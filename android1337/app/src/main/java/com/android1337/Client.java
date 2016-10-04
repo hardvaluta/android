@@ -21,6 +21,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import static android.R.attr.id;
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
+
 /**
  * Created by victor on 2016-09-22.
  */
@@ -36,9 +39,8 @@ public class Client{
     private Network network;
     private RequestQueue queue;
 
-    public static final int USER = 0x01;
-    public static final int QUESTION = 0x02;
-    public static final int IMAGE = 0x03;
+    public static final int QUESTION = 0x01;
+    public static final int IMAGE = 0x02;
 
     private Client(Context context){
 
@@ -63,30 +65,6 @@ public class Client{
         String t_url = url;
 
         switch(toRequest){
-
-            case USER:
-                t_url += "user/" + id;
-
-                JsonArrayRequest getUserRequest = new JsonArrayRequest(Request.Method.GET, t_url, null,
-                        (response) ->  {
-                                try {
-
-                                    JSONObject jsonQ = response.getJSONObject(0);
-
-                                    callback.onSuccessResponse( new User (
-                                            jsonQ.getString("username"),
-                                            jsonQ.getInt("score"),
-                                            jsonQ.getInt("games") ) );
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-
-                        }, (error) -> {}
-                );
-
-                queue.add(getUserRequest);
-                break;
 
             case QUESTION:
 
@@ -165,6 +143,31 @@ public class Client{
 
     public void updateUser(int id, final VolleyCallback callback) {
         /*TO DO*/
+    }
+
+    //OFÄRDIG ANVÄND EJ.
+    public void getUser(String uname, String pwd, final VolleyCallback callback){
+        //String t_url += "user/" + id;
+
+        JsonArrayRequest getUserRequest = new JsonArrayRequest(Request.Method.GET, url, null,
+                (response) ->  {
+                    try {
+
+                        JSONObject jsonQ = response.getJSONObject(0);
+
+                        callback.onSuccessResponse( new User (
+                                jsonQ.getString("username"),
+                                jsonQ.getInt("score"),
+                                jsonQ.getInt("games") ) );
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }, (error) -> {}
+        );
+
+        queue.add(getUserRequest);
     }
 
     public boolean isNetworkAvailable(Context context) {
