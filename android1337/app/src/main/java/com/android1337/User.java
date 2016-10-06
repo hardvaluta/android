@@ -6,18 +6,15 @@ package com.android1337;
 
 public class User{
 
-    int id, games, score;
-    String username;
+    private int id, score;
+    private String username;
 
-    public User(String username, int games, int score){
+    public User(String username, int score, int id){
         this.username=username;
-        this.games=games;
         this.score=score;
     }
 
     public int getId()  {   return id;  }
-
-    public int getGames()  {   return games;  }
 
     public int getScore()  {   return score;  }
 

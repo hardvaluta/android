@@ -26,22 +26,22 @@ public class LoginMenu extends AppCompatActivity {
         pwdField = (EditText) findViewById(R.id.pwdEditText);
 
         loginButton = (Button) findViewById(R.id.loginButton);
-        signinButton = (Button) findViewById(R.id.signinButton);
+        signinButton = (Button) findViewById(R.id.signupButton);
 
         loginButton.setOnClickListener( v -> {
             uname = unameField.getText().toString().trim();
             pwd = unameField.getText().toString().trim();
 
             //TO DO
-            client.getUser(uname, pwd, (o -> {
+            client.getUser(uname, pwd, o -> {
                 User u = (User) o;
 
-            }));
+            });
 
         });
 
-        // Ej implementerad
-        // signinButton.setOnClickListener( v -> new Intent(LoginMenu.this, SignUpAcitvity.class));
+
+        signinButton.setOnClickListener( v -> new Intent(LoginMenu.this, SignupMenu.class));
 
 
     }

@@ -141,8 +141,47 @@ public class Client{
 
     }
 
-    public void updateUser(int id, final VolleyCallback callback) {
+    public void createUser(String uname, String password, final VolleyCallback callback) {
         /*TO DO*/
+        JSONObject body = new JSONObject();
+        JSONArray arr = new JSONArray();
+
+        /*
+        String t_url = (id == USER_CREATE ? url + "user/create" :
+                        id == USER_GET ? url + "user/autenticate" : null); */
+
+        String t_url = url + "user/create";
+        if(t_url != null){
+
+            try {
+                body.put("username", uname);
+                body.put("password", password);
+
+                arr.put(body.get("username"));
+                arr.put(body.get("password"));
+
+            } catch(JSONException e) { }
+
+            JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, t_url, arr,
+                    (response) -> {
+
+                        try{
+                            JSONObject jUser = response.getJSONObject(0);
+                            callback.onSuccessResponse( new User (
+                                    jUser.getString("username"),
+                                    jUser.getInt("scoer"),
+                                    jUser.getInt("id") ) );
+
+                        } catch (JSONException e) {}
+
+                    }, (error) -> {}
+            );
+
+            queue.add(request);
+
+        } else {
+            //id was wrong do something.
+        }
     }
 
     //OFÄRDIG ANVÄND EJ.
