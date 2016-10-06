@@ -30,12 +30,11 @@ public class SignupMenu extends AppCompatActivity {
             if( ! pwd1.equals(pwd2)) {
                 // LÖSENORDEN MATCHER EJ GÖR NÅGOT
             } else {
-                client.createUser(uname.getText().toString(), pwd1.getText().toString(),
-                        o -> {
-                            User u = (User) o;
-                            // GÖR NÅGOT.
+                client.createUser(uname.getText().toString(), pwd1.getText().toString(), o -> {
+                    User u = (User) o;
+                    // GÖR NÅGOT.
 
-                        });
+                });
 
             }
         });

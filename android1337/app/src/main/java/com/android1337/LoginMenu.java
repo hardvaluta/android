@@ -12,7 +12,7 @@ import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 public class LoginMenu extends AppCompatActivity {
 
     private EditText unameField, pwdField;
-    private Button loginButton, signinButton;
+    private Button loginButton, signupButton;
     private Client client;
     private String uname, pwd;
 
@@ -26,7 +26,7 @@ public class LoginMenu extends AppCompatActivity {
         pwdField = (EditText) findViewById(R.id.pwdEditText);
 
         loginButton = (Button) findViewById(R.id.loginButton);
-        signinButton = (Button) findViewById(R.id.signupButton);
+        signupButton = (Button) findViewById(R.id.signupButton);
 
         loginButton.setOnClickListener( v -> {
             uname = unameField.getText().toString().trim();
@@ -41,7 +41,7 @@ public class LoginMenu extends AppCompatActivity {
         });
 
 
-        signinButton.setOnClickListener( v -> new Intent(LoginMenu.this, SignupMenu.class));
+        signupButton.setOnClickListener( v -> startActivity(new Intent(LoginMenu.this, SignupMenu.class)));
 
 
     }
