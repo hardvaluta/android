@@ -19,6 +19,7 @@
         </activity>
         <activity android:name="MenuActivity"/>
         <activity android:name=".ChooseGameActivity"/>
+        <activity android:name=".ConnectTheDots"/>
     </application>
 
 </manifest>

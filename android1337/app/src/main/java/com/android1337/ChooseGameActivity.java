@@ -81,7 +81,7 @@ public class ChooseGameActivity extends AppCompatActivity implements TextToSpeec
         gameOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
-               // startActivity(new Intent(ChooseGameActivity.this, GameOne.class));
+                startActivity(new Intent(ChooseGameActivity.this, ConnectTheDots.class));
             }
         });
         gameTwo.setOnClickListener(new View.OnClickListener() {
