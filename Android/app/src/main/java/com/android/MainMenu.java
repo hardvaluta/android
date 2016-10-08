@@ -13,7 +13,6 @@ import org.w3c.dom.Text;
 public class MainMenu extends AppCompatActivity
 {
     //public final static String EXTRA_MESSAGE = "com.android.GameOne";
-    public static final String PREF_FILE_NAME = "PreferenceFile";
     public static final String SCORE_FILE_NAME = "scoreFile";
     private ImageButton singlePlayerButton;
     private ImageButton settingsButton;
@@ -56,7 +55,7 @@ public class MainMenu extends AppCompatActivity
             }
         });
 
-        settings = getSharedPreferences(PREF_FILE_NAME, 0);
+        settings = getSharedPreferences(SettingsActivity.PREF_FILE_NAME, 0);
         ((TextView)findViewById(R.id.totalScoreTextView)).setText("Total poäng: "+settings.getInt("totalScore", 0));
         ttsEngine = TextToSpeechEngine.getInstance(this);
         ttsEngine.setSpeechRate(settings.getInt("speechRate", 50));

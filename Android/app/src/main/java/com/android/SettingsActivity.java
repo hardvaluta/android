@@ -5,7 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.SeekBar;
 
+
 public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
+    public static final String PREF_FILE_NAME = "PreferenceFile";
     private SeekBar speechRateBar;
     private TextToSpeechEngine ttsEngine;
     private SharedPreferences settings;
@@ -19,7 +21,7 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
         ttsEngine = TextToSpeechEngine.getInstance(this);
 
         speechRateBar = (SeekBar)findViewById(R.id.speechRateBar);
-        settings = getSharedPreferences(MainMenu.PREF_FILE_NAME, 0);
+        settings = getSharedPreferences(SettingsActivity.PREF_FILE_NAME, 0);
         currentProgress = settings.getInt("speechRate", 50);
         speechRateBar.setProgress(currentProgress);
         speechRateBar.setOnSeekBarChangeListener(this);
