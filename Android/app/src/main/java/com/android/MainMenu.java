@@ -16,6 +16,7 @@ public class MainMenu extends AppCompatActivity
     public static final String PREF_FILE_NAME = "PreferenceFile";
     public static final String SCORE_FILE_NAME = "scoreFile";
     private ImageButton singlePlayerButton;
+    private ImageButton settingsButton;
     private TextView totalScoreTextView;
     private SharedPreferences settings;
     private TextToSpeechEngine ttsEngine;
@@ -35,6 +36,16 @@ public class MainMenu extends AppCompatActivity
             }
         });
 
+        settingsButton = (ImageButton) findViewById(R.id.settingsButton);
+        settingsButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                startActivity(new Intent(MainMenu.this, com.android.SettingsActivity.class));
+            }
+        });
+
         totalScoreTextView = (TextView) findViewById(R.id.totalScoreTextView);
         totalScoreTextView.setOnClickListener(new View.OnClickListener()
         {
@@ -48,6 +59,7 @@ public class MainMenu extends AppCompatActivity
         settings = getSharedPreferences(PREF_FILE_NAME, 0);
         ((TextView)findViewById(R.id.totalScoreTextView)).setText("Total poäng: "+settings.getInt("totalScore", 0));
         ttsEngine = TextToSpeechEngine.getInstance(this);
+        ttsEngine.setSpeechRate(settings.getInt("speechRate", 50));
 
     }
 }
