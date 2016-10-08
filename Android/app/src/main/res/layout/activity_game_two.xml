@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:paddingBottom="@dimen/activity_vertical_margin"
+android:paddingLeft="@dimen/activity_horizontal_margin"
+android:paddingRight="@dimen/activity_horizontal_margin"
+android:paddingTop="@dimen/activity_vertical_margin"
+tools:context="com.android.GameTwo">
+
+<Button
+    android:layout_width="100dp"
+    android:layout_height="80dp"
+    android:text="card11"
+    android:id="@+id/card11"
+    android:layout_alignParentTop="true"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true" />
+
+<Button
+    android:layout_width="100dp"
+    android:layout_height="80dp"
+    android:text="card12"
+    android:id="@+id/card12"
+    android:layout_alignTop="@+id/card11"
+    android:layout_alignRight="@+id/card22"
+    android:layout_alignEnd="@+id/card22" />
+
+<Button
+    android:layout_width="100dp"
+    android:layout_height="80dp"
+    android:text="card13"
+    android:id="@+id/card13"
+    android:layout_alignTop="@+id/card12"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentEnd="true" />
+
+<Button
+    android:layout_width="100dp"
+    android:layout_height="80dp"
+    android:text="card21"
+    android:id="@+id/card21"
+    android:layout_below="@+id/space"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true" />
+
+<Space
+    android:layout_width="match_parent"
+    android:layout_height="10dp"
+    android:layout_below="@+id/card11"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true"
+    android:id="@+id/space" />
+
+<Button
+    android:layout_width="100dp"
+    android:layout_height="80dp"
+    android:text="card22"
+    android:id="@+id/card22"
+    android:layout_alignBottom="@+id/card21"
+    android:layout_centerHorizontal="true" />
+
+<Button
+    android:layout_width="100dp"
+    android:layout_height="80dp"
+    android:text="card23"
+    android:id="@+id/card23"
+    android:layout_alignBottom="@+id/card22"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentEnd="true" />
+
+<Space
+    android:layout_width="match_parent"
+    android:layout_height="10dp"
+    android:id="@+id/space2"
+    android:layout_below="@+id/card21"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true" />
+
+<Button
+    android:layout_width="100dp"
+    android:layout_height="80dp"
+    android:text="card31"
+    android:id="@+id/card31"
+    android:layout_below="@+id/space2"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true" />
+
+<Button
+    android:layout_width="100dp"
+    android:layout_height="80dp"
+    android:text="card32"
+    android:id="@+id/card32"
+    android:layout_alignBottom="@+id/card31"
+    android:layout_centerHorizontal="true" />
+
+<Button
+    android:layout_width="100dp"
+    android:layout_height="80dp"
+    android:text="card33"
+    android:id="@+id/card33"
+    android:layout_alignBottom="@+id/card32"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentEnd="true" />
+
+<Space
+    android:layout_width="match_parent"
+    android:layout_height="10dp"
+    android:id="@+id/space3"
+    android:layout_below="@+id/card31"
+    android:layout_centerHorizontal="true" />
+
+<Button
+    android:layout_width="100dp"
+    android:layout_height="80dp"
+    android:text="card41"
+    android:id="@+id/card41"
+    android:layout_below="@+id/space3"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true" />
+
+<Button
+    android:layout_width="100dp"
+    android:layout_height="80dp"
+    android:text="card42"
+    android:id="@+id/card42"
+    android:layout_below="@+id/space3"
+    android:layout_alignLeft="@+id/card32"
+    android:layout_alignStart="@+id/card32" />
+
+<Button
+    android:layout_width="100dp"
+    android:layout_height="80dp"
+    android:text="card43"
+    android:id="@+id/card43"
+    android:layout_below="@+id/space3"
+    android:layout_alignLeft="@+id/card33"
+    android:layout_alignStart="@+id/card33" />
+
+<Button
+    android:layout_width="100dp"
+    android:layout_height="60dp"
+    android:text="Lyssna"
+    android:id="@+id/listenButton"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true" />
+
+<Button
+    android:layout_width="100dp"
+    android:layout_height="60dp"
+    android:text="NÃ¤sta"
+    android:id="@+id/nextButton"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentEnd="true" />
+</RelativeLayout>
