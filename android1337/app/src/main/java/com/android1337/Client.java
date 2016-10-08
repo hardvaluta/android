@@ -150,11 +150,13 @@ public class Client{
         String t_url = url + "user/create";
 
         try {
+
             body.put("username", uname);
             body.put("password", password);
 
-            arr.put(body.get("username"));
-            arr.put(body.get("password"));
+            arr.put(body);
+
+            System.out.println(arr.toString());
 
         } catch(JSONException e) { }
 
@@ -188,8 +190,7 @@ public class Client{
             body.put("username", uname);
             body.put("password", password.isEmpty() ? null : password);
 
-            arr.put(body.get("username"));
-            arr.put(body.get("password"));
+            arr.put(body);
 
         } catch(JSONException e) { }
 
