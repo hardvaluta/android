@@ -8,14 +8,17 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 public class MainMenu extends AppCompatActivity
 {
-    //public final static String EXTRA_MESSAGE = "com.android.MenuActivity";
+    //public final static String EXTRA_MESSAGE = "com.android.GameOne";
     public static final String PREF_FILE_NAME = "PreferenceFile";
     public static final String SCORE_FILE_NAME = "scoreFile";
     private ImageButton singlePlayerButton;
     private TextView totalScoreTextView;
     private SharedPreferences settings;
+    private TextToSpeechEngine ttsEngine;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -42,8 +45,9 @@ public class MainMenu extends AppCompatActivity
             }
         });
 
-        SharedPreferences settings = getSharedPreferences(PREF_FILE_NAME, 0);
+        settings = getSharedPreferences(PREF_FILE_NAME, 0);
         ((TextView)findViewById(R.id.totalScoreTextView)).setText("Total poäng: "+settings.getInt("totalScore", 0));
+        ttsEngine = TextToSpeechEngine.getInstance(this);
 
     }
 }

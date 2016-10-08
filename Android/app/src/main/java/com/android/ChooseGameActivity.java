@@ -15,15 +15,15 @@ import java.util.Locale;
  * Created by William on 2016-10-01.
  */
 
-public class ChooseGameActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
-    TextToSpeech tts;
+public class ChooseGameActivity extends AppCompatActivity {
+    TextToSpeechEngine ttsEngine;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.choosegame_menu);
 
-        tts = new TextToSpeech(this, this);
+        ttsEngine = TextToSpeechEngine.getInstance(this);
 
         ImageButton mainMenu = (ImageButton) findViewById(R.id.homeButton);
         mainMenu.setOnClickListener(new View.OnClickListener()
@@ -81,13 +81,13 @@ public class ChooseGameActivity extends AppCompatActivity implements TextToSpeec
         gameOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
-                // startActivity(new Intent(ChooseGameActivity.this, GameOne.class));
+                startActivity(new Intent(ChooseGameActivity.this, GameOne.class));
             }
         });
         gameTwo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
-                 startActivity(new Intent(ChooseGameActivity.this, GameTwo.class));
+                startActivity(new Intent(ChooseGameActivity.this, GameTwo.class));
             }
         });
         gameThree.setOnClickListener(new View.OnClickListener() {
@@ -112,28 +112,6 @@ public class ChooseGameActivity extends AppCompatActivity implements TextToSpeec
     }
 
     private void wordButtonPressed(int buttonIdPressed) {
-        tts.speak(((Button)findViewById(buttonIdPressed)).getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
-    }
-
-    @Override
-    public void onInit(int status) {
-        if (status == TextToSpeech.SUCCESS){
-            //Denna raden sätter ibland till eng_USA i emulator i varje fall vilket förstör TTS
-            //funktionaliteten
-            Locale lang2   = tts.getLanguage();
-
-            //Bättre att sätta sv direkt; Har inte mobilen det så fungerar inte TTS och borde
-            //stängas av imho. Thoughts?
-            Locale lang = new Locale("sv");
-            int result = tts.setLanguage(lang);
-
-            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                Log.e("TTS", "inget språkstöd");
-            }else {
-                //nothing
-            }
-        }else{
-            Log.e("TTS", "uppstart kaputt");
-        }
+        ttsEngine.speak(((Button)findViewById(buttonIdPressed)).getText().toString());
     }
 }

@@ -1,8 +1,9 @@
 package com.android;
 
-import android.graphics.Bitmap;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.speech.tts.TextToSpeech;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,25 +15,21 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 import android.util.Log;
 
 import java.util.Locale;
 
-public class MenuActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
+public class GameOne extends AppCompatActivity {
 
-    private View contentView;
     private String[] preString = {"Hej, jag ", "Erik spelar ", "Mattias sparkar på ", "Varför finns det ", "Vem är var det som ", "Vilken "};
     private String[] postString = {" Andreas.", " med sina vänner.", ", som ligger ner.", "?", "?", " är bäst?"};
     private String[][] words = {{"heter", "har", "var", "finns"}, {"fotboll", "träd", "kaffekopp", "svenska"}, {"Fred", "William", "Victor", "Edvin", "Jimmie", "Philip"}, {"krig", "fred", "vänsterprasslare", "pennvässare", "analklåda"}, {"sjöng så fint asså", "fes", "fez", "Anders and"}, {"varmkorv", "boogie", "vafan", "en sista"}};
     private Random rand = new Random();
     private int currentScore = 0;
-    private int currentSentence = 0;
     private int maxScore = 0;
     private boolean finishedSentence = false;
-    String test;
     private TextView textView;
     private Button wordButton1;
     private Button wordButton2;
@@ -43,12 +40,12 @@ public class MenuActivity extends AppCompatActivity implements TextToSpeech.OnIn
     private int currentSentenceIdx = 0;
     private Integer[] wordButtonIdArray = new Integer[]{R.id.wordButton1, R.id.wordButton2, R.id.wordButton3, R.id.wordButton4};
 
-    private TextToSpeech tts;
+    private TextToSpeechEngine ttsEngine;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_menu);
+        setContentView(R.layout.activity_game_one);
         textView = ((TextView)findViewById(R.id.textView));
         wordButton1 = ((Button)findViewById(R.id.wordButton1));
         wordButton2 = ((Button)findViewById(R.id.wordButton2));
@@ -64,7 +61,6 @@ public class MenuActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
             public void onSuccessResponse(ArrayList<Question> qArray) {
                 Question q=qArray.get(0);
-                test=q.getA();
                 wordButton1.setText(q.getA());
                 wordButton2.setText(q.getB());
                 wordButton3.setText(q.getC());
@@ -73,8 +69,6 @@ public class MenuActivity extends AppCompatActivity implements TextToSpeech.OnIn
                 qImage.setImageBitmap(q.getImg());
             }
         });
-
-        System.out.println(test);
 
         //Text-To-Speech on "Question" click
         textView.setOnClickListener(new View.OnClickListener() {
@@ -85,8 +79,8 @@ public class MenuActivity extends AppCompatActivity implements TextToSpeech.OnIn
                 //tmpString = tmpString2;
                 tmpString = textView.getText().toString();
                 String parts[] = tmpString.split("______");
-                tts.speak(parts[0].toString(), TextToSpeech.QUEUE_FLUSH, null);
-                while (tts.isSpeaking())
+                ttsEngine.speak(parts[0].toString());
+                while (ttsEngine.isSpeaking())
                 {
                     try
                     {
@@ -96,7 +90,7 @@ public class MenuActivity extends AppCompatActivity implements TextToSpeech.OnIn
                         Thread.currentThread().interrupt();
                     }
                 }
-                tts.speak(parts[1].toString(), TextToSpeech.QUEUE_FLUSH, null);
+                ttsEngine.speak(parts[1].toString());
             }
         });
 
@@ -135,9 +129,7 @@ public class MenuActivity extends AppCompatActivity implements TextToSpeech.OnIn
             }
         });
 
-        // nextSentence();
-
-        tts = new TextToSpeech(this, this);
+        ttsEngine = TextToSpeechEngine.getInstance(this);
     }
 
     private void wordButtonPressed(int buttonIdPressed) {
@@ -152,7 +144,7 @@ public class MenuActivity extends AppCompatActivity implements TextToSpeech.OnIn
             nextSentenceButton.setText(currentScore + "/" + maxScore);
             finishedSentence = true;
         }
-        tts.speak(((Button)findViewById(buttonIdPressed)).getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
+        ttsEngine.speak(((Button)findViewById(buttonIdPressed)).getText().toString());
     }
 
     private void nextSentence() {
@@ -175,159 +167,40 @@ public class MenuActivity extends AppCompatActivity implements TextToSpeech.OnIn
     }
 
     @Override
-    public void onInit(int status){
-        if (status == TextToSpeech.SUCCESS){
-
-            //Denna raden sätter ibland till eng_USA i emulator i varje fall vilket förstör TTS
-            //funktionaliteten
-            Locale lang2   = tts.getLanguage();
-
-            //Bättre att sätta sv direkt; Har inte mobilen det så fungerar inte TTS och borde
-            //stängas av imho. Thoughts?
-            Locale lang = new Locale("sv");
-            int result = tts.setLanguage(lang);
-
-            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                Log.e("TTS", "inget språkstöd");
-            }else {
-                //nothing
-            }
-        }else{
-            Log.e("TTS", "uppstart kaputt");
-        }
+    public void onBackPressed() {
+        //Display alert message when back button has been pressed
+        backButtonHandler();
+        return;
     }
 
-    /*
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game);
+    public void backButtonHandler() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(
+                GameOne.this);
+        // Setting Dialog Title
+        alertDialog.setTitle("Lämna spelet?");
+        // Setting Dialog Message
+        alertDialog.setMessage("Är du säker på att du vill lämna spelet?");
+        // Setting Icon to Dialog
+        //alertDialog.setIcon(R.drawable.dialog_icon);
 
-        Intent intent = getIntent();
-        //String message = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
-        TextView textView = new TextView(this);
-        textView.setTextSize(40);
-        //textView.setText(message);
+        alertDialog.setNegativeButton("NEJ",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Write your code here to invoke NO event
+                        dialog.cancel();
+                    }
+                });
+        // Setting Negative "NO" Button
+        alertDialog.setPositiveButton("JA",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                });
+        // Setting Positive "Yes" Button
 
-        //ViewGroup layout = (ViewGroup) findViewById(R.id.);
-        //layout.addView(textView);
-    //}
-
-    //public GameActivity() {
-        createSentenceList();
-
-        textView = ((TextView)findViewById(R.id.textView));
-        wordButton1 = ((Button)findViewById(R.id.wordButton1));
-        wordButton2 = ((Button)findViewById(R.id.wordButton2));
-        wordButton3 = ((Button)findViewById(R.id.wordButton3));
-        wordButton4 = ((Button)findViewById(R.id.wordButton4));
-        nextSentenceButton = ((Button)findViewById(R.id.nextSentenceButton));
-
-        wordButton1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                checkForCorrectAnswer(1);
-            }
-        });
-        wordButton2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                checkForCorrectAnswer(2);
-            }
-        });
-        wordButton3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                checkForCorrectAnswer(3);
-            }
-        });
-        wordButton4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                checkForCorrectAnswer(4);
-            }
-        });
-        nextSentenceButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(finishedSentence) {
-                    showNextSentence();
-                    finishedSentence = false;
-                }
-            }
-        });
-
-        showNextSentence();
-
+        // Showing Alert Message
+        alertDialog.show();
     }
-
-    private void createSentenceList() {
-
-        for (int i = 0; i < preString.length; i++) {
-            sentenceList.add(new Sentence(preString[i], Arrays.asList(words[i]), postString[i]));
-        }
-    }
-
-    private void showNextSentence() {
-        if (currentSentence >= sentenceList.size() - 1) {
-            showSentence(sentenceList.get(currentSentence++));
-        } else {
-            textView.setText("Score: " + currentScore + ", max: " + maxScore);
-        }
-    }
-
-    private void showSentence(Sentence s) {
-
-        textView.setText(s.toString());
-        wordButton1.setText(s.wordList.get(1));
-        wordButton1.setBackgroundColor(Color.parseColor("GRAY"));
-        wordButton2.setText(s.wordList.get(2));
-        wordButton2.setBackgroundColor(Color.parseColor("GRAY"));
-        wordButton3.setText(s.wordList.get(3));
-        wordButton3.setBackgroundColor(Color.parseColor("GRAY"));
-        wordButton4.setText(s.wordList.get(4));
-        wordButton4.setBackgroundColor(Color.parseColor("GRAY"));
-        correctButtonIndex = 1;
-
-    }
-
-    private void checkForCorrectAnswer(int chosenButtonIndex) {
-        if (correctButtonIndex != chosenButtonIndex) {
-            switch (chosenButtonIndex) {
-                case 1:
-                    wordButton1.setBackgroundColor(Color.parseColor("RED"));
-                    break;
-                case 2:
-                    wordButton2.setBackgroundColor(Color.parseColor("RED"));
-                    break;
-                case 3:
-                    wordButton3.setBackgroundColor(Color.parseColor("RED"));
-                    break;
-                case 4:
-                    wordButton4.setBackgroundColor(Color.parseColor("RED"));
-                    break;
-            }
-        } else {
-            currentScore++;
-        }
-        maxScore++;
-        switch (correctButtonIndex) {
-            case 1:
-                wordButton1.setBackgroundColor(Color.parseColor("GREEN"));
-                break;
-            case 2:
-                wordButton2.setBackgroundColor(Color.parseColor("GREEN"));
-                break;
-            case 3:
-                wordButton3.setBackgroundColor(Color.parseColor("GREEN"));
-                break;
-            case 4:
-                wordButton4.setBackgroundColor(Color.parseColor("GREEN"));
-                break;
-        }
-        finishedSentence = true;
-
-    }
-*/
 
 }

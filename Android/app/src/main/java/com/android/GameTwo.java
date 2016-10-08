@@ -19,7 +19,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class GameTwo extends AppCompatActivity implements TextToSpeech.OnInitListener{
+public class GameTwo extends AppCompatActivity {
     private Button[] cards = new Button[12];
     private Button listenButton;
     private Button nextButton;
@@ -31,21 +31,21 @@ public class GameTwo extends AppCompatActivity implements TextToSpeech.OnInitLis
     private String[] words = {"fotboll", "telefon", "träd", "bord", "stol", "lampa"};
     private int numberOfCardViews = 0;
 
-    private TextToSpeech tts;
+    private TextToSpeechEngine ttsEngine;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_two);
 
-        tts = new TextToSpeech(this, this);
+        ttsEngine = TextToSpeechEngine.getInstance(this);
 
         listenButton = ((Button)findViewById(R.id.listenButton));
         listenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (lastClickedId >= 0) {
-                    tts.speak(words[shuffles[lastClickedId] % 6].toString(), TextToSpeech.QUEUE_FLUSH, null);
+                    ttsEngine.speak(words[shuffles[lastClickedId] % 6].toString());
                 }
             }
         });
@@ -56,7 +56,6 @@ public class GameTwo extends AppCompatActivity implements TextToSpeech.OnInitLis
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tts.shutdown();
                 GameTwo.this.finish();
             }
         });
@@ -165,29 +164,6 @@ public class GameTwo extends AppCompatActivity implements TextToSpeech.OnInitLis
 
         finishedCards = new TreeSet<Integer>();
 
-    }
-
-    @Override
-    public void onInit(int status){
-        if (status == TextToSpeech.SUCCESS){
-
-            //Denna raden sätter ibland till eng_USA i emulator i varje fall vilket förstör TTS
-            //funktionaliteten
-            //Locale lang2   = tts.getLanguage();
-
-            //Bättre att sätta sv direkt; Har inte mobilen det så fungerar inte TTS och borde
-            //stängas av imho. Thoughts?
-            Locale lang = new Locale("sv");
-            int result = tts.setLanguage(lang);
-
-            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                Log.e("TTS", "inget språkstöd");
-            }else {
-                //nothing
-            }
-        }else{
-            Log.e("TTS", "uppstart kaputt");
-        }
     }
 
     private void cardClicked(int cardId) {
@@ -312,7 +288,6 @@ public class GameTwo extends AppCompatActivity implements TextToSpeech.OnInitLis
         alertDialog.setPositiveButton("JA",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        tts.shutdown();
                         finish();
                     }
                 });
