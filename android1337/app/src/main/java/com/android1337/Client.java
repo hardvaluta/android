@@ -22,6 +22,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import static android.R.attr.id;
+import static android.R.attr.password;
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 
 /**
@@ -146,49 +147,53 @@ public class Client{
         JSONObject body = new JSONObject();
         JSONArray arr = new JSONArray();
 
-        /*
-        String t_url = (id == USER_CREATE ? url + "user/create" :
-                        id == USER_GET ? url + "user/autenticate" : null); */
-
         String t_url = url + "user/create";
-        if(t_url != null){
 
-            try {
-                body.put("username", uname);
-                body.put("password", password);
+        try {
+            body.put("username", uname);
+            body.put("password", password);
 
-                arr.put(body.get("username"));
-                arr.put(body.get("password"));
+            arr.put(body.get("username"));
+            arr.put(body.get("password"));
 
-            } catch(JSONException e) { }
+        } catch(JSONException e) { }
 
-            JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, t_url, arr,
-                    (response) -> {
+        JsonArrayRequest createUserRequest = new JsonArrayRequest(Request.Method.POST, t_url, arr,
+                (response) -> {
 
-                        try{
-                            JSONObject jUser = response.getJSONObject(0);
-                            callback.onSuccessResponse( new User (
-                                    jUser.getString("username"),
-                                    jUser.getInt("scoer"),
-                                    jUser.getInt("id") ) );
+                    try{
+                        JSONObject jUser = response.getJSONObject(0);
+                        callback.onSuccessResponse( new User (
+                                jUser.getString("username"),
+                                jUser.getInt("scoer"),
+                                jUser.getInt("id") ) );
 
-                        } catch (JSONException e) {}
+                    } catch (JSONException e) {}
 
-                    }, (error) -> {}
-            );
+                }, (error) -> {}
+        );
 
-            queue.add(request);
-
-        } else {
-            //id was wrong do something.
-        }
+        queue.add(createUserRequest);
     }
 
     //OFÄRDIG ANVÄND EJ.
-    public void getUser(String uname, String pwd, final VolleyCallback callback){
-        //String t_url += "user/" + id;
+    public void getUser(String uname, String password, final VolleyCallback callback){
+        String t_url = url + "user/authenticate";
 
-        JsonArrayRequest getUserRequest = new JsonArrayRequest(Request.Method.GET, url, null,
+         /*TO DO*/
+        JSONObject body = new JSONObject();
+        JSONArray arr = new JSONArray();
+
+        try {
+            body.put("username", uname);
+            body.put("password", password.isEmpty() ? null : password);
+
+            arr.put(body.get("username"));
+            arr.put(body.get("password"));
+
+        } catch(JSONException e) { }
+
+        JsonArrayRequest getUserRequest = new JsonArrayRequest(Request.Method.POST, t_url, arr,
                 (response) ->  {
                     try {
 

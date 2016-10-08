@@ -28,7 +28,7 @@ public class MainMenu extends AppCompatActivity
         singlePlayerButton = (ImageButton) findViewById(R.id.sinlgePlayerButton);
         singlePlayerButton.setOnClickListener(v -> startActivity(new Intent(MainMenu.this, ChooseGameActivity.class)));
 
-        SharedPreferences settings = getSharedPreferences(PREF_FILE_NAME, 0);
+        settings = getSharedPreferences(PREF_FILE_NAME, 0);
         ((TextView)findViewById(R.id.totalScoreTextView)).setText("Total poäng: "+settings.getInt("totalScore", 0));
 
     }
