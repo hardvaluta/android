@@ -1,14 +1,18 @@
 package com.android;
 
+import android.content.ClipData;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
@@ -17,9 +21,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 
-import android.util.Log;
-
-import java.util.Locale;
 
 public class GameOne extends AppCompatActivity {
 
@@ -38,33 +39,51 @@ public class GameOne extends AppCompatActivity {
     private Button nextSentenceButton;
     private ImageView qImage;
     private int currentSentenceIdx = 0;
-    private Integer[] wordButtonIdArray = new Integer[]{R.id.wordButton1, R.id.wordButton2, R.id.wordButton3, R.id.wordButton4};
-
+    private Button[] wordButtons={wordButton1,wordButton2,wordButton3,wordButton4};
     private TextToSpeechEngine ttsEngine;
+
+    private GestureDetector gestureDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_one);
         textView = ((TextView)findViewById(R.id.textView));
-        wordButton1 = ((Button)findViewById(R.id.wordButton1));
-        wordButton2 = ((Button)findViewById(R.id.wordButton2));
-        wordButton3 = ((Button)findViewById(R.id.wordButton3));
-        wordButton4 = ((Button)findViewById(R.id.wordButton4));
         nextSentenceButton = ((Button)findViewById(R.id.nextSentenceButton));
         qImage = (ImageView)findViewById(R.id.questionImage);
 
+        RelativeLayout sentancePond=(RelativeLayout) findViewById(R.id.sentancePond);
+        RelativeLayout dropZone = (RelativeLayout) findViewById(R.id.dropZone);
+        dropZone.setOnDragListener(new DragZoneListener());
+
+        for(int n=1;n<5;n++){
+            wordButtons[n-1] = new Button(this);
+            wordButtons[n-1].setId(n);
+            wordButtons[n-1].setText("Placeholder");
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            int width = this.getResources().getDisplayMetrics().widthPixels-400;
+            Random random = new Random();
+            width=random.nextInt(width);
+            lp.leftMargin=width;
+            if(n==1){
+                lp.topMargin+=200;
+            }
+            else{
+                lp.addRule(RelativeLayout.BELOW, n-1);
+            }
+            sentancePond.addView(wordButtons[n-1], lp);
+            wordButtons[n-1].setOnTouchListener(new DragList(wordButtons[n-1]));
+        }
+
         com.android.Client client = com.android.Client.getInstance(this.getApplicationContext());
-
-
         client.requestData(com.android.Client.QUESTION, 1, new VolleyCallback<ArrayList<Question>>() {
 
             public void onSuccessResponse(ArrayList<Question> qArray) {
                 Question q=qArray.get(0);
-                wordButton1.setText(q.getA());
-                wordButton2.setText(q.getB());
-                wordButton3.setText(q.getC());
-                wordButton4.setText(q.getD());
+                wordButtons[0].setText(q.getA());
+                wordButtons[1].setText(q.getB());
+                wordButtons[2].setText(q.getC());
+                wordButtons[3].setText(q.getD());
                 textView.setText(q.getText());
                 qImage.setImageBitmap(q.getImg());
             }
@@ -94,34 +113,6 @@ public class GameOne extends AppCompatActivity {
             }
         });
 
-        wordButton1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                wordButtonPressed(R.id.wordButton1);
-            }
-        });
-
-        wordButton2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                wordButtonPressed(R.id.wordButton2);
-            }
-        });
-
-        wordButton3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                wordButtonPressed(R.id.wordButton3);
-            }
-        });
-
-        wordButton4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                wordButtonPressed(R.id.wordButton4);
-            }
-        });
-
         nextSentenceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -132,32 +123,32 @@ public class GameOne extends AppCompatActivity {
         ttsEngine = TextToSpeechEngine.getInstance(this);
     }
 
-    private void wordButtonPressed(int buttonIdPressed) {
+    private void wordButtonPressed(Button buttonPressed) {
         if (finishedSentence == false) {
-            findViewById(wordButtonIdArray[0]).setBackgroundColor(Color.GREEN);
-            if (buttonIdPressed == wordButtonIdArray[0]) {
+            buttonPressed.setBackgroundColor(Color.GREEN);
+            if (buttonPressed.equals(wordButton1)) {
                 currentScore++;
             } else {
-                findViewById(buttonIdPressed).setBackgroundColor(Color.RED);
+                buttonPressed.setBackgroundColor(Color.RED);
             }
             maxScore++;
             nextSentenceButton.setText(currentScore + "/" + maxScore);
             finishedSentence = true;
         }
-        ttsEngine.speak(((Button)findViewById(buttonIdPressed)).getText().toString());
+        ttsEngine.speak(buttonPressed.getText().toString());
     }
 
     private void nextSentence() {
         if (finishedSentence) {
             currentSentenceIdx = rand.nextInt(preString.length);
 
-            Collections.shuffle(Arrays.asList(wordButtonIdArray));
+            Collections.shuffle(Arrays.asList(wordButtons));
 
             textView.setText(preString[currentSentenceIdx] + "______" + postString[currentSentenceIdx]);
-            ((Button) findViewById(wordButtonIdArray[0])).setText(words[currentSentenceIdx][0]);
-            ((Button) findViewById(wordButtonIdArray[1])).setText(words[currentSentenceIdx][1]);
-            ((Button) findViewById(wordButtonIdArray[2])).setText(words[currentSentenceIdx][2]);
-            ((Button) findViewById(wordButtonIdArray[3])).setText(words[currentSentenceIdx][3]);
+            wordButtons[0].setText(words[currentSentenceIdx][0]);
+            wordButtons[1].setText(words[currentSentenceIdx][1]);
+            wordButtons[2].setText(words[currentSentenceIdx][2]);
+            wordButtons[3].setText(words[currentSentenceIdx][3]);
             wordButton1.setBackgroundColor(Color.LTGRAY);
             wordButton2.setBackgroundColor(Color.LTGRAY);
             wordButton3.setBackgroundColor(Color.LTGRAY);
@@ -201,6 +192,41 @@ public class GameOne extends AppCompatActivity {
 
         // Showing Alert Message
         alertDialog.show();
+    }
+
+    private class DragList implements View.OnTouchListener{
+        private final float SCROLL_THRESHOLD = 10;
+        private float x,y;
+        private boolean clicked;
+        private Button button;
+
+        public DragList(Button button){
+            this.button=button;
+        }
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            if (event.getAction() == MotionEvent.ACTION_DOWN){
+                x = event.getX();
+                y = event.getY();
+                clicked=true;
+                wordButtonPressed(button);
+                return true;
+            }
+            if(event.getAction() == MotionEvent.ACTION_MOVE){
+                if(clicked && (Math.abs(x - event.getX()) > SCROLL_THRESHOLD || Math.abs(y - event.getY()) > SCROLL_THRESHOLD)){
+                    ClipData data = ClipData.newPlainText("", "");
+                    View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(
+                            v);
+                    v.startDrag(data, shadowBuilder, v, 0);
+                    return true;
+                }
+                return false;
+            }
+            else {
+                return false;
+            }
+        }
     }
 
 }
