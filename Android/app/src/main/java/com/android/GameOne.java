@@ -220,29 +220,31 @@ public class GameOne extends AppCompatActivity {
     private void nextSentence() {
         if (finishedSentence) {
             currentSentenceIdx = rand.nextInt(preString.length);
+            
+            RelativeLayout container = (RelativeLayout) findViewById(R.id.sentancePond);
+            if(container.getChildCount()<5){
+                for(answerButton b : wordButtons){
+                    if(b.isRightAnswer()){
+                        b.setRightAnswer(false);
+                        View view = (View) b;
+                        ViewGroup owner = (ViewGroup) view.getParent();
+                        owner.removeView(view);
 
-            for(answerButton b : wordButtons){
-                if(b.isRightAnswer()){
-                    b.setRightAnswer(false);
-                    RelativeLayout container = (RelativeLayout) findViewById(R.id.sentancePond);
-                    View view = (View) b;
-                    ViewGroup owner = (ViewGroup) view.getParent();
-                    owner.removeView(view);
-
-                    int x=0,y=0;
-                    for(answerButton button : wordButtons){
-                        if(!button.getTaken()){
-                            x=button.getXPos();
-                            y=button.getYPos();
+                        int x=0,y=0;
+                        for(answerButton button : wordButtons){
+                            if(!button.getTaken()){
+                                x=button.getXPos();
+                                y=button.getYPos();
+                            }
                         }
-                    }
 
-                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                    lp.leftMargin+=x;
-                    lp.topMargin+=y;
-                    container.addView(view, lp);
-                    b.setTaken(true);
-                    view.setVisibility(View.VISIBLE);
+                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        lp.leftMargin+=x;
+                        lp.topMargin+=y;
+                        container.addView(view, lp);
+                        b.setTaken(true);
+                        view.setVisibility(View.VISIBLE);
+                    }
                 }
             }
 

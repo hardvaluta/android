@@ -81,7 +81,6 @@ public class Client{
                 JSONArray jArray=new JSONArray();
 
                 try{
-
                     jRequest.put("difficulty", 1);
                     jRequest.put("count", id);
                     jArray.put(jRequest.get("difficulty"));
@@ -102,11 +101,10 @@ public class Client{
                                         System.out.println("n är: " + n);
                                         jsonQ = response.getJSONObject(n);
 
-                                        Client.this.requestData(IMAGE, jsonQ.getInt("image"), (new VolleyCallback() {
+                                        requestData(IMAGE, jsonQ.getInt("image"), (new VolleyCallback() {
                                             @Override
                                             public void onSuccessResponse(Object o) {
                                                 try {
-
                                                     questionArray.add(new Question(
                                                             jsonQ.getString("answer_a"),
                                                             jsonQ.getString("answer_b"),
