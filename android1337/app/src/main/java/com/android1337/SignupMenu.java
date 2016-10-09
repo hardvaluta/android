@@ -21,6 +21,7 @@ public class SignupMenu extends AppCompatActivity {
         setContentView(R.layout.activity_signup_menu);
 
         client = Client.getInstance(this);
+        prefs = getSharedPreferences(MainMenu.PREF_FILE_NAME, MODE_PRIVATE);
 
         signup = (Button) findViewById(R.id.registerNewUserButton);
         uname = (EditText) findViewById(R.id.signup_unameEditText);
@@ -28,7 +29,7 @@ public class SignupMenu extends AppCompatActivity {
         pwd1 = (EditText) findViewById(R.id.signup_password1);
         pwd2 = (EditText) findViewById(R.id.signup_password2);
 
-        prefs = getSharedPreferences(MainMenu.PREF_FILE_NAME, 0);
+
 
         signup.setOnClickListener(v -> {
             if(pwd1.getText().toString().equals(pwd2.getText().toString())) {
@@ -36,7 +37,11 @@ public class SignupMenu extends AppCompatActivity {
                 client.createUser(uname.getText().toString(), pwd1.getText().toString(), o -> {
                     User u = (User) o;
                     // GÖR NÅGOT.
-                    System.out.println("Du är inloggad som: " + u.getUsername());
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putInt("user_id", u.getId());
+                    editor.putString("username", u.getUsername());
+                    editor.putBoolean("active", true);
+                    editor.commit();
                     startActivity(new Intent(SignupMenu.this, MainMenu.class));
                 });
 
