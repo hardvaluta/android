@@ -13,7 +13,6 @@ import org.w3c.dom.Text;
 public class MainMenu extends AppCompatActivity
 {
     //public final static String EXTRA_MESSAGE = "com.android.GameOne";
-    public static final String SCORE_FILE_NAME = "scoreFile";
     private ImageButton singlePlayerButton;
     private ImageButton settingsButton;
     private TextView totalScoreTextView;
