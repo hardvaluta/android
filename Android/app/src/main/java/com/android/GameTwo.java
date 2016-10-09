@@ -193,7 +193,7 @@ public class GameTwo extends AppCompatActivity {
                         numberOfCardViews++;
                         if (finishedCards.size() >= 12) {
                             // Save progress.
-                            for (int ajoj = 0; ajoj < 1; ajoj++) {
+                            for (int ajoj = 0; ajoj < 500; ajoj++) {
                                 String string = gameId + "," + isSingleGame + "," + System.currentTimeMillis() + "," + numberOfCardViews + "\n";
                                 try {
                                     FileOutputStream fos = openFileOutput(ProfileActivity.SCORE_FILE_NAME3, Context.MODE_APPEND);
