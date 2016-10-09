@@ -26,7 +26,8 @@
         <activity android:name=".MenuActivity" />
         <activity android:name=".ChooseGameActivity" />
         <activity android:name=".LoginMenu" />
-        <activity android:name=".SignupMenu"></activity>
+        <activity android:name=".SignupMenu" />
+        <activity android:name=".SettingsActivity"></activity>
     </application>
 
 </manifest>
