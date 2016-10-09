@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -27,25 +28,31 @@ public class SettingsActivity extends AppCompatActivity {
             String uname = prefs.getString("username", "");
             loginInfoTextView.setText("Hej " + uname + "! Du är inloggad.");
             login_logoutButton.setText("Logga ut");
-            login_logoutButton.setOnClickListener(v -> {
+            login_logoutButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.remove("username");
+                    editor.remove("active");
+                    editor.remove("user_id");
+                    editor.apply();
 
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.remove("username");
-                editor.remove("active");
-                editor.remove("user_id");
-                editor.apply();
-
-                Intent intent = getIntent();
-                finish();
-                startActivity(intent);
-
+                    Intent intent = getIntent();
+                    finish();
+                    startActivity(intent);
+                }
             });
 
         } else {
             //ANVÄNDAREN ÄR INTE INLOGGAD.
             loginInfoTextView.setText("Du är inte inloggad.");
             login_logoutButton.setText("Logga in");
-            login_logoutButton.setOnClickListener(v -> startActivity(new Intent(SettingsActivity.this, LoginMenu.class)));
+            login_logoutButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(SettingsActivity.this, LoginMenu.class));
+                }
+            });
         }
 
     }

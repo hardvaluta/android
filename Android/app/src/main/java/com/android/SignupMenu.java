@@ -1,10 +1,12 @@
 package com.android;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -32,27 +34,31 @@ public class SignupMenu extends AppCompatActivity {
 
 
 
-        signup.setOnClickListener(v -> {
-            if(pwd1.getText().toString().equals(pwd2.getText().toString())) {
+        signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(pwd1.getText().toString().equals(pwd2.getText().toString())) {
 
-                client.createUser(uname.getText().toString(), pwd1.getText().toString(), o -> {
+                    client.createUser(uname.getText().toString(), pwd1.getText().toString(), new VolleyCallback() {
+                        @Override
+                        public void onSuccessResponse(Object o) {
+                            if(o instanceof User){
+                                User u = (User) o;
+                                SharedPreferences.Editor editor = prefs.edit();
+                                editor.putInt("user_id", u.getId());
+                                editor.putString("username", u.getUsername());
+                                editor.putBoolean("active", true);
+                                editor.commit();
+                                startActivity(new Intent(SignupMenu.this, MainMenu.class));
+                            } else {
+                                alert();
+                            }
+                        }
+                    });
 
-                    if(o instanceof User){
-                        User u = (User) o;
-                        SharedPreferences.Editor editor = prefs.edit();
-                        editor.putInt("user_id", u.getId());
-                        editor.putString("username", u.getUsername());
-                        editor.putBoolean("active", true);
-                        editor.commit();
-                        startActivity(new Intent(SignupMenu.this, MainMenu.class));
-                    } else {
-                        alert();
-                    }
-
-                });
-
-            } else {
-                System.out.println("Lösenorden matchar ej");
+                } else {
+                    System.out.println("Lösenorden matchar ej");
+                }
             }
         });
     }
@@ -61,7 +67,12 @@ public class SignupMenu extends AppCompatActivity {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(SignupMenu.this);
         alertDialog.setTitle("Error");
         alertDialog.setMessage("Något gick fel.");
-        alertDialog.setPositiveButton("Okej", (d, v) -> d.cancel());
+        alertDialog.setPositiveButton("Okej", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
         alertDialog.show();
     }
 }

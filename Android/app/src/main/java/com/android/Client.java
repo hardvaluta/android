@@ -105,7 +105,6 @@ public class Client{
                                         Client.this.requestData(IMAGE, jsonQ.getInt("image"), (new VolleyCallback() {
                                             @Override
                                             public void onSuccessResponse(Object o) {
-
                                                 try {
 
                                                     questionArray.add(new Question(
@@ -119,8 +118,7 @@ public class Client{
                                                     if (questionArray.size() == Client.this.id)
                                                         callback.onSuccessResponse(questionArray);
 
-                                                } catch (JSONException e) {
-                                                }
+                                                } catch (JSONException e) {}
 
                                             }
                                         }));
@@ -131,11 +129,7 @@ public class Client{
                                 }
 
                             }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                    }
-                }
+                        }, new Response.ErrorListener() { public void onErrorResponse(VolleyError error) { } }
                 );
 
                 queue.add(getQuestionRequest);
@@ -171,7 +165,7 @@ public class Client{
     }
 
     public void createUser(String uname, String password, final VolleyCallback callback) {
-        /*TO DO*/
+
         JSONObject body = new JSONObject();
         JSONArray arr = new JSONArray();
 
@@ -186,28 +180,35 @@ public class Client{
         } catch(JSONException e) { }
 
         JsonArrayRequest createUserRequest = new JsonArrayRequest(Request.Method.POST, t_url, arr,
-                (response) -> {
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            JSONObject jUser = response.getJSONObject(0);
+                            callback.onSuccessResponse(new User(
+                                    jUser.getString("username"),
+                                    jUser.getInt("scoer"),
+                                    jUser.getInt("id")));
 
-                    try{
-                        JSONObject jUser = response.getJSONObject(0);
-                        callback.onSuccessResponse( new User (
-                                jUser.getString("username"),
-                                jUser.getInt("scoer"),
-                                jUser.getInt("id") ) );
+                        } catch (JSONException e) {
+                        }
+                    }
+                },
 
-                    } catch (JSONException e) {}
-
-                }, (error) -> { callback.onSuccessResponse(null); }
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        callback.onSuccessResponse(null);
+                    }
+                }
         );
 
         queue.add(createUserRequest);
     }
 
-    //OFÄRDIG ANVÄND EJ.
     public void getUser(String uname, String password, final VolleyCallback callback){
         String t_url = url + "user/authenticate";
 
-         /*TO DO*/
         JSONObject body = new JSONObject();
         JSONArray arr = new JSONArray();
 
@@ -220,21 +221,30 @@ public class Client{
         } catch(JSONException e) { }
 
         JsonArrayRequest getUserRequest = new JsonArrayRequest(Request.Method.POST, t_url, arr,
-                (response) ->  {
-                    try {
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
 
-                        JSONObject jsonQ = response.getJSONObject(0);
+                            JSONObject jsonQ = response.getJSONObject(0);
 
-                        callback.onSuccessResponse( new User (
-                                jsonQ.getString("username"),
-                                jsonQ.getInt("score"),
-                                jsonQ.getInt("games") ) );
+                            callback.onSuccessResponse(new User(
+                                    jsonQ.getString("username"),
+                                    jsonQ.getInt("score"),
+                                    jsonQ.getInt("games")));
 
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
+                },
 
-                }, (error) -> { callback.onSuccessResponse(null);}
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        callback.onSuccessResponse(null);
+                    }
+                }
         );
 
         queue.add(getUserRequest);
