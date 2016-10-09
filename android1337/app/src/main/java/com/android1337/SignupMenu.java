@@ -2,6 +2,7 @@ package com.android1337;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
@@ -35,14 +36,19 @@ public class SignupMenu extends AppCompatActivity {
             if(pwd1.getText().toString().equals(pwd2.getText().toString())) {
 
                 client.createUser(uname.getText().toString(), pwd1.getText().toString(), o -> {
-                    User u = (User) o;
-                    // GÖR NÅGOT.
-                    SharedPreferences.Editor editor = prefs.edit();
-                    editor.putInt("user_id", u.getId());
-                    editor.putString("username", u.getUsername());
-                    editor.putBoolean("active", true);
-                    editor.commit();
-                    startActivity(new Intent(SignupMenu.this, MainMenu.class));
+
+                    if(o instanceof User){
+                        User u = (User) o;
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putInt("user_id", u.getId());
+                        editor.putString("username", u.getUsername());
+                        editor.putBoolean("active", true);
+                        editor.commit();
+                        startActivity(new Intent(SignupMenu.this, MainMenu.class));
+                    } else {
+                        alert();
+                    }
+
                 });
 
             } else {
@@ -50,4 +56,13 @@ public class SignupMenu extends AppCompatActivity {
             }
         });
     }
+
+    public void alert() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(SignupMenu.this);
+        alertDialog.setTitle("Error");
+        alertDialog.setMessage("Något gick fel.");
+        alertDialog.setPositiveButton("Okej", (d, v) -> d.cancel());
+        alertDialog.show();
+    }
 }
+

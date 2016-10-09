@@ -39,7 +39,7 @@ public class MainMenu extends AppCompatActivity
             if(prefs.getBoolean("active", false)){
                 //startActivity(;new Intent(MainMenu.this, MultiPlayerEnter.class));
             } else {
-                startActivity(new Intent(MainMenu.this, SignupMenu.class));
+                startActivity(new Intent(MainMenu.this, SettingsActivity.class));
             }
 
         });

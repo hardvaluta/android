@@ -153,10 +153,7 @@ public class Client{
 
             body.put("username", uname);
             body.put("password", password);
-
             arr.put(body);
-
-            System.out.println(arr.toString());
 
         } catch(JSONException e) { }
 
@@ -172,7 +169,7 @@ public class Client{
 
                     } catch (JSONException e) {}
 
-                }, (error) -> {}
+                }, (error) -> { callback.onSuccessResponse(null); }
         );
 
         queue.add(createUserRequest);
@@ -187,9 +184,9 @@ public class Client{
         JSONArray arr = new JSONArray();
 
         try {
+
             body.put("username", uname);
             body.put("password", password.isEmpty() ? null : password);
-
             arr.put(body);
 
         } catch(JSONException e) { }
@@ -209,7 +206,7 @@ public class Client{
                         e.printStackTrace();
                     }
 
-                }, (error) -> {}
+                }, (error) -> { callback.onSuccessResponse(null);}
         );
 
         queue.add(getUserRequest);
