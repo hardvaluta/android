@@ -48,13 +48,14 @@
         android:text="Score: "
         android:id="@+id/scoreView" />
 
-    <Button
+    <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:srcCompat="@mipmap/forwardarrow"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:text="Next ->"
-        android:id="@+id/nextSentenceButton"/>
+        android:id="@+id/nextSentenceButton"
+        android:background="#FFFFFF"/>
 
 
     <RelativeLayout
@@ -72,6 +73,7 @@
             android:layout_alignParentTop="true"
             android:id="@+id/dropZone"
             android:layout_centerHorizontal="true"
+            android:gravity="center"
             android:background="@color/colorPrimaryDark">
         </RelativeLayout>
     </RelativeLayout>
