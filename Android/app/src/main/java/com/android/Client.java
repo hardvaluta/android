@@ -85,12 +85,11 @@ public class Client{
 
                     jRequest.put("difficulty", 1);
                     jRequest.put("count", id);
-                    jArray.put(jRequest.get("difficulty"));
-                    jArray.put(jRequest.get("count"));
+                    //jArray.put(jRequest);
 
                 } catch(JSONException e) { }
 
-                JsonArrayRequest getQuestionRequest = new JsonArrayRequest(Request.Method.GET, t_url, jArray,
+                CustomRequest getQuestionRequest = new CustomRequest(Request.Method.GET, t_url, jRequest,
                         new Response.Listener<JSONArray>() {
                             @Override
                             public void onResponse(JSONArray response) {
@@ -176,19 +175,21 @@ public class Client{
 
             body.put("username", uname);
             body.put("password", password);
-            arr.put(body);
+            //arr.put(body);
 
         } catch(JSONException e) { }
 
-        JsonArrayRequest createUserRequest = new JsonArrayRequest(Request.Method.POST, t_url, arr,
+        CustomRequest createUserRequest = new CustomRequest(Request.Method.POST, t_url, body,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         try {
                             JSONObject jUser = response.getJSONObject(0);
+
+                            System.out.println(jUser.getString("username")+" och "+jUser.getInt("id"));
                             callback.onSuccessResponse(new User(
                                     jUser.getString("username"),
-                                    jUser.getInt("scoer"),
+                                    jUser.getInt("score"),
                                     jUser.getInt("id")));
 
                         } catch (JSONException e) {
