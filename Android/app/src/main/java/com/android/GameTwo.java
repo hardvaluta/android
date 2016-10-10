@@ -20,6 +20,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class GameTwo extends AppCompatActivity {
+    public static final int gameId = 2;
+    private int isSingleGame = 1;
     private Button[] cards = new Button[12];
     private Button listenButton;
     private Button nextButton;
@@ -191,12 +193,17 @@ public class GameTwo extends AppCompatActivity {
                         numberOfCardViews++;
                         if (finishedCards.size() >= 12) {
                             // Save progress.
-                            String string = "GAMETWO TIME:" + System.currentTimeMillis() + ", SCORE: " + numberOfCardViews + "\n";
-                            try {
-                                FileOutputStream fos = openFileOutput(MainMenu.SCORE_FILE_NAME, Context.MODE_APPEND);
-                                fos.write(string.getBytes());
-                                fos.close();
-                            } catch (Exception e) { e.printStackTrace(); }
+                            for (int ajoj = 0; ajoj < 500; ajoj++) {
+                                String string = gameId + "," + isSingleGame + "," + System.currentTimeMillis() + "," + numberOfCardViews + "\n";
+                                try {
+                                    FileOutputStream fos = openFileOutput(ProfileActivity.SCORE_FILE_NAME3, Context.MODE_APPEND);
+                                    fos.write(string.getBytes());
+                                    fos.close();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
                             nextButton.setClickable(true);
                             nextButton.setVisibility(View.VISIBLE);
                         }
