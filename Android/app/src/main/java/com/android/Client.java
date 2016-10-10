@@ -1,5 +1,6 @@
 package com.android;
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
@@ -210,16 +211,42 @@ public class Client{
         String t_url = url + "user/authenticate";
 
         JSONObject body = new JSONObject();
-        JSONArray arr = new JSONArray();
+        //JSONArray arr = new JSONArray();
 
         try {
 
             body.put("username", uname);
             body.put("password", password.isEmpty() ? null : password);
-            arr.put(body);
+            //arr.put(body);
 
         } catch(JSONException e) { }
 
+
+        CustomRequest getUserRequest = new CustomRequest(Request.Method.POST, t_url, body,
+                new Response.Listener<JSONArray>() {
+
+                    public void onResponse(JSONArray response) {
+                        try {
+
+                            JSONObject jsonQ = response.getJSONObject(0);
+
+                            callback.onSuccessResponse(new User(
+                                    jsonQ.getString("username"),
+                                    jsonQ.getInt("score"),
+                                    jsonQ.getInt("games")));
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                    new Response.ErrorListener() {
+                        public void onErrorResponse(VolleyError error) {
+                            callback.onSuccessResponse(null);
+                        }
+                });
+
+        /*
         JsonArrayRequest getUserRequest = new JsonArrayRequest(Request.Method.POST, t_url, arr,
                 new Response.Listener<JSONArray>() {
                     @Override
@@ -245,7 +272,7 @@ public class Client{
                         callback.onSuccessResponse(null);
                     }
                 }
-        );
+        );*/
 
         queue.add(getUserRequest);
     }
