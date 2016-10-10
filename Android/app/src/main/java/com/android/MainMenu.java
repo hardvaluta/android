@@ -16,7 +16,7 @@ import org.w3c.dom.Text;
 
 public class MainMenu extends AppCompatActivity
 {
-    //public final static String EXTRA_MESSAGE = "com.android.GameOne";
+    //public final static String EXTRA_MESSAGE = "com.android.GameOne.GameOne";
     public static final String PREF_FILE_NAME = "PreferenceFile";
     public static final String SCORE_FILE_NAME = "scoreFile";
 

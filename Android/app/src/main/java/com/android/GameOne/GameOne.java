@@ -1,4 +1,4 @@
-package com.android;
+package com.android.GameOne;
 
 import android.content.ClipData;
 import android.content.Context;
@@ -8,7 +8,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.DragEvent;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +18,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
+import com.android.Question;
+import com.android.R;
+import com.android.TextToSpeechEngine;
+import com.android.VolleyCallback;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 
@@ -38,10 +41,8 @@ public class GameOne extends AppCompatActivity {
     private ImageButton nextSentenceButton;
     private ImageView qImage;
     private int currentSentenceIdx = 0;
-    private ArrayList<answerButton> wordButtons;
-    private answerButton rightAnswer;
-    private TextToSpeechEngine ttsEngine;
-
+    private ArrayList<AnswerButton> wordButtons;
+    private TextToSpeechEngine ttsEngine = TextToSpeechEngine.getInstance(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,87 +52,21 @@ public class GameOne extends AppCompatActivity {
         textView = ((TextView)findViewById(R.id.textView));
         nextSentenceButton = ((ImageButton)findViewById(R.id.nextSentenceButton));
         qImage = (ImageView)findViewById(R.id.questionImage);
-        wordButtons= new ArrayList<answerButton>();
+        wordButtons= new ArrayList<AnswerButton>();
         nextSentenceButton.setClickable(false);
 
         RelativeLayout sentancePond=(RelativeLayout) findViewById(R.id.sentancePond);
         RelativeLayout dropZone = (RelativeLayout) findViewById(R.id.dropZone);
-        dropZone.setOnDragListener(new View.OnDragListener() {
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
-                int action = event.getAction();
-                switch (event.getAction()) {
-                    case DragEvent.ACTION_DROP:
-                        RelativeLayout container = (RelativeLayout) v;
-                        if(container.getChildCount()<1){
-                            View view = (View) event.getLocalState();
-                            answerButton b = (answerButton)view;
-                            ViewGroup owner = (ViewGroup) view.getParent();
+        dropZone.setOnDragListener(new DragZoneListener(nextSentenceButton));
+        sentancePond.setOnDragListener(new MainDragListener(wordButtons));
 
-                            if (b.isRightAnswer()){
-                                b.setBackgroundColor(Color.GREEN);
-                                nextSentenceButton.setClickable(true);
-                            }
-                            else{
-                                b.setBackgroundColor(Color.RED);
-                            }
-
-                            owner.removeView(view);
-                            b.setTaken(false);
-
-                            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                            container.addView(view, lp);
-                            view.setVisibility(View.VISIBLE);
-                        }
-                        break;
-                    default:
-                        break;
-                }
-                return true;
-            }
-        });
-        sentancePond.setOnDragListener(new View.OnDragListener() {
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
-                int action = event.getAction();
-                switch (event.getAction()) {
-                    case DragEvent.ACTION_DROP:
-                        RelativeLayout container = (RelativeLayout) v;
-                        if(container.getChildCount()<5){
-                            View view = (View) event.getLocalState();
-                            answerButton b = (answerButton)view;
-                            ViewGroup owner = (ViewGroup) view.getParent();
-                            owner.removeView(view);
-
-                            int x=0,y=0;
-                            for(answerButton button : wordButtons){
-                                if(!button.getTaken()){
-                                    x=button.getXPos();
-                                    y=button.getYPos();
-                                }
-                            }
-
-                            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                            lp.leftMargin+=x;
-                            lp.topMargin+=y;
-                            container.addView(view, lp);
-                            b.setTaken(true);
-                            view.setVisibility(View.VISIBLE);
-                        }
-                        break;
-                    default:
-                        break;
-                }
-                return true;
-            }
-        });
-
+        //Create the Answer-choice buttons
         for(int n=1;n<5;n++){
             if(n==1){
-                wordButtons.add(new answerButton(this));
+                wordButtons.add(new AnswerButton(this));
             }
             else{
-                wordButtons.add(new answerButton(this));
+                wordButtons.add(new AnswerButton(this));
             }
             wordButtons.get(n-1).setId(n);
             wordButtons.get(n-1).setText("Placeholder");
@@ -154,6 +89,7 @@ public class GameOne extends AppCompatActivity {
             wordButtons.get(n-1).setOnTouchListener(new DragList(wordButtons.get(n-1)));
         }
 
+        //Fetch the question data and add it to the screen
         com.android.Client client = com.android.Client.getInstance(this.getApplicationContext());
         client.requestData(com.android.Client.QUESTION, 4, new VolleyCallback<ArrayList<Question>>() {
 
@@ -200,21 +136,15 @@ public class GameOne extends AppCompatActivity {
                 nextSentence();
             }
         });
-
-        ttsEngine = TextToSpeechEngine.getInstance(this);
     }
 
     private void wordButtonPressed(Button buttonPressed) {
         if (finishedSentence == false) {
 
-            /*if (buttonPressed.equals(wordButton1)) {
-                currentScore++;
-            }*/
             maxScore++;
-            //nextSentenceButton.setText(currentScore + "/" + maxScore);
             finishedSentence = true;
         }
-        ttsEngine.speak(buttonPressed.getText().toString());
+        //ttsEngine.speak(buttonPressed.getText().toString());
     }
 
     private void nextSentence() {
@@ -223,7 +153,7 @@ public class GameOne extends AppCompatActivity {
             
             RelativeLayout container = (RelativeLayout) findViewById(R.id.sentancePond);
             if(container.getChildCount()<5){
-                for(answerButton b : wordButtons){
+                for(AnswerButton b : wordButtons){
                     if(b.isRightAnswer()){
                         b.setRightAnswer(false);
                         View view = (View) b;
@@ -231,7 +161,7 @@ public class GameOne extends AppCompatActivity {
                         owner.removeView(view);
 
                         int x=0,y=0;
-                        for(answerButton button : wordButtons){
+                        for(AnswerButton button : wordButtons){
                             if(!button.getTaken()){
                                 x=button.getXPos();
                                 y=button.getYPos();
@@ -318,7 +248,12 @@ public class GameOne extends AppCompatActivity {
                 x = event.getX();
                 y = event.getY();
                 clicked=true;
-                wordButtonPressed(button);
+                if (finishedSentence == false) {
+
+                    maxScore++;
+                    finishedSentence = true;
+                }
+                ttsEngine.speak(button.getText().toString());
                 return true;
             }
             if(event.getAction() == MotionEvent.ACTION_MOVE){
@@ -335,24 +270,5 @@ public class GameOne extends AppCompatActivity {
                 return false;
             }
         }
-    }
-    private class answerButton extends Button{
-        private int x;
-        private int y;
-        private boolean taken;
-        private boolean rightAnswer;
-        public answerButton(Context context){
-            super(context);
-            taken=true;
-            rightAnswer=false;
-        }
-        public boolean getTaken(){return taken;}
-        public void setTaken(boolean taken){this.taken=taken;}
-        public int getXPos(){return x;}
-        public int getYPos(){return y;}
-        public void setXPos(int x){this.x=x;}
-        public void setYPos(int y){this.y=y;}
-        public boolean isRightAnswer(){return rightAnswer;}
-        public void setRightAnswer(boolean rightAnswer){this.rightAnswer=rightAnswer;}
     }
 }
