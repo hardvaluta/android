@@ -52,6 +52,8 @@ public class LoginMenu extends AppCompatActivity {
                             editor.putString("username", u.getUsername());
                             editor.putBoolean("active", true);
                             editor.commit();
+
+                            //startActivity(new Intent(LoginMenu.this, /*DDDDDDD*/));
                         } else {
                             alert();
                         }
