@@ -26,7 +26,7 @@ public class LoginMenu extends AppCompatActivity {
         setContentView(R.layout.activity_login_menu);
 
         client = Client.getInstance(this);
-        prefs = getSharedPreferences(MainMenu.PREF_FILE_NAME, MODE_PRIVATE);
+        prefs = getSharedPreferences(SettingsActivity.PREF_FILE_NAME, MODE_PRIVATE);
 
 
         unameField = (EditText) findViewById(R.id.uNameEditText);

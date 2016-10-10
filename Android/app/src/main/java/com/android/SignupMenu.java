@@ -24,7 +24,7 @@ public class SignupMenu extends AppCompatActivity {
         setContentView(R.layout.activity_signup_menu);
 
         client = Client.getInstance(this);
-        prefs = getSharedPreferences(MainMenu.PREF_FILE_NAME, MODE_PRIVATE);
+        prefs = getSharedPreferences(SettingsActivity.PREF_FILE_NAME, MODE_PRIVATE);
 
         signup = (Button) findViewById(R.id.registerNewUserButton);
         uname = (EditText) findViewById(R.id.signup_unameEditText);
