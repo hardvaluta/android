@@ -212,15 +212,14 @@ public class Client{
         String t_url = url + "user/authenticate";
 
         JSONObject body = new JSONObject();
-        //JSONArray arr = new JSONArray();
 
         try {
 
             body.put("username", uname);
-            body.put("password", password.isEmpty() ? null : password);
-            //arr.put(body);
+            body.put("password", password);
 
         } catch(JSONException e) { }
+
 
 
         CustomRequest getUserRequest = new CustomRequest(Request.Method.POST, t_url, body,

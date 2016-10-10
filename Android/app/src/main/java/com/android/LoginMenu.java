@@ -39,7 +39,7 @@ public class LoginMenu extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 uname = unameField.getText().toString().trim();
-                pwd = unameField.getText().toString().trim();
+                pwd = pwdField.getText().toString().trim();
 
                 //TO DO
                 client.getUser(uname, pwd, new VolleyCallback() {
