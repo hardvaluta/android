@@ -1,0 +1,18 @@
+Sprintmöte den 8 oktober 2016
+
+* Det var sämre kommunikation denna sprinten. Både allmänt och vad det gäller daily scrum.
+    Allmänt:      Vi bestämde att börja parprogrammera mer.
+    Daily scrum:  Skriv alltid mån-fre, om du inte gjort något eller tänker göra något, skriv det! Man måste som sagt inte arbeta varje dag.
+                  Bara det blir gjort.
+                  
+* Generellt har vi kommit långt i projektet! Det börjar verkligen likna en ordentlig app. Bra jobbat.
+
+* Sociala kontraktet efterföljs inte. Alla ska läsa igenom det igen.
+
+* Många tasks blev inte klara den här sprinten.
+    Den här veckans sprint: Vi får hemläxa över helgen att göra klart de tasks vi antagit oss.
+    Nästa veckas sprint: Återigen, parprogrammering!
+
+* I nuläget en del buggar, men vissa är starkt kopplade till features som inte finns ännu.
+    Hittar man en buggar som är för omfattande/är någon annan som har koll på,
+    lägg in den i trello under buggfixar. Så tar vi itu med detta senare.

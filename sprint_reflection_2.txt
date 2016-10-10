@@ -1,0 +1,9 @@
+Sprintreflektion vecka 2
+
+Sprintprocessen fungerade mycket bättre den här veckan när vi använde oss av effort- och velocitykoncepten. 
+Med detta sagt så var vår uppskattning av user stories effortvärden inte den bästa.
+En medlem i gruppen var sjuk under denna sprint vilket gav ett visst bortfall i produktiviteten. 
+Detta blev blev mer markant eftersom detta var en två-dagars sprint. 
+Vi gjorde en så kort sprint för att få in extra funktionalitet i tid till designmötet. 
+
+I efterhand är vi nu överens om att detta är för kort tid för en effektiv sprint.
