@@ -18,7 +18,7 @@ public class MainMenu extends AppCompatActivity
 {
     //public final static String EXTRA_MESSAGE = "com.android.GameOne";
 
-    private ImageButton singlePlayerButton, multiPlayerButton, settingsButton;
+    private ImageButton singlePlayerButton, multiPlayerButton, settingsButton, profileButton;
     private SharedPreferences prefs;
     private TextView totalScoreTextView;
     private TextToSpeechEngine ttsEngine;
@@ -56,6 +56,14 @@ public class MainMenu extends AppCompatActivity
                 } else {
                     startActivity(new Intent(MainMenu.this, LoginMenu.class));
                 }
+            }
+        });
+
+        profileButton = (ImageButton) findViewById(R.id.profileButton);
+        profileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainMenu.this, ProfileActivity.class));
             }
         });
 

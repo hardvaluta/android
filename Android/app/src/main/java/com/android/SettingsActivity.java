@@ -30,11 +30,8 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
 
         prefs = getSharedPreferences(SettingsActivity.PREF_FILE_NAME, MODE_PRIVATE);
 
-        loginInfoTextView = new TextView(this);
-
-                //(TextView)findViewById(R.id.loginInfoTextView);
-        login_logoutButton = new Button(this);
-                //(Button)findViewById(R.id.login_logoutButton);
+        loginInfoTextView = (TextView)findViewById(R.id.loginInfoTextView);
+        login_logoutButton = (Button)findViewById(R.id.login_logoutButton);
 
         if(prefs.getBoolean("active", false)){
             //ANVÄNDAREN ÄR INLOGGAD.
