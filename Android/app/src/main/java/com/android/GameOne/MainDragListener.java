@@ -6,12 +6,13 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
+import java.util.Observable;
 
 /**
  * Created by William on 2016-10-10.
  */
 
-public class MainDragListener implements View.OnDragListener{
+public class MainDragListener extends Observable implements View.OnDragListener{
     ArrayList<AnswerButton> wordButtons;
 
     public MainDragListener(ArrayList<AnswerButton> wordButtons){
@@ -44,6 +45,8 @@ public class MainDragListener implements View.OnDragListener{
                     container.addView(view, lp);
                     b.setTaken(true);
                     view.setVisibility(View.VISIBLE);
+                    setChanged();
+                    notifyObservers();
                 }
                 break;
             default:

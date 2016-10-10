@@ -79,12 +79,10 @@ public class Client{
 
                 t_url += "question/random";
                 JSONObject jRequest = new JSONObject();
-                JSONArray jArray=new JSONArray();
 
                 try{
                     jRequest.put("difficulty", 1);
                     jRequest.put("count", id);
-                    //jArray.put(jRequest);
 
                 } catch(JSONException e) { }
 

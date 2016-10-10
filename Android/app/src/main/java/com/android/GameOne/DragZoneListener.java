@@ -7,13 +7,20 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
+import com.android.R;
+
+import java.util.Observable;
+import java.util.Observer;
+
 
 /**
  * Created by William on 2016-10-10.
  */
 
-public class DragZoneListener implements View.OnDragListener{
+public class DragZoneListener implements View.OnDragListener, Observer {
     ImageButton nextSentenceButton;
+    RelativeLayout container;
+    View dragSpot;
     public DragZoneListener(ImageButton nextSentenceButton){
         this.nextSentenceButton=nextSentenceButton;
     }
@@ -23,8 +30,11 @@ public class DragZoneListener implements View.OnDragListener{
         int action = event.getAction();
         switch (event.getAction()) {
             case DragEvent.ACTION_DROP:
-                RelativeLayout container = (RelativeLayout) v;
-                if(container.getChildCount()<1){
+                container = (RelativeLayout) v;
+                if(dragSpot==null){
+                    dragSpot = v.findViewById(R.id.dragSpot);
+                }
+                if(container.findViewById(R.id.dragSpot)!=null){
                     View view = (View) event.getLocalState();
                     AnswerButton b = (AnswerButton)view;
                     ViewGroup owner = (ViewGroup) view.getParent();
@@ -41,6 +51,7 @@ public class DragZoneListener implements View.OnDragListener{
                     b.setTaken(false);
 
                     RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                    container.removeView(dragSpot);
                     container.addView(view, lp);
                     view.setVisibility(View.VISIBLE);
                 }
@@ -49,5 +60,10 @@ public class DragZoneListener implements View.OnDragListener{
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        container.addView(dragSpot);
     }
 }
