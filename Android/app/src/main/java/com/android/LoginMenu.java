@@ -41,7 +41,6 @@ public class LoginMenu extends AppCompatActivity {
                 uname = unameField.getText().toString().trim();
                 pwd = pwdField.getText().toString().trim();
 
-                //TO DO
                 client.loginUser(uname, pwd, new VolleyCallback() {
                     @Override
                     public void onSuccessResponse(Object o) {
@@ -53,7 +52,7 @@ public class LoginMenu extends AppCompatActivity {
                             editor.putBoolean("active", true);
                             editor.commit();
 
-                            //startActivity(new Intent(LoginMenu.this, /*DDDDDDD*/));
+                            startActivity(new Intent(LoginMenu.this, SettingsActivity.class));
                         } else {
                             alert();
                         }

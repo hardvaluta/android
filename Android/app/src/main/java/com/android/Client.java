@@ -23,6 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static android.R.attr.id;
 import static android.R.attr.password;
@@ -88,7 +89,9 @@ public class Client{
 
                 } catch(JSONException e) { }
 
-                CustomRequest getQuestionRequest = new CustomRequest(Request.Method.GET, t_url, body,
+                body.toString();
+
+                JsonArrayRequest getQuestionRequest = new JsonArrayRequest(Request.Method.GET, t_url, body,
                         new Response.Listener<JSONArray>() {
                             @Override
                             public void onResponse(JSONArray response) {
@@ -125,7 +128,7 @@ public class Client{
                                 } catch (JSONException e) { }
 
                             }
-                        }, new Response.ErrorListener() { public void onErrorResponse(VolleyError error) { } }
+                        }, new Response.ErrorListener() { public void onErrorResponse(VolleyError error) {} }
                 );
 
                 queue.add(getQuestionRequest);
@@ -171,7 +174,7 @@ public class Client{
 
         } catch(JSONException e) { }
 
-        CustomRequest createUserRequest = new CustomRequest(Request.Method.POST, t_url, body,
+        JsonArrayRequest createUserRequest = new JsonArrayRequest(Request.Method.POST, t_url, body,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -211,10 +214,8 @@ public class Client{
             body.put("password", password);
 
         } catch(JSONException e) { }
-
-
-
-        CustomRequest loginUserRequest = new CustomRequest(Request.Method.POST, t_url, body,
+        
+        JsonArrayRequest loginUserRequest = new JsonArrayRequest(Request.Method.POST, t_url, body,
                 new Response.Listener<JSONArray>() {
 
                     public void onResponse(JSONArray response) {
@@ -224,8 +225,8 @@ public class Client{
 
                             callback.onSuccessResponse(new User(
                                     jsonQ.getString("username"),
-                                    jsonQ.getInt("score"),
-                                    jsonQ.getInt("games")));
+                                    jsonQ.getInt("id"),
+                                    jsonQ.getInt("score")));
 
                         } catch (JSONException e) {
                             e.printStackTrace();
