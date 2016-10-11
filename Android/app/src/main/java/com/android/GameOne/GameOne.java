@@ -37,20 +37,23 @@ public class GameOne extends AppCompatActivity {
     private Random rand = new Random();
     private int currentScore = 0;
     private int maxScore = 0;
-    private boolean finishedSentence = false;
-    private TextView textView;
+    private TextView leftSentence;
+    private TextView rightSentence;
     private ImageButton nextSentenceButton;
     private ImageView qImage;
     private int currentSentenceIdx = 0;
     private ArrayList<AnswerButton> wordButtons;
     private TextToSpeechEngine ttsEngine = TextToSpeechEngine.getInstance(this);
+    private DragZoneListener dropListen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_one);
 
-        textView = ((TextView)findViewById(R.id.textView));
+        leftSentence= (TextView)findViewById(R.id.leftSentance);
+        rightSentence= (TextView)findViewById(R.id.rightSentance);
+
         nextSentenceButton = ((ImageButton)findViewById(R.id.nextSentenceButton));
         qImage = (ImageView)findViewById(R.id.questionImage);
         wordButtons= new ArrayList<AnswerButton>();
@@ -58,8 +61,11 @@ public class GameOne extends AppCompatActivity {
 
         RelativeLayout sentancePond=(RelativeLayout) findViewById(R.id.sentancePond);
         RelativeLayout dropZone = (RelativeLayout) findViewById(R.id.dropZone);
-        dropZone.setOnDragListener(new DragZoneListener(nextSentenceButton));
-        sentancePond.setOnDragListener(new MainDragListener(wordButtons));
+        dropListen = new DragZoneListener(nextSentenceButton);
+        MainDragListener mainListen = new MainDragListener(wordButtons);
+        mainListen.addObserver(dropListen);
+        dropZone.setOnDragListener(dropListen);
+        sentancePond.setOnDragListener(mainListen);
 
         //Create the Answer-choice buttons
         for(int n=1;n<5;n++){
@@ -102,13 +108,16 @@ public class GameOne extends AppCompatActivity {
                 wordButtons.get(1).setText(q.getB());
                 wordButtons.get(2).setText(q.getC());
                 wordButtons.get(3).setText(q.getD());
-                textView.setText(q.getText());
+                String[] sentence=q.getText().split("\\*");
+                leftSentence.setText(sentence[0]);
+                rightSentence.setText(sentence[1]);
                 qImage.setImageBitmap(q.getImg());
             }
         });
 
         //Text-To-Speech on "Question" click
-        textView.setOnClickListener(new View.OnClickListener() {
+
+        /*textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String tmpString;
@@ -129,7 +138,7 @@ public class GameOne extends AppCompatActivity {
                 }
                 ttsEngine.speak(parts[1].toString());
             }
-        });
+        });*/
 
         nextSentenceButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,17 +148,7 @@ public class GameOne extends AppCompatActivity {
         });
     }
 
-    private void wordButtonPressed(Button buttonPressed) {
-        if (finishedSentence == false) {
-
-            maxScore++;
-            finishedSentence = true;
-        }
-        //ttsEngine.speak(buttonPressed.getText().toString());
-    }
-
     private void nextSentence() {
-        if (finishedSentence) {
             currentSentenceIdx = rand.nextInt(preString.length);
             
             RelativeLayout container = (RelativeLayout) findViewById(R.id.sentancePond);
@@ -175,6 +174,7 @@ public class GameOne extends AppCompatActivity {
                         container.addView(view, lp);
                         b.setTaken(true);
                         view.setVisibility(View.VISIBLE);
+                        dropListen.update(null, null);
                     }
                 }
             }
@@ -182,7 +182,8 @@ public class GameOne extends AppCompatActivity {
             nextSentenceButton.setClickable(false);
             Collections.shuffle(wordButtons);
 
-            textView.setText(preString[currentSentenceIdx] + "______" + postString[currentSentenceIdx]);
+            leftSentence.setText(preString[currentSentenceIdx]);
+            rightSentence.setText(postString[currentSentenceIdx]);
             wordButtons.get(0).setText(words[currentSentenceIdx][0]);
             wordButtons.get(0).setRightAnswer(true);
             wordButtons.get(1).setText(words[currentSentenceIdx][1]);
@@ -192,8 +193,6 @@ public class GameOne extends AppCompatActivity {
             wordButtons.get(1).setBackgroundColor(Color.LTGRAY);
             wordButtons.get(2).setBackgroundColor(Color.LTGRAY);
             wordButtons.get(3).setBackgroundColor(Color.LTGRAY);
-            finishedSentence = false;
-        }
     }
 
     @Override
@@ -238,6 +237,7 @@ public class GameOne extends AppCompatActivity {
         private float x,y;
         private boolean clicked;
         private Button button;
+        private long timeOfClick;
 
         public DragList(Button button){
             this.button=button;
@@ -246,16 +246,16 @@ public class GameOne extends AppCompatActivity {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             if (event.getAction() == MotionEvent.ACTION_DOWN){
+                timeOfClick=event.getEventTime();
                 x = event.getX();
                 y = event.getY();
                 clicked=true;
-                if (finishedSentence == false) {
-
-                    maxScore++;
-                    finishedSentence = true;
-                }
-                ttsEngine.speak(button.getText().toString());
                 return true;
+            }
+            if (event.getAction() == MotionEvent.ACTION_UP){
+                if(event.getEventTime()-timeOfClick<350 && (event.getX()-x<50&&event.getY()-y<50)){
+                    ttsEngine.speak(button.getText().toString());
+                }
             }
             if(event.getAction() == MotionEvent.ACTION_MOVE){
                 if(clicked && (Math.abs(x - event.getX()) > SCROLL_THRESHOLD || Math.abs(y - event.getY()) > SCROLL_THRESHOLD)){
