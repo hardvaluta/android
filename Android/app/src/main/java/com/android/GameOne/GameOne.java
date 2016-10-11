@@ -248,6 +248,7 @@ public class GameOne extends AppCompatActivity {
         private float x,y;
         private boolean clicked;
         private Button button;
+        private long timeOfClick;
 
         public DragList(Button button){
             this.button=button;
@@ -256,16 +257,16 @@ public class GameOne extends AppCompatActivity {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             if (event.getAction() == MotionEvent.ACTION_DOWN){
+                timeOfClick=event.getEventTime();
                 x = event.getX();
                 y = event.getY();
                 clicked=true;
-                if (finishedSentence == false) {
-
-                    maxScore++;
-                    finishedSentence = true;
-                }
-                ttsEngine.speak(button.getText().toString());
                 return true;
+            }
+            if (event.getAction() == MotionEvent.ACTION_UP){
+                if(event.getEventTime()-timeOfClick<350 && (event.getX()-x<50&&event.getY()-y<50)){
+                    ttsEngine.speak(button.getText().toString());
+                }
             }
             if(event.getAction() == MotionEvent.ACTION_MOVE){
                 if(clicked && (Math.abs(x - event.getX()) > SCROLL_THRESHOLD || Math.abs(y - event.getY()) > SCROLL_THRESHOLD)){

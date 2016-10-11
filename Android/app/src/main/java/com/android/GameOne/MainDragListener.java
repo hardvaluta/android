@@ -22,31 +22,35 @@ public class MainDragListener extends Observable implements View.OnDragListener{
     @Override
     public boolean onDrag(View v, DragEvent event){
         int action = event.getAction();
-        switch (event.getAction()) {
+        switch (event.getAction()){
             case DragEvent.ACTION_DROP:
+                float x=0,y=0;
                 RelativeLayout container = (RelativeLayout) v;
-                if(container.getChildCount()<5){
-                    View view = (View) event.getLocalState();
-                    AnswerButton b = (AnswerButton)view;
-                    ViewGroup owner = (ViewGroup) view.getParent();
+                View view = (View) event.getLocalState();
+                AnswerButton b = (AnswerButton)view;
+                ViewGroup owner = (ViewGroup) view.getParent();
+                RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                if(container.getChildCount()<4){
                     owner.removeView(view);
-
-                    int x=0,y=0;
                     for(AnswerButton button : wordButtons){
                         if(!button.getTaken()){
                             x=button.getXPos();
                             y=button.getYPos();
+                            lp.leftMargin+=x;
+                            lp.topMargin+=y;
                         }
                     }
-
-                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                    lp.leftMargin+=x;
-                    lp.topMargin+=y;
-                    container.addView(view, lp);
                     b.setTaken(true);
+                    container.addView(view, lp);
                     view.setVisibility(View.VISIBLE);
                     setChanged();
                     notifyObservers();
+                }
+                else{
+                    x=event.getX();y=event.getY();
+                    lp.leftMargin+=x;
+                    lp.topMargin+=y;
+                    view.setLayoutParams(lp);
                 }
                 break;
             default:
