@@ -91,7 +91,7 @@ public class Client{
                 CustomRequest getQuestionRequest = new CustomRequest(Request.Method.GET, t_url, body,
                         new Response.Listener<JSONArray>() {
                             @Override
-                            public void onResponse(final JSONArray response) {
+                            public void onResponse(JSONArray response) {
                                 try {
 
                                     questionArray = new ArrayList<Question>();
