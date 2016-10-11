@@ -1,11 +1,13 @@
 package com.android.GameOne;
 
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.view.DragEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.R;
 
@@ -38,8 +40,16 @@ public class DragZoneListener implements View.OnDragListener, Observer {
                     View view = (View) event.getLocalState();
                     AnswerButton b = (AnswerButton)view;
                     ViewGroup owner = (ViewGroup) view.getParent();
+                    ViewGroup mainView = (ViewGroup) owner.getParent();
 
                     if (b.isRightAnswer()){
+                        TextView score = (TextView)mainView.findViewById(R.id.scoreView);
+                        String initialScore=score.getText().toString();
+                        initialScore=initialScore.split(" ")[1];
+                        int nScore = Integer.parseInt(initialScore);
+                        nScore++;
+                        String newScore = "Score: "+nScore;
+                        score.setText(newScore);
                         b.setBackgroundColor(Color.GREEN);
                         nextSentenceButton.setClickable(true);
                     }

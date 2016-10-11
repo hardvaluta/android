@@ -16,6 +16,7 @@ public class AnswerButton extends Button {
         super(context);
         taken=true;
         rightAnswer=false;
+        this.setAllCaps(false);
     }
 
     public boolean getTaken(){return taken;}

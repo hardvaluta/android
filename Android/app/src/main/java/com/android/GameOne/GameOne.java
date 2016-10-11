@@ -36,7 +36,6 @@ public class GameOne extends AppCompatActivity {
     private Random rand = new Random();
     private int currentScore = 0;
     private int maxScore = 0;
-    private boolean finishedSentence = false;
     private TextView leftSentence;
     private TextView rightSentence;
     private ImageButton nextSentenceButton;
@@ -148,16 +147,7 @@ public class GameOne extends AppCompatActivity {
         });
     }
 
-    private void wordButtonPressed(Button buttonPressed) {
-        if (finishedSentence == false) {
-
-            maxScore++;
-            finishedSentence = true;
-        }
-    }
-
     private void nextSentence() {
-        if (finishedSentence) {
             currentSentenceIdx = rand.nextInt(preString.length);
             
             RelativeLayout container = (RelativeLayout) findViewById(R.id.sentancePond);
@@ -202,8 +192,6 @@ public class GameOne extends AppCompatActivity {
             wordButtons.get(1).setBackgroundColor(Color.LTGRAY);
             wordButtons.get(2).setBackgroundColor(Color.LTGRAY);
             wordButtons.get(3).setBackgroundColor(Color.LTGRAY);
-            finishedSentence = false;
-        }
     }
 
     @Override
