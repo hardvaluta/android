@@ -42,7 +42,7 @@ public class LoginMenu extends AppCompatActivity {
                 pwd = pwdField.getText().toString().trim();
 
                 //TO DO
-                client.getUser(uname, pwd, new VolleyCallback() {
+                client.loginUser(uname, pwd, new VolleyCallback() {
                     @Override
                     public void onSuccessResponse(Object o) {
                         if(o instanceof User){

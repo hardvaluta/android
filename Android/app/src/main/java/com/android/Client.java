@@ -208,7 +208,7 @@ public class Client{
         queue.add(createUserRequest);
     }
 
-    public void getUser(String uname, String password, final VolleyCallback callback){
+    public void loginUser(String uname, String password, final VolleyCallback callback){
         String t_url = url + "user/authenticate";
 
         JSONObject body = new JSONObject();
