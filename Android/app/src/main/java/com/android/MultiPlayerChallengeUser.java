@@ -63,11 +63,16 @@ public class MultiPlayerChallengeUser extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
 
                 String currText = searchField.getText().toString().trim();
-                for(User u : allUsers){
-                    if(u.getUsername().toLowerCase().contains(currText.toLowerCase()))
-                        searchedUsers.add(u);
+                if(currText.length() > 2 && allUsers != null){
+                    for(User u : allUsers){
+                        if(u.getUsername().toLowerCase().contains(currText.toLowerCase()))
+                            searchedUsers.add(u);
 
+                    }
+                } else {
+                    System.out.println("Inga användare hittade");
                 }
+
 
                 scrollView.removeAllViews();
                 //Update ScrollView.

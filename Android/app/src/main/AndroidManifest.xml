@@ -39,6 +39,7 @@
         </activity>
         <activity android:name=".ProfileActivity" />
         <activity android:name=".MultiplayerLandingPage"></activity>
+        <activity android:name=".MultiPlayerChallengeUser"></activity>
     </application>
 
 </manifest>
