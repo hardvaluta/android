@@ -27,7 +27,7 @@
         <activity android:name=".ChooseGameActivity" />
         <activity android:name=".LoginMenu" />
         <activity android:name=".SignupMenu" />
-        <activity android:name=".SettingsActivity"></activity>
+        <activity android:name=".SettingsActivity" />
         <activity android:name=".GameOne" />
         <activity
             android:name=".GameTwo"
@@ -38,7 +38,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.android.ChooseGameActivity" />
         </activity>
-        <activity android:name=".ProfileActivity"></activity>
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".MultiplayerLanding"></activity>
     </application>
 
 </manifest>
