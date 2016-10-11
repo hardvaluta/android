@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.android1337.SignupMenu">
+    tools:context="com.android.SignupMenu">
 
     <Button
         android:text="Registrera"
@@ -25,7 +25,7 @@
         android:inputType="textPassword"
         android:ems="10"
         android:id="@+id/signup_password2"
-        android:text="********"
+        android:hint="********"
         android:layout_centerVertical="true"
         android:layout_alignLeft="@+id/signup_password1"
         android:layout_alignStart="@+id/signup_password1" />
@@ -36,7 +36,7 @@
         android:inputType="textPassword"
         android:ems="10"
         android:id="@+id/signup_password1"
-        android:text="********"
+        android:hint="********"
         android:layout_above="@+id/signup_password2"
         android:layout_alignLeft="@+id/signup_unameEditText"
         android:layout_alignStart="@+id/signup_unameEditText" />
@@ -45,7 +45,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="text"
-        android:text="Användarnamn"
+        android:hint="Användarnamn"
         android:ems="10"
         android:id="@+id/signup_unameEditText"
         android:layout_above="@+id/signup_password1"

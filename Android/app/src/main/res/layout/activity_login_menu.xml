@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="text"
-        android:text="Användarnamn"
+        android:hint="Användarnamn"
         android:ems="10"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
@@ -22,7 +22,7 @@
         android:id="@+id/uNameEditText" />
 
     <Button
-        android:text="Ny anvädare"
+        android:text="Ny användare"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/signupButton"
@@ -36,7 +36,7 @@
         android:inputType="textPassword"
         android:ems="10"
         android:id="@+id/pwdEditText"
-        android:text="********"
+        android:hint="********"
         android:layout_below="@+id/uNameEditText"
         android:layout_alignLeft="@+id/uNameEditText"
         android:layout_alignStart="@+id/uNameEditText" />
