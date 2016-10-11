@@ -48,7 +48,9 @@ public class Client{
 
     private ArrayList<Question> questionArray;
     private JSONObject jsonQ;
-    private int id;
+
+    //frågor att hämta.
+    private final int count = 4;
 
     private Client(Context context){
 
@@ -69,8 +71,7 @@ public class Client{
         return client;
     }
 
-    public void requestData(int toRequest, int id, final VolleyCallback callback){
-        this.id = id;
+    public void requestData(int toRequest, int extra, final VolleyCallback callback){
         String t_url = url;
 
         switch(toRequest){
@@ -78,32 +79,28 @@ public class Client{
             case QUESTION:
 
                 t_url += "question/random";
-                JSONObject jRequest = new JSONObject();
-                JSONArray jArray=new JSONArray();
+                JSONObject body = new JSONObject();
 
                 try{
 
-                    jRequest.put("difficulty", 1);
-                    jRequest.put("count", id);
-                    //jArray.put(jRequest);
+                    body.put("difficulty", 1);
+                    body.put("count", count);
 
                 } catch(JSONException e) { }
 
-                CustomRequest getQuestionRequest = new CustomRequest(Request.Method.GET, t_url, jRequest,
+                CustomRequest getQuestionRequest = new CustomRequest(Request.Method.GET, t_url, body,
                         new Response.Listener<JSONArray>() {
                             @Override
-                            public void onResponse(JSONArray response) {
+                            public void onResponse(final JSONArray response) {
                                 try {
 
                                     questionArray = new ArrayList<Question>();
 
                                     for (int n = 0; n < response.length(); n++) {
 
-                                        System.out.println("n är: " + n);
                                         jsonQ = response.getJSONObject(n);
 
-                                        Client.this.requestData(IMAGE, jsonQ.getInt("image"), (new VolleyCallback() {
-                                            @Override
+                                        requestData(IMAGE, jsonQ.getInt("image"), (new VolleyCallback() {
                                             public void onSuccessResponse(Object o) {
                                                 try {
 
@@ -115,7 +112,7 @@ public class Client{
                                                             jsonQ.getString("text"),
                                                             (Bitmap) o));
 
-                                                    if (questionArray.size() == Client.this.id)
+                                                    if (questionArray.size() == count)
                                                         callback.onSuccessResponse(questionArray);
 
                                                 } catch (JSONException e) {}
@@ -125,8 +122,7 @@ public class Client{
 
                                     }
 
-                                } catch (JSONException e) {
-                                }
+                                } catch (JSONException e) { }
 
                             }
                         }, new Response.ErrorListener() { public void onErrorResponse(VolleyError error) { } }
@@ -137,7 +133,7 @@ public class Client{
 
 
             case IMAGE:
-                t_url += "image/" + id;
+                t_url += "image/" + extra;
 
                 ImageRequest getImageRequest = new ImageRequest(t_url,
                         new Response.Listener<Bitmap>() {
@@ -148,9 +144,7 @@ public class Client{
                         },
                         0, 0, ImageView.ScaleType.FIT_XY, Bitmap.Config.ARGB_8888,
                         new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                            }
+                            public void onErrorResponse(VolleyError error) { }
                         }
                 );
 
@@ -167,7 +161,6 @@ public class Client{
     public void createUser(String uname, String password, final VolleyCallback callback) {
 
         JSONObject body = new JSONObject();
-        JSONArray arr = new JSONArray();
 
         String t_url = url + "user/create";
 
@@ -175,7 +168,6 @@ public class Client{
 
             body.put("username", uname);
             body.put("password", password);
-            //arr.put(body);
 
         } catch(JSONException e) { }
 
@@ -222,7 +214,7 @@ public class Client{
 
 
 
-        CustomRequest getUserRequest = new CustomRequest(Request.Method.POST, t_url, body,
+        CustomRequest loginUserRequest = new CustomRequest(Request.Method.POST, t_url, body,
                 new Response.Listener<JSONArray>() {
 
                     public void onResponse(JSONArray response) {
@@ -246,43 +238,12 @@ public class Client{
                         }
                 });
 
-        /*
-        JsonArrayRequest getUserRequest = new JsonArrayRequest(Request.Method.POST, t_url, arr,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        try {
-
-                            JSONObject jsonQ = response.getJSONObject(0);
-
-                            callback.onSuccessResponse(new User(
-                                    jsonQ.getString("username"),
-                                    jsonQ.getInt("score"),
-                                    jsonQ.getInt("games")));
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        callback.onSuccessResponse(null);
-                    }
-                }
-        );*/
-
-        queue.add(getUserRequest);
+        queue.add(loginUserRequest);
     }
 
     public boolean isNetworkAvailable(Context context) {
-        ConnectivityManager connectivityManager = (ConnectivityManager)
-                context.getSystemService(Context.CONNECTIVITY_SERVICE);
-
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
