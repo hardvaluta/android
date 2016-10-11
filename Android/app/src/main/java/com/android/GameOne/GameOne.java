@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.android.Question;
 import com.android.R;
+import com.android.SpeakerSlave;
 import com.android.TextToSpeechEngine;
 import com.android.VolleyCallback;
 
@@ -54,8 +55,8 @@ public class GameOne extends AppCompatActivity {
 
         leftSentence= (TextView)findViewById(R.id.leftSentance);
         rightSentence= (TextView)findViewById(R.id.rightSentance);
-        leftSentence.setOnClickListener(new sentenceListener());
-        rightSentence.setOnClickListener(new sentenceListener());
+        leftSentence.setOnClickListener(new SentenceListener(this));
+        rightSentence.setOnClickListener(new SentenceListener(this));
 
         nextSentenceButton = ((ImageButton)findViewById(R.id.nextSentenceButton));
         qImage = (ImageView)findViewById(R.id.questionImage);
@@ -125,7 +126,7 @@ public class GameOne extends AppCompatActivity {
             }
         });
 
-        new Thread(new SpeakerSlave()).start();
+        new Thread(new SpeakerSlave(this, leftSentence.getText().toString(), null, rightSentence.getText().toString())).start();
     }
 
     private void nextSentence() {
@@ -174,7 +175,7 @@ public class GameOne extends AppCompatActivity {
             wordButtons.get(2).setBackgroundColor(Color.LTGRAY);
             wordButtons.get(3).setBackgroundColor(Color.LTGRAY);
 
-            new Thread(new SpeakerSlave()).start();
+            new Thread(new SpeakerSlave(this, leftSentence.getText().toString(), null, rightSentence.getText().toString())).start();
     }
 
     @Override
@@ -254,7 +255,11 @@ public class GameOne extends AppCompatActivity {
             }
         }
     }
-    private class sentenceListener implements View.OnClickListener{
+    private class SentenceListener implements View.OnClickListener{
+        private Context context;
+        public SentenceListener(Context context){
+            this.context=context;
+        }
         @Override
         public void onClick(View v) {
             boolean finishedSpeaking=false;
@@ -262,34 +267,20 @@ public class GameOne extends AppCompatActivity {
             TextView right = (TextView) findViewById(R.id.rightSentance);
             RelativeLayout dropLayout = (RelativeLayout) findViewById(R.id.dropZone);
 
-            ttsEngine.speak(left.getText().toString());
-            while(ttsEngine.isSpeaking()){}
-            if(dropLayout.findViewById(R.id.dragSpot)!=null){
-                ttsEngine.silentSound();
-                while(ttsEngine.isPlaying()){}
-            }
-            else{
-                AnswerButton choise=null;
+            String sLeft=left.getText().toString();
+            String sChoise=null;
+            String sRight=right.getText().toString();
+
+            if(dropLayout.findViewById(R.id.dragSpot)==null){
                 for(int n=0 ; n<dropLayout.getChildCount();n++){
                     if(dropLayout.getChildAt(n) instanceof AnswerButton){
-                        choise=(AnswerButton)dropLayout.getChildAt(n);
+                        AnswerButton choise=(AnswerButton)dropLayout.getChildAt(n);
+                        sChoise=choise.getText().toString();
                     }
                 }
-                ttsEngine.speak(choise.getText().toString());
-                while(ttsEngine.isSpeaking()){}
             }
-            ttsEngine.speak(right.getText().toString());
-        }
-    }
 
-    private class SpeakerSlave implements Runnable{
-        @Override
-        public void run() {
-            ttsEngine.speak(leftSentence.getText().toString());
-            while(ttsEngine.isSpeaking()){}
-            ttsEngine.silentSound();
-            while(ttsEngine.isPlaying()){}
-            ttsEngine.speak(rightSentence.getText().toString());
+            new Thread(new SpeakerSlave(context, sLeft, sChoise, sRight)).start();
         }
     }
 }
