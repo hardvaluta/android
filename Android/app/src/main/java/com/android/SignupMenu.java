@@ -52,7 +52,7 @@ public class SignupMenu extends AppCompatActivity {
                                     editor.putString("username", u.getUsername());
                                     editor.putBoolean("active", true);
                                     editor.commit();
-                                    startActivity(new Intent(SignupMenu.this, MainMenu.class));
+                                    startActivity(new Intent(SignupMenu.this, SettingsActivity.class));
 
                                 } else {
                                     alert("Error", "Något gick fel.");

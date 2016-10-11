@@ -22,6 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -48,6 +49,7 @@ public class Client{
     public static final int IMAGE = 0x02;
 
     private ArrayList<Question> questionArray;
+    private ArrayList<User> users;
     private JSONObject jsonQ;
 
     //frågor att hämta.
@@ -79,7 +81,7 @@ public class Client{
 
             case QUESTION:
 
-                t_url += "question/random";
+                t_url += "type/1";
                 JSONObject body = new JSONObject();
 
                 try{
@@ -136,7 +138,7 @@ public class Client{
 
 
             case IMAGE:
-                t_url += "image/" + extra;
+                t_url += "data/" + extra;
 
                 ImageRequest getImageRequest = new ImageRequest(t_url,
                         new Response.Listener<Bitmap>() {
@@ -240,6 +242,34 @@ public class Client{
                 });
 
         queue.add(loginUserRequest);
+    }
+
+    public void getAllUsers(final VolleyCallback callback){
+        String t_url = url + "user/all";
+
+        users = new ArrayList<User>();
+
+        JsonArrayRequest requestAllUSers = new JsonArrayRequest(Request.Method.GET, t_url, new Response.Listener<JSONArray>() {
+            public void onResponse(JSONArray response) {
+
+                for(int i = 0; i < response.length(); i++){
+                    try {
+
+                        JSONObject obj = response.getJSONObject(i);
+                        users.add( new User( obj.getString("username"), obj.getInt("score"), obj.getInt("id")));
+                    } catch (JSONException e) { }
+                }
+
+                callback.onSuccessResponse(users);
+            }
+        }, new Response.ErrorListener() {
+            public void onErrorResponse(VolleyError error) {
+                callback.onSuccessResponse(null);
+            }
+        });
+
+        queue.add(requestAllUSers);
+
     }
 
     public boolean isNetworkAvailable(Context context) {
