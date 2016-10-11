@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -53,6 +54,8 @@ public class GameOne extends AppCompatActivity {
 
         leftSentence= (TextView)findViewById(R.id.leftSentance);
         rightSentence= (TextView)findViewById(R.id.rightSentance);
+        leftSentence.setOnClickListener(new sentenceListener());
+        rightSentence.setOnClickListener(new sentenceListener());
 
         nextSentenceButton = ((ImageButton)findViewById(R.id.nextSentenceButton));
         qImage = (ImageView)findViewById(R.id.questionImage);
@@ -115,37 +118,14 @@ public class GameOne extends AppCompatActivity {
             }
         });
 
-        //Text-To-Speech on "Question" click
-
-        /*textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String tmpString;
-                //String tmpString2 = "Erik spelar ______ med sina vänner.";
-                //tmpString = tmpString2;
-                tmpString = textView.getText().toString();
-                String parts[] = tmpString.split("______");
-                ttsEngine.speak(parts[0].toString());
-                while (ttsEngine.isSpeaking())
-                {
-                    try
-                    {
-                        Thread.sleep(200);
-                    } catch (InterruptedException ex)
-                    {
-                        Thread.currentThread().interrupt();
-                    }
-                }
-                ttsEngine.speak(parts[1].toString());
-            }
-        });*/
-
         nextSentenceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 nextSentence();
             }
         });
+
+        new Thread(new SpeakerSlave()).start();
     }
 
     private void nextSentence() {
@@ -193,6 +173,8 @@ public class GameOne extends AppCompatActivity {
             wordButtons.get(1).setBackgroundColor(Color.LTGRAY);
             wordButtons.get(2).setBackgroundColor(Color.LTGRAY);
             wordButtons.get(3).setBackgroundColor(Color.LTGRAY);
+
+            new Thread(new SpeakerSlave()).start();
     }
 
     @Override
@@ -270,6 +252,44 @@ public class GameOne extends AppCompatActivity {
             else {
                 return false;
             }
+        }
+    }
+    private class sentenceListener implements View.OnClickListener{
+        @Override
+        public void onClick(View v) {
+            boolean finishedSpeaking=false;
+            TextView left = (TextView) findViewById(R.id.leftSentance);
+            TextView right = (TextView) findViewById(R.id.rightSentance);
+            RelativeLayout dropLayout = (RelativeLayout) findViewById(R.id.dropZone);
+
+            ttsEngine.speak(left.getText().toString());
+            while(ttsEngine.isSpeaking()){}
+            if(dropLayout.findViewById(R.id.dragSpot)!=null){
+                ttsEngine.silentSound();
+                while(ttsEngine.isPlaying()){}
+            }
+            else{
+                AnswerButton choise=null;
+                for(int n=0 ; n<dropLayout.getChildCount();n++){
+                    if(dropLayout.getChildAt(n) instanceof AnswerButton){
+                        choise=(AnswerButton)dropLayout.getChildAt(n);
+                    }
+                }
+                ttsEngine.speak(choise.getText().toString());
+                while(ttsEngine.isSpeaking()){}
+            }
+            ttsEngine.speak(right.getText().toString());
+        }
+    }
+
+    private class SpeakerSlave implements Runnable{
+        @Override
+        public void run() {
+            ttsEngine.speak(leftSentence.getText().toString());
+            while(ttsEngine.isSpeaking()){}
+            ttsEngine.silentSound();
+            while(ttsEngine.isPlaying()){}
+            ttsEngine.speak(rightSentence.getText().toString());
         }
     }
 }
