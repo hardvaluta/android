@@ -75,7 +75,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:text="Score: 0"
+        android:text="Poäng: 0"
         android:id="@+id/scoreView" />
 
     <ImageButton
