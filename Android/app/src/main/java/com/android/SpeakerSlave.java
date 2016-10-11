@@ -28,7 +28,7 @@ public class SpeakerSlave implements Runnable{
             ttsEngine.speak(s3);
         }
         else{
-            String sentence=s1+s2+s3;
+            String sentence=s1+" "+s2+" "+s3;
             ttsEngine.speak(sentence);
         }
     }

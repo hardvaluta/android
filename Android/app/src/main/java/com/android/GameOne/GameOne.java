@@ -3,7 +3,9 @@ package com.android.GameOne;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.media.Image;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,9 +35,11 @@ import java.util.Random;
 public class GameOne extends AppCompatActivity {
     public static final int gameId = 1;
     private boolean isSingleGame = true;
-    private String[] preString = {"Hej, jag ", "Erik spelar ", "Mattias sparkar på ", "Varför finns det ", "Vem är var det som ", "Vilken "};
-    private String[] postString = {" Andreas.", " med sina vänner.", ", som ligger ner.", "?", "?", " är bäst?"};
-    private String[][] words = {{"heter", "har", "var", "finns"}, {"fotboll", "träd", "kaffekopp", "svenska"}, {"Fred", "William", "Victor", "Edvin", "Jimmie", "Philip"}, {"krig", "fred", "vänsterprasslare", "pennvässare", "analklåda"}, {"sjöng så fint asså", "fes", "fez", "Anders and"}, {"varmkorv", "boogie", "vafan", "en sista"}};
+    private String[] preString={"Barnet", "Han", "Hon", "Dem", "Dem spelar"};
+    private String[] postString = {"i träd", "i bassängen", "vattenmelon", "tillsammans", ""};
+    private String[][] words = {{"klättrar", "dansar", "sjunger", "kör"},{"simmar", "skjuter", "pratar", "trollar"},{"äter", "sitter", "skriker", "gråter"},{"dansar", "tittar", "äter", "hoppar"},{"fotboll", "bowling", "datorspel", "tennis"}};
+    private int[] images = {R.mipmap.klattrar, R.mipmap.simmar, R.mipmap.ater, R.mipmap.dansar, R.mipmap.fotboll};
+
     private Random rand = new Random();
     private int currentScore = 0;
     private int maxScore = 0;
@@ -88,8 +92,8 @@ public class GameOne extends AppCompatActivity {
             width=random.nextInt(width);
             lp.leftMargin=width;
             if(n==1){
-                wordButtons.get(n-1).setYPos(130);
-                lp.topMargin+=130;
+                wordButtons.get(n-1).setYPos((100));
+                lp.topMargin+=(100);
             }
             else{
                 wordButtons.get(n-1).setYPos((150*n-1));
@@ -101,7 +105,7 @@ public class GameOne extends AppCompatActivity {
         }
 
         //Fetch the question data and add it to the screen
-        com.android.Client client = com.android.Client.getInstance(this.getApplicationContext());
+       /* com.android.Client client = com.android.Client.getInstance(this.getApplicationContext());
         client.requestData(com.android.Client.QUESTION, 4, new VolleyCallback<ArrayList<Question>>() {
 
             public void onSuccessResponse(ArrayList<Question> qArray) {
@@ -117,8 +121,8 @@ public class GameOne extends AppCompatActivity {
                 rightSentence.setText(sentence[1]);
                 qImage.setImageBitmap(q.getImg());
             }
-        });
-
+        });*/
+        nextSentence();
         nextSentenceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -133,7 +137,7 @@ public class GameOne extends AppCompatActivity {
             currentSentenceIdx = rand.nextInt(preString.length);
             
             RelativeLayout container = (RelativeLayout) findViewById(R.id.sentancePond);
-            if(container.getChildCount()<5){
+            if(container.getChildCount()<4){
                 for(AnswerButton b : wordButtons){
                     if(b.isRightAnswer()){
                         b.setRightAnswer(false);
@@ -170,6 +174,7 @@ public class GameOne extends AppCompatActivity {
             wordButtons.get(1).setText(words[currentSentenceIdx][1]);
             wordButtons.get(2).setText(words[currentSentenceIdx][2]);
             wordButtons.get(3).setText(words[currentSentenceIdx][3]);
+            qImage.setImageResource(images[currentSentenceIdx]);
             wordButtons.get(0).setBackgroundColor(Color.LTGRAY);
             wordButtons.get(1).setBackgroundColor(Color.LTGRAY);
             wordButtons.get(2).setBackgroundColor(Color.LTGRAY);
