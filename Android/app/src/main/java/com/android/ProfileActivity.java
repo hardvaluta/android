@@ -2,6 +2,7 @@ package com.android;
 
 import android.graphics.Rect;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v4.widget.Space;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -82,6 +83,10 @@ public class ProfileActivity extends AppCompatActivity {
                     buttons.add(i, tempButton);
                     tempButton.setText(i + ": " + gameStrings[i] + "\n\n");
                     linearLayout.addView(tempButton);
+
+                    Space tempSpace = new Space(this);
+                    tempSpace.setMinimumHeight(20);
+                    linearLayout.addView(tempSpace);
                 }
                 lastGameEntryShowing = i;
             }

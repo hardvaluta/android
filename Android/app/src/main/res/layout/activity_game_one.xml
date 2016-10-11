@@ -11,31 +11,61 @@
     android:id="@+id/sentanceGame"
     tools:context="com.android.GameOne.GameOne">
 
-
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
     <Space
         android:layout_width="match_parent"
         android:layout_height="10dp"
         android:id="@+id/textViewSpace"
         android:layout_gravity="center_horizontal"
-        android:layout_below="@+id/textView"/>
+        android:layout_below="@+id/dropLayout"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/questionImageSpace"
+        android:id="@+id/dropLayout"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:text="Left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/leftSentance"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/questionImageSpace"
+            android:layout_gravity="center"
+            android:id="@+id/dropZone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="           _______           "
+                android:id="@+id/dragSpot"/>
+        </RelativeLayout>
+
+        <TextView
+            android:text="Right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rightSentance"/>
+    </LinearLayout>
+
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/questionImage"
-        android:layout_below="@+id/textViewSpace"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         app:srcCompat="@mipmap/singleplayericon"/>
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="10dp"
+        android:layout_height="30dp"
         android:id="@+id/questionImageSpace"
         android:layout_gravity="center_horizontal"
         android:layout_below="@+id/questionImage"/>
@@ -45,7 +75,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:text="Score: "
+        android:text="Poäng: 0"
         android:id="@+id/scoreView" />
 
     <ImageButton
@@ -57,25 +87,14 @@
         android:id="@+id/nextSentenceButton"
         android:background="#FFFFFF"/>
 
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/sentancePond"
-        android:layout_below="@+id/questionImageSpace"
+        android:layout_below="@+id/textViewSpace"
         android:layout_above="@+id/nextSentenceButton"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
-
-        <RelativeLayout
-            android:layout_width="300dp"
-            android:layout_height="40dp"
-            android:layout_alignParentTop="true"
-            android:id="@+id/dropZone"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:background="@color/colorPrimaryDark">
-        </RelativeLayout>
     </RelativeLayout>
 
 </RelativeLayout>
