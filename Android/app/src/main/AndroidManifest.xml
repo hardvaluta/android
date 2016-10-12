@@ -16,29 +16,29 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainMenu">
+        <activity android:name=".MainMenu" android:screenOrientation="portrait" android:configChanges="keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ChooseGameActivity" />
-        <activity android:name=".LoginMenu" />
-        <activity android:name=".SignupMenu" />
-        <activity android:name=".SettingsActivity"></activity>
-        <activity android:name=".GameOne.GameOne" />
+        <activity android:name=".ChooseGameActivity" android:screenOrientation="portrait" android:configChanges="keyboardHidden" />
+        <activity android:name=".LoginMenu" android:screenOrientation="portrait" android:configChanges="keyboardHidden" />
+        <activity android:name=".SignupMenu" android:screenOrientation="portrait" android:configChanges="keyboardHidden" />
+        <activity android:name=".SettingsActivity" android:screenOrientation="portrait" android:configChanges="keyboardHidden" ></activity>
+        <activity android:name=".GameOne.GameOne" android:screenOrientation="portrait" android:configChanges="keyboardHidden" />
         <activity
             android:name=".GameTwo"
             android:label="@string/title_activity_game_two"
             android:parentActivityName=".ChooseGameActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait" android:configChanges="keyboardHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.android.ChooseGameActivity" />
         </activity>
-        <activity android:name=".ProfileActivity" />
-        <activity android:name=".SettingsActivity"></activity>
+        <activity android:name=".ProfileActivity" android:screenOrientation="portrait" android:configChanges="keyboardHidden" />
     </application>
 
 </manifest>
