@@ -86,7 +86,7 @@ public class Client{
 
                 try{
 
-                    body.put("difficulty", 1);
+                    //body.put("difficulty", 1);
                     body.put("count", count);
 
                 } catch(JSONException e) { }
@@ -265,6 +265,7 @@ public class Client{
         }, new Response.ErrorListener() {
             public void onErrorResponse(VolleyError error) {
                 callback.onSuccessResponse(null);
+                System.out.println("ERROR, "+error+toString());
             }
         });
 
