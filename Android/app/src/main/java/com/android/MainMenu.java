@@ -54,7 +54,7 @@ public class MainMenu extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 if(prefs.getBoolean("active", false)){
-                    //startActivity(;new Intent(MainMenu.this, MultiPlayerEnter.class));
+                    startActivity(new Intent(MainMenu.this, MultiplayerLandingPage.class));
                 } else {
                     startActivity(new Intent(MainMenu.this, LoginMenu.class));
                 }

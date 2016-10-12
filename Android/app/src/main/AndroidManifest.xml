@@ -38,7 +38,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.android.ChooseGameActivity" />
         </activity>
+
         <activity android:name=".ProfileActivity" android:screenOrientation="portrait" android:configChanges="keyboardHidden" />
+        <activity android:name=".MultiplayerLandingPage" android:screenOrientation="portrait" android:configChanges="keyboardHidden"  />
+        <activity android:name=".MultiPlayerChallengeUser" android:screenOrientation="portrait" android:configChanges="keyboardHidden" />
     </application>
 
 </manifest>
