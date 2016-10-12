@@ -8,6 +8,7 @@
     android:paddingLeft="5dp"
     android:paddingRight="5dp"
     android:paddingTop="5dp"
+    android:background="@drawable/bg"
     tools:context="com.android.MainMenu">
 
     <LinearLayout
@@ -64,18 +65,15 @@
                 android:scaleType="fitCenter"
                 app:srcCompat="@mipmap/singleplayericon"/>
 
-            <TextView
+            <ImageButton
+                android:id="@+id/profileButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Profil"
-                android:id="@+id/totalScoreTextView"
-                android:layout_gravity="bottom"
                 android:layout_weight="1"
-                android:textAllCaps="false"
-                android:textAlignment="center"
-                android:contextClickable="true"
-                android:clickable="true" />
+                android:adjustViewBounds="true"
+                android:background="@drawable/iconborder"
+                android:scaleType="fitCenter"
+                app:srcCompat="@mipmap/rabbit" />
 
             <ImageButton
                 android:id="@+id/multiPlayerButton"

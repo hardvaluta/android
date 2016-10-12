@@ -16,13 +16,12 @@ import org.w3c.dom.Text;
 
 public class MainMenu extends AppCompatActivity
 {
-    //public final static String EXTRA_MESSAGE = "com.android.GameOne";
+    //public final static String EXTRA_MESSAGE = "com.android.GameOne.GameOne";
     public static final String PREF_FILE_NAME = "PreferenceFile";
     public static final String SCORE_FILE_NAME = "scoreFile";
 
-    private ImageButton singlePlayerButton, multiPlayerButton, settingsButton;
+    private ImageButton singlePlayerButton, multiPlayerButton, settingsButton, profileButton;
     private SharedPreferences prefs;
-
     private TextView totalScoreTextView;
     private TextToSpeechEngine ttsEngine;
 
@@ -32,7 +31,7 @@ public class MainMenu extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_menu);
 
-        prefs = getSharedPreferences(PREF_FILE_NAME, MODE_PRIVATE);
+        prefs = getSharedPreferences(SettingsActivity.PREF_FILE_NAME, MODE_PRIVATE);
 
         settingsButton = (ImageButton) findViewById(R.id.settingsButton);
         settingsButton.setOnClickListener(new View.OnClickListener() {
@@ -43,7 +42,6 @@ public class MainMenu extends AppCompatActivity
         });
 
         singlePlayerButton = (ImageButton) findViewById(R.id.sinlgePlayerButton);
-
         singlePlayerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,8 +61,13 @@ public class MainMenu extends AppCompatActivity
             }
         });
 
-        ((TextView)findViewById(R.id.totalScoreTextView)).setText("Total poäng: "+prefs.getInt("totalScore", 0));
-        ttsEngine = TextToSpeechEngine.getInstance(this);
+        profileButton = (ImageButton) findViewById(R.id.profileButton);
+        profileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainMenu.this, ProfileActivity.class));
+            }
+        });
 
     }
 }

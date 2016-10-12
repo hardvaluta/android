@@ -28,6 +28,7 @@ import java.util.HashMap;
 import static android.R.attr.id;
 import static android.R.attr.password;
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
+import static com.android.volley.Request.Method.HEAD;
 
 /**
  * Created by victor on 2016-09-22.
@@ -87,6 +88,7 @@ public class Client{
                     body.put("difficulty", 1);
                     body.put("count", count);
 
+
                 } catch(JSONException e) { }
 
                 body.toString();
@@ -104,9 +106,9 @@ public class Client{
                                         jsonQ = response.getJSONObject(n);
 
                                         requestData(IMAGE, jsonQ.getInt("image"), (new VolleyCallback() {
+
                                             public void onSuccessResponse(Object o) {
                                                 try {
-
                                                     questionArray.add(new Question(
                                                             jsonQ.getString("answer_a"),
                                                             jsonQ.getString("answer_b"),

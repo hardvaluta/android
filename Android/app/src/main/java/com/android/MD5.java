@@ -1,4 +1,4 @@
-package com.android1337;
+package com.android;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

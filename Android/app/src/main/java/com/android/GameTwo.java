@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.os.Handler;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -11,25 +13,38 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.io.FileOutputStream;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.TreeSet;
 
 public class GameTwo extends AppCompatActivity {
+    public static final int gameId = 2;
+    private boolean isSingleGame = true;
+    private TextView timePassedView;
     private Button[] cards = new Button[12];
     private Button listenButton;
     private Button nextButton;
     private int cardClickedId1 = -1;
     private int cardClickedId2 = -1;
     private int lastClickedId = -1;
+    private Set<Integer> flippedCards;
     private Set<Integer> finishedCards;
     private Integer[] shuffles = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
     private String[] words = {"fotboll", "telefon", "träd", "bord", "stol", "lampa"};
     private int numberOfCardViews = 0;
+    private int timePassed = -1;
+    private Handler handler;
+    private Runnable runnable;
+    private Runnable runnablePenalty;
 
     private TextToSpeechEngine ttsEngine;
 
@@ -39,6 +54,11 @@ public class GameTwo extends AppCompatActivity {
         setContentView(R.layout.activity_game_two);
 
         ttsEngine = TextToSpeechEngine.getInstance(this);
+
+        timePassedView = (TextView)findViewById(R.id.timePassedView);
+        if (isSingleGame) {
+            timePassedView.setText("Antal kort vända: " + numberOfCardViews);
+        }
 
         listenButton = ((Button)findViewById(R.id.listenButton));
         listenButton.setOnClickListener(new View.OnClickListener() {
@@ -50,7 +70,7 @@ public class GameTwo extends AppCompatActivity {
             }
         });
         listenButton.setClickable(false);
-        listenButton.setVisibility(View.INVISIBLE);
+        listenButton.setAlpha(0.4f);
 
         nextButton = ((Button)findViewById(R.id.nextButton));
         nextButton.setOnClickListener(new View.OnClickListener() {
@@ -61,7 +81,7 @@ public class GameTwo extends AppCompatActivity {
         });
         nextButton.setText("Nästa");
         nextButton.setClickable(false);
-        nextButton.setVisibility(View.INVISIBLE);
+        nextButton.setAlpha(0.4f);
 
         cards[0] = ((Button)findViewById(R.id.card11));
         cards[1] = ((Button)findViewById(R.id.card12));
@@ -163,6 +183,26 @@ public class GameTwo extends AppCompatActivity {
         }
 
         finishedCards = new TreeSet<Integer>();
+        flippedCards = new TreeSet<Integer>();
+
+        if (!isSingleGame) {
+            runnable = new Runnable() {
+                @Override
+                public void run() {
+                    timePassedView.setText("Tid: " + ++timePassed);
+                    handler.postDelayed(this, 1000);
+                }
+            };
+            handler = new Handler();
+            handler.post(runnable);
+
+            runnablePenalty = new Runnable() {
+                @Override
+                public void run() {
+                    timePassedView.setBackgroundColor(Color.TRANSPARENT);
+                }
+            };
+        }
 
     }
 
@@ -171,11 +211,14 @@ public class GameTwo extends AppCompatActivity {
             if (cardClickedId2 < 0) { // No second card chosen
                 if (cardClickedId1 < 0) { // No first card chosen
                     listenButton.setClickable(true);
-                    listenButton.setVisibility(View.VISIBLE);
+                    listenButton.setAlpha(1f);
                     viewCard(cardId);
                     cardClickedId1 = cardId;
                     lastClickedId = cardId;
                     numberOfCardViews++;
+                    if (isSingleGame) {
+                        timePassedView.setText("Antal kort vända: " + numberOfCardViews);
+                    }
                 } else { // a first card is chosen
                     if (cardClickedId1 == cardId) {
                         return; // Do nothing, since the same card was clicked again
@@ -185,28 +228,51 @@ public class GameTwo extends AppCompatActivity {
                         viewCard(cardClickedId2);
                         finishedCards.add(cardClickedId1);
                         finishedCards.add(cardClickedId2);
+                        cards[cardClickedId1].setAlpha(0.4f);
+                        cards[cardClickedId2].setAlpha(0.4f);
                         cardClickedId1 = -1;
                         cardClickedId2 = -1;
                         lastClickedId = cardId;
                         numberOfCardViews++;
+                        if (isSingleGame) {
+                            timePassedView.setText("Antal kort vända: " + numberOfCardViews);
+                        }
                         if (finishedCards.size() >= 12) {
+                            if (!isSingleGame) {
+                                handler.removeCallbacks(runnable);
+                            }
                             // Save progress.
-                            String string = "GAMETWO TIME:" + System.currentTimeMillis() + ", SCORE: " + numberOfCardViews + "\n";
-                            try {
-                                FileOutputStream fos = openFileOutput(MainMenu.SCORE_FILE_NAME, Context.MODE_APPEND);
-                                fos.write(string.getBytes());
-                                fos.close();
-                            } catch (Exception e) { e.printStackTrace(); }
+                            for (int ajoj = 0; ajoj < 1; ajoj++) {
+                                String string = gameId + "," + isSingleGame + "," + System.currentTimeMillis() + "," + timePassed + "\n";
+                                try {
+                                    FileOutputStream fos = openFileOutput(ProfileActivity.SCORE_FILE_NAME3, Context.MODE_APPEND);
+                                    fos.write(string.getBytes());
+                                    fos.close();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
                             nextButton.setClickable(true);
-                            nextButton.setVisibility(View.VISIBLE);
+                            nextButton.setAlpha(1f);
                         }
                     } else { // Didn't find a pair => wait until a next click to flip the cards
-                        viewCard(cardId);
                         cardClickedId2 = cardId;
                         lastClickedId = cardId;
                         numberOfCardViews++;
+                        if (isSingleGame) {
+                            timePassedView.setText("Antal kort vända: " + numberOfCardViews);
+                        } else {
+                            if (!flippedCards.add(cardClickedId1) || !flippedCards.add(cardClickedId2)) {
+                                timePassed += 4;
+                                timePassedView.setText("Tid: " + timePassed);
+                                timePassedView.setBackgroundColor(Color.RED);
+                                handler.postDelayed(runnablePenalty, 2500);
+                            }
+                        }
+                        viewCard(cardId);
                         listenButton.setClickable(true);
-                        listenButton.setVisibility(View.VISIBLE);
+                        listenButton.setAlpha(1f);
                     }
                 }
             } else { // a second card is already chosen => flip the cards!
@@ -216,12 +282,12 @@ public class GameTwo extends AppCompatActivity {
                 cardClickedId2 = -1;
                 lastClickedId = -1;
                 listenButton.setClickable(false);
-                listenButton.setVisibility(View.INVISIBLE);
+                listenButton.setAlpha(0.4f);
             }
         } else {
             lastClickedId = cardId;
             listenButton.setClickable(true);
-            listenButton.setVisibility(View.VISIBLE);
+            listenButton.setAlpha(1f);
         }
     }
 
