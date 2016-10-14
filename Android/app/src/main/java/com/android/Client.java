@@ -2,6 +2,7 @@ package com.android;
 
 import android.app.DownloadManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -45,6 +46,8 @@ public class Client{
     private Network network;
     private RequestQueue queue;
 
+    private SharedPreferences prefs;
+
     public static final int QUESTION = 0x01;
     public static final int IMAGE = 0x02;
 
@@ -64,6 +67,8 @@ public class Client{
         queue.start();
 
         url = "http://philiplaine.com/";
+
+        prefs = context.getSharedPreferences(MainMenu.PREF_FILE_NAME, Context.MODE_PRIVATE);
     }
 
 
@@ -271,6 +276,77 @@ public class Client{
 
         queue.add(requestAllUSers);
 
+    }
+
+    public void challengeUser(int id_to_challenge){
+
+    }
+
+    public void declineChallenge(int game_id, final VolleyCallback callback){
+
+        String t_url = url + "game/" + game_id + "decline";
+        JSONObject body = new JSONObject();
+        try {
+            body.put("context_id", prefs.getInt("user_id", 0));
+        } catch (JSONException e) {}
+
+        JsonArrayRequest decline = new JsonArrayRequest(Request.Method.POST, t_url, body, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        queue.add(decline);
+    }
+
+    public void acceptChallenge(int game_id, final VolleyCallback callback){
+        String t_url = url + "game/" + game_id + "accept";
+        JSONObject body = new JSONObject();
+        try {
+            body.put("context_id", prefs.getInt("user_id", 0));
+        } catch (JSONException e) {}
+
+        JsonArrayRequest accept = new JsonArrayRequest(Request.Method.POST, t_url, body, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        queue.add(accept);
+    }
+
+    public void getCurrGames(final VolleyCallback callback){
+
+        String t_url = url + "game/list";
+        JSONObject body = new JSONObject();
+        try {
+            body.put("context_id", prefs.getInt("user_id", 0));
+        } catch (JSONException e) { }
+
+
+        JsonArrayRequest getGamesById = new JsonArrayRequest(Request.Method.GET, t_url, body, new Response.Listener<JSONArray>() {
+            public void onResponse(JSONArray response) {
+                // GÖR NÅGOT
+            }
+        }, new Response.ErrorListener() {
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        queue.add(getGamesById);
     }
 
     public boolean isNetworkAvailable(Context context) {
