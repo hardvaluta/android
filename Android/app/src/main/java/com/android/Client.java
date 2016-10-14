@@ -278,13 +278,33 @@ public class Client{
 
     }
 
-    public void challengeUser(int id_to_challenge){
+    public void challengeUser(int id_to_challenge, final VolleyCallback callback){
+        String t_url = url + "user/" + id_to_challenge + "/challenge";
+        JSONObject body = new JSONObject();
+        try {
+            body.put("context_id", prefs.getInt("user_id", 0));
+            body.put("type", 1);
+        } catch (JSONException e) {};
+
+        JsonArrayRequest challenge = new JsonArrayRequest(Request.Method.POST, t_url, body, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        queue.add(challenge);
 
     }
 
     public void declineChallenge(int game_id, final VolleyCallback callback){
 
-        String t_url = url + "game/" + game_id + "decline";
+        String t_url = url + "game/" + game_id + "/decline";
         JSONObject body = new JSONObject();
         try {
             body.put("context_id", prefs.getInt("user_id", 0));
