@@ -45,7 +45,6 @@ public class DragZoneListener extends Observable implements View.OnDragListener,
                 ViewGroup mainView = (ViewGroup) owner.getParent();
 
                 if(!owner.equals(v) && dragSpot.getParent()!=null){
-                    System.out.println(view.toString() + "      :     "+owner.toString());
                     me.removeView(dragSpot);
                     owner.removeView(view);
                     me.addView(view);
@@ -68,7 +67,10 @@ public class DragZoneListener extends Observable implements View.OnDragListener,
     @Override
     public void update(Observable o, Object arg) {
         if(arg instanceof String){
-            me.addView(dragSpot);
+            String message = (String)arg;
+            if(message.toString()=="Restore"){
+                me.addView(dragSpot);
+            }
         }
         else{
             me.addView(dragSpot);

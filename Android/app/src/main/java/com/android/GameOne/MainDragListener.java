@@ -31,25 +31,24 @@ public class MainDragListener extends Observable implements View.OnDragListener{
                 AnswerButton b = (AnswerButton)view;
                 if(b.isDragable())
                 {
-                    System.out.println("Dragable NOTIIIIIIIIICE");
                     RelativeLayout container = (RelativeLayout) v;
                     ViewGroup me = (ViewGroup) v;
                     ViewGroup owner = (ViewGroup) view.getParent();
 
                     if(!view.getParent().equals(v)){
-                        System.out.println(v.toString() + "      :     "+owner.toString());
                         setChanged();
                         notifyObservers();
                         owner.removeView(view);
                         me.addView(view);
                     }
-                    else{
+                    /*else{
+                        System.out.println("Hände" + "      :     "+owner.toString());
                         x=event.getX();y=event.getY();
                         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lp.leftMargin+=x;
                         lp.topMargin+=y;
                         view.setLayoutParams(lp);
-                    }
+                    }*/
                 }
                 break;
             default:

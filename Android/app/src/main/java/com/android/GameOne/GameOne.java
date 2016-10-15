@@ -37,7 +37,6 @@ import java.util.Random;
 
 public class GameOne extends AppCompatActivity implements Observer{
     private final int nrQuestions = 4;
-    private int finishedQuestions = 0;
     public static final int gameId = 1;
     private boolean isSingleGame = true;
     private String[] preString={"Barnet", "Han", "Hon", "Dem", "Dem spelar"};
@@ -73,7 +72,18 @@ public class GameOne extends AppCompatActivity implements Observer{
         progressBar=(ProgressBar) findViewById(R.id.progressBar);
 
         RelativeLayout sentancePond=(RelativeLayout) findViewById(R.id.sentancePond);
-        RelativeLayout dropZone = (RelativeLayout) findViewById(R.id.dropZone);
+        final RelativeLayout dropZone = (RelativeLayout) findViewById(R.id.dropZone);
+        LinearLayout dropLayout = (LinearLayout) findViewById(R.id.dropLayout);
+
+        dropLayout.setOnDragListener(new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View v, DragEvent event) {
+                View zone = (View) dropZone;
+                dropListen.onDrag(zone, event);
+                return false;
+            }
+        });
+
         dropListen = new DragZoneListener(nextSentenceButton);
         dropListen.addObserver(this);
         MainDragListener mainListen = new MainDragListener(wordButtons);
@@ -116,7 +126,7 @@ public class GameOne extends AppCompatActivity implements Observer{
                 qImage.setImageBitmap(q.getImg());
             }
         });*/
-       nextSentence();
+        nextSentence();
         nextSentenceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -213,7 +223,7 @@ public class GameOne extends AppCompatActivity implements Observer{
             nextSentenceButton.setClickable(true);
             nextSentenceButton.setVisibility(AnswerButton.VISIBLE);
         }
-        else{
+        else{   // Here is what happens when the game is finished!
             AlertDialog.Builder gameFinished = new AlertDialog.Builder(
                     GameOne.this);
 
