@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -22,12 +23,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
+import com.android.GameTwo;
 import com.android.Question;
 import com.android.R;
 import com.android.SpeakerSlave;
 import com.android.TextToSpeechEngine;
 import com.android.VolleyCallback;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Observable;
@@ -234,18 +238,27 @@ public class GameOne extends AppCompatActivity implements Observer{
             nextSentenceButton.setVisibility(AnswerButton.VISIBLE);
         }
         else{   // Here is what happens when the game is finished!
-            AlertDialog.Builder gameFinished = new AlertDialog.Builder(
-                    GameOne.this);
-
-            gameFinished.setTitle("Omgång färdig!");
-            gameFinished.setPositiveButton("OK",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // Write your code here to invoke NO event
-                            finish();
-                        }
-                    });
-            gameFinished.show();
+            ImageView image = new ImageView(GameOne.this);
+            try{
+                InputStream ims = getAssets().open("good_job_smaller.jpg");
+                image.setImageDrawable(Drawable.createFromStream(ims, null));
+                ims.close();
+            }catch(IOException e){}
+            String message = "Bra jobbat!";
+            ttsEngine.speak("Bra Jobbat!");
+            AlertDialog gameFinished = new AlertDialog.Builder(GameOne.this).
+                    setMessage(message).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    finish();
+                }
+            }).
+                    setTitle("Omgång färdig!").
+                    setView(image).show();
+            TextView textView = (TextView) gameFinished.findViewById(android.R.id.message);
+                    /*Typeface face=Typeface.createFromAsset(getAssets(), "Bubblegum.ttf");
+                    textView.setTypeface(face);*/
+            textView.setTextSize(50);
+            textView.setAllCaps(false);
         }
     }
 

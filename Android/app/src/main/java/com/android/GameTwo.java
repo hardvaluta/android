@@ -1,23 +1,34 @@
 package com.android;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.android.GameOne.GameOne;
 
 import org.w3c.dom.Text;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Locale;
@@ -28,6 +39,7 @@ import java.util.TreeSet;
 
 public class GameTwo extends AppCompatActivity {
     public static final int gameId = 2;
+    public int nrRounds = 1;
     private boolean isSingleGame = true;
     private TextView timePassedView;
     private Button[] cards = new Button[12];
@@ -76,9 +88,49 @@ public class GameTwo extends AppCompatActivity {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                GameTwo.this.finish();
+                nrRounds--;
+                ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar_Game2);
+                progressBar.setProgress(progressBar.getProgress()+1);
+                if(nrRounds==0){
+                    ImageView image = new ImageView(GameTwo.this);
+                    try{
+                        InputStream ims = getAssets().open("good_job_smaller.jpg");
+                        image.setImageDrawable(Drawable.createFromStream(ims, null));
+                        ims.close();
+                    }catch(IOException e){}
+
+                    String message = "Du vände på "+numberOfCardViews+" kort\nBra jobbat!";
+                    ttsEngine.speak("Bra Jobbat!");
+                    AlertDialog gameFinished = new AlertDialog.Builder(GameTwo.this).
+                            setMessage(message).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            finish();
+                        }
+                    }).
+                            setTitle("Omgång färdig!").
+                            setView(image).show();
+                    TextView textView = (TextView) gameFinished.findViewById(android.R.id.message);
+                    /*Typeface face=Typeface.createFromAsset(getAssets(), "Bubblegum.ttf");
+                    textView.setTypeface(face);*/
+                    textView.setTextSize(50);
+                    textView.setAllCaps(false);
+
+                    /*gameFinished.setPositiveButton("OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    finish();
+                                }
+                            });
+                    gameFinished.show();*/
+                }
+                else{
+                    nextButton.setClickable(false);
+                    nextButton.setAlpha(0.4f);
+                    //Setup the memory board with new cards!
+                }
             }
         });
+
         nextButton.setText("Nästa");
         nextButton.setClickable(false);
         nextButton.setAlpha(0.4f);
@@ -362,5 +414,4 @@ public class GameTwo extends AppCompatActivity {
         // Showing Alert Message
         alertDialog.show();
     }
-
 }

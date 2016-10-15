@@ -138,6 +138,23 @@ tools:context="com.android.GameTwo"
     android:layout_alignLeft="@+id/card33"
     android:layout_alignStart="@+id/card33" />
 
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:layout_above="@+id/listenButton"
+    android:layout_below="@+id/card43">
+
+    <ProgressBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar_Game2"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:max="4"
+        android:secondaryProgress="4"
+        android:progressTint="@android:color/holo_green_light" />
+</RelativeLayout>
+
 <Button
     android:layout_width="100dp"
     android:layout_height="60dp"
