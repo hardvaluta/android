@@ -53,6 +53,8 @@ public class Client{
 
     private ArrayList<Question> questionArray;
     private ArrayList<User> users;
+    private ArrayList<GameInfo> currentGames;
+
     private JSONObject jsonQ;
 
     //frågor att hämta.
@@ -187,8 +189,6 @@ public class Client{
                     public void onResponse(JSONArray response) {
                         try {
                             JSONObject jUser = response.getJSONObject(0);
-
-                            System.out.println(jUser.getString("username")+" och "+jUser.getInt("id"));
                             callback.onSuccessResponse(new User(
                                     jUser.getString("username"),
                                     jUser.getInt("score"),
@@ -270,7 +270,7 @@ public class Client{
         }, new Response.ErrorListener() {
             public void onErrorResponse(VolleyError error) {
                 callback.onSuccessResponse(null);
-                System.out.println("ERROR, "+error+toString());
+                System.out.println("ERROR, "+error.toString());
             }
         });
 
@@ -289,7 +289,7 @@ public class Client{
         JsonArrayRequest challenge = new JsonArrayRequest(Request.Method.POST, t_url, body, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-
+                System.out.println("User challenged.");
             }
         }, new Response.ErrorListener() {
             @Override
@@ -313,7 +313,7 @@ public class Client{
         JsonArrayRequest decline = new JsonArrayRequest(Request.Method.POST, t_url, body, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-
+                System.out.println("Challenge declined");
             }
         }, new Response.ErrorListener() {
             @Override
@@ -335,7 +335,7 @@ public class Client{
         JsonArrayRequest accept = new JsonArrayRequest(Request.Method.POST, t_url, body, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-
+                System.out.println("Challenge accepted");
             }
         }, new Response.ErrorListener() {
             @Override
@@ -358,7 +358,17 @@ public class Client{
 
         JsonArrayRequest getGamesById = new JsonArrayRequest(Request.Method.GET, t_url, body, new Response.Listener<JSONArray>() {
             public void onResponse(JSONArray response) {
-                // GÖR NÅGOT
+                for(int i = 0; i < response.length(); i++){
+                    try {
+                        JSONObject t = response.getJSONObject(i);
+                        currentGames.add( new GameInfo (
+                                t.getInt("id"),
+                                t.getInt("player1"),
+                                t.getInt("player2")
+                        ) );
+
+                    } catch (JSONException e) { }
+                }
             }
         }, new Response.ErrorListener() {
             public void onErrorResponse(VolleyError error) {
