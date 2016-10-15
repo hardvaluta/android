@@ -55,7 +55,6 @@ public class GameOne extends AppCompatActivity implements Observer{
     private ArrayList<AnswerButton> wordButtons;
     private TextToSpeechEngine ttsEngine = TextToSpeechEngine.getInstance(this);
     private DragZoneListener dropListen;
-    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +68,6 @@ public class GameOne extends AppCompatActivity implements Observer{
         wordButtons= new ArrayList<AnswerButton>();
         nextSentenceButton.setClickable(false);
         nextSentenceButton.setVisibility(Button.INVISIBLE);
-        progressBar=(ProgressBar) findViewById(R.id.progressBar);
 
         RelativeLayout sentancePond=(RelativeLayout) findViewById(R.id.sentancePond);
         final RelativeLayout dropZone = (RelativeLayout) findViewById(R.id.dropZone);
@@ -108,13 +106,15 @@ public class GameOne extends AppCompatActivity implements Observer{
         ImageButton ttsButton=(ImageButton) findViewById(R.id.TTS);
         ttsButton.setOnClickListener(new SentenceListener(this));
 
-        //Fetch the question data and add it to the screen
-       /* com.android.Client client = com.android.Client.getInstance(this.getApplicationContext());
-        client.requestData(com.android.Client.QUESTION, 4, new VolleyCallback<ArrayList<Question>>() {
+       /* com.android.Client client=null;
+        try{
+           client = com.android.Client.getInstance(this.getApplicationContext());
+        }catch(java.lang.Exception e){}
+        client.requestRoundSentenceGame(new VolleyCallback<ArrayList<Question>>(){
 
+            @Override
             public void onSuccessResponse(ArrayList<Question> qArray) {
-                Question q=qArray.get(0);
-                Collections.shuffle(wordButtons);
+                Question q =qArray.get(0);
                 wordButtons.get(0).setText(q.getA());
                 wordButtons.get(0).setRightAnswer(true);
                 wordButtons.get(1).setText(q.getB());
@@ -123,9 +123,9 @@ public class GameOne extends AppCompatActivity implements Observer{
                 String[] sentence=q.getText().split("\\*");
                 leftSentence.setText(sentence[0]);
                 rightSentence.setText(sentence[1]);
-                qImage.setImageBitmap(q.getImg());
             }
         });*/
+
         nextSentence();
         nextSentenceButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,8 +133,6 @@ public class GameOne extends AppCompatActivity implements Observer{
                 nextSentence();
             }
         });
-
-        new Thread(new SpeakerSlave(this, leftSentence.getText().toString(), null, rightSentence.getText().toString())).start();
     }
 
     private void nextSentence() {
@@ -161,6 +159,7 @@ public class GameOne extends AppCompatActivity implements Observer{
             }
 
             nextSentenceButton.setClickable(false);
+            nextSentenceButton.setVisibility(AnswerButton.INVISIBLE);
             Collections.shuffle(wordButtons);
 
             leftSentence.setText(preString[currentSentenceIdx]);
@@ -176,7 +175,14 @@ public class GameOne extends AppCompatActivity implements Observer{
             wordButtons.get(2).setBackgroundColor(Color.LTGRAY);
             wordButtons.get(3).setBackgroundColor(Color.LTGRAY);
 
-            new Thread(new SpeakerSlave(this, leftSentence.getText().toString(), null, rightSentence.getText().toString())).start();
+            final View view = (View) findViewById(R.id.sentanceGame);
+            final Context context = this;
+            view.post( new Runnable() {
+                @Override
+                public void run() {
+                    new Thread(new SpeakerSlave(context, leftSentence.getText().toString(), null, rightSentence.getText().toString())).start();
+                }
+            });
     }
 
     @Override
@@ -192,7 +198,7 @@ public class GameOne extends AppCompatActivity implements Observer{
         // Setting Dialog Title
         alertDialog.setTitle("Lämna spelet?");
         // Setting Dialog Message
-        alertDialog.setMessage("Är du säker på att du vill lämna spelet?");
+        alertDialog.setMessage("Är du sker på att du vill lämna spelet?");
         // Setting Icon to Dialog
         //alertDialog.setIcon(R.drawable.dialog_icon);
 
@@ -218,7 +224,11 @@ public class GameOne extends AppCompatActivity implements Observer{
 
     @Override
     public void update(Observable o, Object arg) {
+        ProgressBar progressBar=(ProgressBar) findViewById(R.id.progressBar);
+        TextView progressText = (TextView) findViewById(R.id.progressText);
         progressBar.setProgress(progressBar.getProgress()+1);
+        progressText.setText(progressBar.getProgress()+"/"+nrQuestions+" frågor");
+
         if(progressBar.getProgress()<nrQuestions){
             nextSentenceButton.setClickable(true);
             nextSentenceButton.setVisibility(AnswerButton.VISIBLE);
