@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -29,10 +30,14 @@ import com.android.VolleyCallback;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Random;
 
 
-public class GameOne extends AppCompatActivity {
+public class GameOne extends AppCompatActivity implements Observer{
+    private final int nrQuestions = 4;
+    private int finishedQuestions = 0;
     public static final int gameId = 1;
     private boolean isSingleGame = true;
     private String[] preString={"Barnet", "Han", "Hon", "Dem", "Dem spelar"};
@@ -51,6 +56,7 @@ public class GameOne extends AppCompatActivity {
     private ArrayList<AnswerButton> wordButtons;
     private TextToSpeechEngine ttsEngine = TextToSpeechEngine.getInstance(this);
     private DragZoneListener dropListen;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,50 +65,38 @@ public class GameOne extends AppCompatActivity {
 
         leftSentence= (TextView)findViewById(R.id.leftSentance);
         rightSentence= (TextView)findViewById(R.id.rightSentance);
-        leftSentence.setOnClickListener(new SentenceListener(this));
-        rightSentence.setOnClickListener(new SentenceListener(this));
-
         nextSentenceButton = ((ImageButton)findViewById(R.id.nextSentenceButton));
         qImage = (ImageView)findViewById(R.id.questionImage);
         wordButtons= new ArrayList<AnswerButton>();
         nextSentenceButton.setClickable(false);
+        nextSentenceButton.setVisibility(Button.INVISIBLE);
+        progressBar=(ProgressBar) findViewById(R.id.progressBar);
 
         RelativeLayout sentancePond=(RelativeLayout) findViewById(R.id.sentancePond);
         RelativeLayout dropZone = (RelativeLayout) findViewById(R.id.dropZone);
         dropListen = new DragZoneListener(nextSentenceButton);
+        dropListen.addObserver(this);
         MainDragListener mainListen = new MainDragListener(wordButtons);
         mainListen.addObserver(dropListen);
         dropZone.setOnDragListener(dropListen);
         sentancePond.setOnDragListener(mainListen);
 
-        //Create the Answer-choice buttons
-        for(int n=1;n<5;n++){
-            if(n==1){
-                wordButtons.add(new AnswerButton(this));
-            }
-            else{
-                wordButtons.add(new AnswerButton(this));
-            }
-            wordButtons.get(n-1).setId(n);
-            wordButtons.get(n-1).setText("Placeholder");
+        AnswerButton choise1 = (AnswerButton) findViewById(R.id.choise1);
+        AnswerButton choise2 = (AnswerButton) findViewById(R.id.choise2);
+        AnswerButton choise3 = (AnswerButton) findViewById(R.id.choise3);
+        AnswerButton choise4 = (AnswerButton) findViewById(R.id.choise4);
+        wordButtons.add(choise1);wordButtons.add(choise2);wordButtons.add(choise3);wordButtons.add(choise4);
+        dropListen.addObserver(choise1);
+        dropListen.addObserver(choise2);
+        dropListen.addObserver(choise3);
+        dropListen.addObserver(choise4);
+        choise1.setOnTouchListener(new DragList(choise1));
+        choise2.setOnTouchListener(new DragList(choise2));
+        choise3.setOnTouchListener(new DragList(choise3));
+        choise4.setOnTouchListener(new DragList(choise4));
 
-            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            int width = this.getResources().getDisplayMetrics().widthPixels-400;
-            Random random = new Random();
-            width=random.nextInt(width);
-            lp.leftMargin=width;
-            if(n==1){
-                wordButtons.get(n-1).setYPos((100));
-                lp.topMargin+=(100);
-            }
-            else{
-                wordButtons.get(n-1).setYPos((150*n-1));
-                lp.topMargin+=(150*n-1);
-            }
-            wordButtons.get(n-1).setXPos(width);
-            sentancePond.addView(wordButtons.get(n-1), lp);
-            wordButtons.get(n-1).setOnTouchListener(new DragList(wordButtons.get(n-1)));
-        }
+        ImageButton ttsButton=(ImageButton) findViewById(R.id.TTS);
+        ttsButton.setOnClickListener(new SentenceListener(this));
 
         //Fetch the question data and add it to the screen
        /* com.android.Client client = com.android.Client.getInstance(this.getApplicationContext());
@@ -122,7 +116,7 @@ public class GameOne extends AppCompatActivity {
                 qImage.setImageBitmap(q.getImg());
             }
         });*/
-        nextSentence();
+       nextSentence();
         nextSentenceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -137,31 +131,23 @@ public class GameOne extends AppCompatActivity {
             currentSentenceIdx = rand.nextInt(preString.length);
             
             RelativeLayout container = (RelativeLayout) findViewById(R.id.sentancePond);
-            if(container.getChildCount()<4){
+            if(container.getChildCount()<8){
                 for(AnswerButton b : wordButtons){
                     if(b.isRightAnswer()){
                         b.setRightAnswer(false);
                         View view = (View) b;
                         ViewGroup owner = (ViewGroup) view.getParent();
                         owner.removeView(view);
-
-                        int x=0,y=0;
-                        for(AnswerButton button : wordButtons){
-                            if(!button.getTaken()){
-                                x=button.getXPos();
-                                y=button.getYPos();
-                            }
-                        }
-
-                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                        lp.leftMargin+=x;
-                        lp.topMargin+=y;
-                        container.addView(view, lp);
+                        container.addView(view);
                         b.setTaken(true);
                         view.setVisibility(View.VISIBLE);
-                        dropListen.update(null, null);
+                        dropListen.update(null, "Restore");
                     }
                 }
+            }
+
+            for(AnswerButton b : wordButtons){
+                b.setDragable(true);
             }
 
             nextSentenceButton.setClickable(false);
@@ -220,14 +206,37 @@ public class GameOne extends AppCompatActivity {
         alertDialog.show();
     }
 
+    @Override
+    public void update(Observable o, Object arg) {
+        progressBar.setProgress(progressBar.getProgress()+1);
+        if(progressBar.getProgress()<nrQuestions){
+            nextSentenceButton.setClickable(true);
+            nextSentenceButton.setVisibility(AnswerButton.VISIBLE);
+        }
+        else{
+            AlertDialog.Builder gameFinished = new AlertDialog.Builder(
+                    GameOne.this);
+
+            gameFinished.setTitle("Omgång färdig!");
+            gameFinished.setPositiveButton("OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Write your code here to invoke NO event
+                            finish();
+                        }
+                    });
+            gameFinished.show();
+        }
+    }
+
     private class DragList implements View.OnTouchListener{
         private final float SCROLL_THRESHOLD = 10;
         private float x,y;
         private boolean clicked;
-        private Button button;
+        private AnswerButton button;
         private long timeOfClick;
 
-        public DragList(Button button){
+        public DragList(AnswerButton button){
             this.button=button;
         }
 
@@ -245,7 +254,7 @@ public class GameOne extends AppCompatActivity {
                     ttsEngine.speak(button.getText().toString());
                 }
             }
-            if(event.getAction() == MotionEvent.ACTION_MOVE){
+            if(event.getAction() == MotionEvent.ACTION_MOVE && button.isDragable()){
                 if(clicked && (Math.abs(x - event.getX()) > SCROLL_THRESHOLD || Math.abs(y - event.getY()) > SCROLL_THRESHOLD)){
                     ClipData data = ClipData.newPlainText("", "");
                     View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(

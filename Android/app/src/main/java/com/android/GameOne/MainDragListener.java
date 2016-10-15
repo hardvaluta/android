@@ -7,6 +7,7 @@ import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Created by William on 2016-10-10.
@@ -24,33 +25,31 @@ public class MainDragListener extends Observable implements View.OnDragListener{
         int action = event.getAction();
         switch (event.getAction()){
             case DragEvent.ACTION_DROP:
+
                 float x=0,y=0;
-                RelativeLayout container = (RelativeLayout) v;
                 View view = (View) event.getLocalState();
                 AnswerButton b = (AnswerButton)view;
-                ViewGroup owner = (ViewGroup) view.getParent();
-                RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                if(container.getChildCount()<4){
-                    owner.removeView(view);
-                    for(AnswerButton button : wordButtons){
-                        if(!button.getTaken()){
-                            x=button.getXPos();
-                            y=button.getYPos();
-                            lp.leftMargin+=x;
-                            lp.topMargin+=y;
-                        }
+                if(b.isDragable())
+                {
+                    System.out.println("Dragable NOTIIIIIIIIICE");
+                    RelativeLayout container = (RelativeLayout) v;
+                    ViewGroup me = (ViewGroup) v;
+                    ViewGroup owner = (ViewGroup) view.getParent();
+
+                    if(!view.getParent().equals(v)){
+                        System.out.println(v.toString() + "      :     "+owner.toString());
+                        setChanged();
+                        notifyObservers();
+                        owner.removeView(view);
+                        me.addView(view);
                     }
-                    b.setTaken(true);
-                    container.addView(view, lp);
-                    view.setVisibility(View.VISIBLE);
-                    setChanged();
-                    notifyObservers();
-                }
-                else{
-                    x=event.getX();y=event.getY();
-                    lp.leftMargin+=x;
-                    lp.topMargin+=y;
-                    view.setLayoutParams(lp);
+                    else{
+                        x=event.getX();y=event.getY();
+                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        lp.leftMargin+=x;
+                        lp.topMargin+=y;
+                        view.setLayoutParams(lp);
+                    }
                 }
                 break;
             default:

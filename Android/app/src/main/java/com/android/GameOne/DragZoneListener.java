@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.view.DragEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,10 +20,11 @@ import java.util.Observer;
  * Created by William on 2016-10-10.
  */
 
-public class DragZoneListener implements View.OnDragListener, Observer {
+public class DragZoneListener extends Observable implements View.OnDragListener, Observer{
     ImageButton nextSentenceButton;
     RelativeLayout container;
     View dragSpot;
+    ViewGroup me;
     public DragZoneListener(ImageButton nextSentenceButton){
         this.nextSentenceButton=nextSentenceButton;
     }
@@ -36,34 +38,25 @@ public class DragZoneListener implements View.OnDragListener, Observer {
                 if(dragSpot==null){
                     dragSpot = v.findViewById(R.id.dragSpot);
                 }
-                if(container.findViewById(R.id.dragSpot)!=null){
-                    View view = (View) event.getLocalState();
-                    AnswerButton b = (AnswerButton)view;
-                    ViewGroup owner = (ViewGroup) view.getParent();
-                    ViewGroup mainView = (ViewGroup) owner.getParent();
+                View view = (View) event.getLocalState();
+                AnswerButton b = (AnswerButton)view;
+                ViewGroup owner = (ViewGroup) view.getParent();
+                me = (ViewGroup) v;
+                ViewGroup mainView = (ViewGroup) owner.getParent();
 
-                    if (b.isRightAnswer()){
-                        TextView score = (TextView)mainView.findViewById(R.id.scoreView);
-                        String initialScore=score.getText().toString();
-                        initialScore=initialScore.split(" ")[1];
-                        int nScore = Integer.parseInt(initialScore);
-                        nScore++;
-                        String newScore = "Score: "+nScore;
-                        score.setText(newScore);
+                if(!owner.equals(v) && dragSpot.getParent()!=null){
+                    System.out.println(view.toString() + "      :     "+owner.toString());
+                    me.removeView(dragSpot);
+                    owner.removeView(view);
+                    me.addView(view);
+                    if(b.isRightAnswer()){
+                        setChanged();
+                        notifyObservers();
                         b.setBackgroundColor(Color.GREEN);
-                        nextSentenceButton.setClickable(true);
                     }
                     else{
                         b.setBackgroundColor(Color.RED);
                     }
-
-                    owner.removeView(view);
-                    b.setTaken(false);
-
-                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                    container.removeView(dragSpot);
-                    container.addView(view, lp);
-                    view.setVisibility(View.VISIBLE);
                 }
                 break;
             default:
@@ -74,6 +67,11 @@ public class DragZoneListener implements View.OnDragListener, Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        container.addView(dragSpot);
+        if(arg instanceof String){
+            me.addView(dragSpot);
+        }
+        else{
+            me.addView(dragSpot);
+        }
     }
 }

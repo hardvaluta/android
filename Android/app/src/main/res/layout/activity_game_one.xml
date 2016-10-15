@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,84 +10,138 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:id="@+id/sentanceGame"
     tools:context="com.android.GameOne.GameOne"
-    android:background="@drawable/bg">
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/questionImageSpace"
-        android:id="@+id/dropLayout"
-        android:layout_centerHorizontal="true"
-        android:gravity="center_vertical">
-
-        <TextView
-            android:text="Left"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/leftSentance"/>
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/questionImageSpace"
-            android:layout_gravity="center"
-            android:id="@+id/dropZone">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="           _______           "
-                android:id="@+id/dragSpot"/>
-        </RelativeLayout>
-
-        <TextView
-            android:text="Right"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/rightSentance"/>
-    </LinearLayout>
-
+    android:background="@drawable/bg"
+    android:orientation="vertical">
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="match_parent"
         android:id="@+id/questionImage"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        app:srcCompat="@mipmap/singleplayericon"/>
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:id="@+id/questionImageSpace"
-        android:layout_below="@+id/questionImage"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:text="Poäng: 0"
-        android:id="@+id/scoreView" />
-
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@mipmap/forwardarrow"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:id="@+id/nextSentenceButton"
-        android:background="#FFFFFF"/>
+        android:layout_weight="0.5"
+        app:srcCompat="@mipmap/singleplayericon"
+        />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/sentancePond"
-        android:layout_below="@+id/dropLayout"
-        android:layout_above="@+id/nextSentenceButton"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
-    </RelativeLayout>
+        android:layout_weight="0.5">
 
-</RelativeLayout>
+        <ImageButton
+            android:id="@+id/TTS"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            app:srcCompat="@mipmap/texttospeech"
+            android:background="#FFFFFF"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/dropLayout"
+            android:layout_centerHorizontal="true"
+            android:gravity="center">
+
+            <TextView
+                android:text="Left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/leftSentance"/>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:id="@+id/dropZone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="           _______           "
+                    android:id="@+id/dragSpot"/>
+            </RelativeLayout>
+
+            <TextView
+                android:text="Right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/rightSentance"/>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/sentancePond"
+            android:layout_below="@+id/dropLayout"
+            android:layout_above="@+id/nextSentenceButton"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:id="@+id/bottomSentencePond"
+                android:layout_alignParentBottom="true" />
+            <Space
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:id="@+id/leftSentencePond"
+                android:layout_alignParentLeft="true" />
+            <Space
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:id="@+id/rightSentencePond"
+                android:layout_alignParentRight="true" />
+            <com.android.GameOne.AnswerButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Placeholder"
+                android:id="@+id/choise1"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/leftSentencePond"/>
+            <com.android.GameOne.AnswerButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Placeholder"
+                android:id="@+id/choise2"
+                android:layout_alignParentTop="true"
+                android:layout_toLeftOf="@+id/rightSentencePond"/>
+            <com.android.GameOne.AnswerButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Placeholder"
+                android:id="@+id/choise3"
+                android:layout_above="@+id/bottomSentencePond"
+                android:layout_toRightOf="@+id/leftSentencePond"/>
+            <com.android.GameOne.AnswerButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Placeholder"
+                android:id="@+id/choise4"
+                android:layout_above="@+id/bottomSentencePond"
+                android:layout_toLeftOf="@+id/rightSentencePond"/>
+
+        </RelativeLayout>
+
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@id/nextSentenceButton"
+            android:max="4"
+            android:secondaryProgress="4"
+            android:progressTint="@android:color/holo_green_light" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@mipmap/forwardarrow"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:id="@+id/nextSentenceButton"
+            android:background="#FFFFFF"/>
+
+    </RelativeLayout>
+</LinearLayout>
