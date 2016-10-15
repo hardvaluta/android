@@ -39,11 +39,16 @@ public class MultiPlayerChallengeUser extends AppCompatActivity {
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
-        Client.getInstance(this).getAllUsers(new VolleyCallback() {
-            public void onSuccessResponse(Object o) {
-                allUsers = (ArrayList<User>) o;
-            }
-        });
+        try {
+            Client.getInstance(this).getAllUsers(new VolleyCallback() {
+                public void onSuccessResponse(Object o) {
+                    allUsers = (ArrayList<User>) o;
+                }
+            });
+        } catch (Exception e) {
+            System.out.println("Ingen internetanslutning.");
+            //ALERT-DIALOG.
+        }
 
         challengeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {

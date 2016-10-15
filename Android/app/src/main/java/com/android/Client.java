@@ -108,7 +108,7 @@ public class Client{
     public void requestRoundMemoryGame(final VolleyCallback callback){
         //TO DO
     }
-    
+
     public void requestRoundSentenceGame(final VolleyCallback callback){
         String t_url = url + "type/1";
         JSONObject body = new JSONObject();
