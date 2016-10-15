@@ -2,6 +2,7 @@ package com.android;
 
 import android.app.DownloadManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -28,6 +29,7 @@ import java.util.HashMap;
 
 import static android.R.attr.id;
 import static android.R.attr.password;
+import static android.R.attr.type;
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 import static com.android.volley.Request.Method.HEAD;
 
@@ -46,11 +48,15 @@ public class Client{
     private Network network;
     private RequestQueue queue;
 
+    private SharedPreferences prefs;
+
     public static final int QUESTION = 0x01;
     public static final int IMAGE = 0x02;
 
     private ArrayList<Question> questionArray;
     private ArrayList<User> users;
+    private ArrayList<GameInfo> currentGames;
+
     private JSONObject jsonQ;
 
     //frågor att hämta.
@@ -65,105 +71,90 @@ public class Client{
         queue.start();
 
         url = "http://philiplaine.com/";
+
+        prefs = context.getSharedPreferences(MainMenu.PREF_FILE_NAME, Context.MODE_PRIVATE);
     }
 
+    public static Client getInstance(Context context) throws Exception {
+        if(isNetworkAvailable(context)){
+            if(client == null)
+                client = new Client(context);
 
-    public static Client getInstance(Context context){
-        if(client == null)
-            client = new Client(context);
-
-        return client;
+            return client;
+        } else {
+            throw new Exception("Network not available");
+        }
     }
 
-    public void requestData(int toRequest, int extra, final VolleyCallback callback){
-        String t_url = url;
+    private void requestImage(int image_id, final VolleyCallback callback){
+        String t_url = "data/" + image_id;
 
-        switch(toRequest){
+        ImageRequest getImageRequest = new ImageRequest(t_url,
+                new Response.Listener<Bitmap>() {
+                    @Override
+                    public void onResponse(Bitmap response) {
+                        callback.onSuccessResponse(response);
+                    }
+                },
+                0, 0, ImageView.ScaleType.FIT_XY, Bitmap.Config.ARGB_8888,
+                new Response.ErrorListener() {
+                    public void onErrorResponse(VolleyError error) { }
+                }
+        );
+        queue.add(getImageRequest);
+    }
 
-            case QUESTION:
+    public void requestRoundMemoryGame(final VolleyCallback callback){
+        //TO DO
+    }
 
-                t_url += "type/1";
-                JSONObject body = new JSONObject();
+    public void requestRoundSentenceGame(final VolleyCallback callback){
+        String t_url = url + "type/1";
+        JSONObject body = new JSONObject();
 
-                try{
+        try {
+            body.put("count", count);
+        } catch (JSONException e) { }
 
-                    //body.put("difficulty", 1);
-                    body.put("count", count);
+        JsonArrayRequest requestSentenceRound = new JsonArrayRequest(Request.Method.GET, t_url, body, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try {
+                    questionArray = new ArrayList<Question>();
 
+                    for(int i = 0; i < response.length(); i++){
 
-                } catch(JSONException e) { }
+                        jsonQ = response.getJSONObject(i);
 
-                body.toString();
+                        requestImage(jsonQ.getInt("image"), new VolleyCallback() {
 
-                JsonArrayRequest getQuestionRequest = new JsonArrayRequest(Request.Method.GET, t_url, body,
-                        new Response.Listener<JSONArray>() {
-                            @Override
-                            public void onResponse(JSONArray response) {
+                            public void onSuccessResponse(Object o) {
                                 try {
 
-                                    questionArray = new ArrayList<Question>();
+                                    questionArray.add(new Question(
+                                            jsonQ.getString("answer_a"),
+                                            jsonQ.getString("answer_b"),
+                                            jsonQ.getString("answer_c"),
+                                            jsonQ.getString("answer_d"),
+                                            jsonQ.getString("text"),
+                                            (Bitmap) o));
 
-                                    for (int n = 0; n < response.length(); n++) {
+                                    if (questionArray.size() == count)
+                                        callback.onSuccessResponse(questionArray);
 
-                                        jsonQ = response.getJSONObject(n);
-
-                                        requestData(IMAGE, jsonQ.getInt("image"), (new VolleyCallback() {
-
-                                            public void onSuccessResponse(Object o) {
-                                                try {
-                                                    questionArray.add(new Question(
-                                                            jsonQ.getString("answer_a"),
-                                                            jsonQ.getString("answer_b"),
-                                                            jsonQ.getString("answer_c"),
-                                                            jsonQ.getString("answer_d"),
-                                                            jsonQ.getString("text"),
-                                                            (Bitmap) o));
-
-                                                    if (questionArray.size() == count)
-                                                        callback.onSuccessResponse(questionArray);
-
-                                                } catch (JSONException e) {}
-
-                                            }
-                                        }));
-
-                                    }
-
-                                } catch (JSONException e) { }
-
+                                } catch (JSONException e) {}
                             }
-                        }, new Response.ErrorListener() { public void onErrorResponse(VolleyError error) {} }
-                );
+                        });
+                    }
 
-                queue.add(getQuestionRequest);
-                break;
+                } catch (JSONException e) {}
 
+            }
+        }, new Response.ErrorListener() { public void onErrorResponse(VolleyError error) {} });
 
-            case IMAGE:
-                t_url += "data/" + extra;
-
-                ImageRequest getImageRequest = new ImageRequest(t_url,
-                        new Response.Listener<Bitmap>() {
-                            @Override
-                            public void onResponse(Bitmap response) {
-                                callback.onSuccessResponse(response);
-                            }
-                        },
-                        0, 0, ImageView.ScaleType.FIT_XY, Bitmap.Config.ARGB_8888,
-                        new Response.ErrorListener() {
-                            public void onErrorResponse(VolleyError error) { }
-                        }
-                );
-
-                queue.add(getImageRequest);
-                break;
-
-
-            default:
-                break;
-        }
-
+        queue.add(requestSentenceRound);
     }
+
 
     public void createUser(String uname, String password, final VolleyCallback callback) {
 
@@ -184,8 +175,6 @@ public class Client{
                     public void onResponse(JSONArray response) {
                         try {
                             JSONObject jUser = response.getJSONObject(0);
-
-                            System.out.println(jUser.getString("username")+" och "+jUser.getInt("id"));
                             callback.onSuccessResponse(new User(
                                     jUser.getString("username"),
                                     jUser.getInt("score"),
@@ -268,7 +257,7 @@ public class Client{
         }, new Response.ErrorListener() {
             public void onErrorResponse(VolleyError error) {
                 callback.onSuccessResponse(null);
-                System.out.println("ERROR, "+error+toString());
+                System.out.println("ERROR, "+error.toString());
             }
         });
 
@@ -276,7 +265,108 @@ public class Client{
 
     }
 
-    public boolean isNetworkAvailable(Context context) {
+    public void challengeUser(int id_to_challenge, final VolleyCallback callback){
+        String t_url = url + "user/" + id_to_challenge + "/challenge";
+        JSONObject body = new JSONObject();
+        try {
+            body.put("context_id", prefs.getInt("user_id", 0));
+            body.put("type", 1);
+        } catch (JSONException e) {};
+
+        JsonArrayRequest challenge = new JsonArrayRequest(Request.Method.POST, t_url, body, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                System.out.println("User challenged.");
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        queue.add(challenge);
+
+    }
+
+    public void declineChallenge(int game_id, final VolleyCallback callback){
+
+        String t_url = url + "game/" + game_id + "/decline";
+        JSONObject body = new JSONObject();
+        try {
+            body.put("context_id", prefs.getInt("user_id", 0));
+        } catch (JSONException e) {}
+
+        JsonArrayRequest decline = new JsonArrayRequest(Request.Method.POST, t_url, body, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                System.out.println("Challenge declined");
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        queue.add(decline);
+    }
+
+    public void acceptChallenge(int game_id, final VolleyCallback callback){
+        String t_url = url + "game/" + game_id + "accept";
+        JSONObject body = new JSONObject();
+        try {
+            body.put("context_id", prefs.getInt("user_id", 0));
+        } catch (JSONException e) {}
+
+        JsonArrayRequest accept = new JsonArrayRequest(Request.Method.POST, t_url, body, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                System.out.println("Challenge accepted");
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        queue.add(accept);
+    }
+
+    public void getCurrGames(final VolleyCallback callback){
+
+        String t_url = url + "game/list";
+        JSONObject body = new JSONObject();
+        try {
+            body.put("context_id", prefs.getInt("user_id", 0));
+        } catch (JSONException e) { }
+
+
+        JsonArrayRequest getGamesById = new JsonArrayRequest(Request.Method.GET, t_url, body, new Response.Listener<JSONArray>() {
+            public void onResponse(JSONArray response) {
+                for(int i = 0; i < response.length(); i++){
+                    try {
+                        JSONObject t = response.getJSONObject(i);
+                        currentGames.add( new GameInfo (
+                                t.getInt("id"),
+                                t.getInt("player1"),
+                                t.getInt("player2")
+                        ) );
+
+                    } catch (JSONException e) { }
+                }
+            }
+        }, new Response.ErrorListener() {
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        queue.add(getGamesById);
+    }
+
+    private static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();

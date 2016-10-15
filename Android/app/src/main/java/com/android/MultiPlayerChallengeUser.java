@@ -5,12 +5,18 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 
 public class MultiPlayerChallengeUser extends AppCompatActivity {
 
@@ -19,6 +25,7 @@ public class MultiPlayerChallengeUser extends AppCompatActivity {
     private ScrollView scrollView;
     private ArrayList<User> allUsers;
     private ArrayList<User> searchedUsers;
+    private LinearLayout layout;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,12 +35,20 @@ public class MultiPlayerChallengeUser extends AppCompatActivity {
         searchField = (EditText) findViewById(R.id.search_edittext);
         scrollView = (ScrollView)findViewById(R.id.scrollview_searchp);
         searchedUsers = new ArrayList<User>();
+        layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
-        Client.getInstance(this).getAllUsers(new VolleyCallback() {
-            public void onSuccessResponse(Object o) {
-                allUsers = (ArrayList<User>) o;
-            }
-        });
+        try {
+            Client.getInstance(this).getAllUsers(new VolleyCallback() {
+                public void onSuccessResponse(Object o) {
+                    allUsers = (ArrayList<User>) o;
+                }
+            });
+        } catch (Exception e) {
+            System.out.println("Ingen internetanslutning.");
+            //ALERT-DIALOG.
+        }
 
         challengeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -62,8 +77,9 @@ public class MultiPlayerChallengeUser extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
 
+                searchedUsers.clear();
                 String currText = searchField.getText().toString().trim();
-                if(currText.length() > 2 && allUsers != null){
+                if(allUsers != null){
                     for(User u : allUsers){
                         if(u.getUsername().toLowerCase().contains(currText.toLowerCase()))
                             searchedUsers.add(u);
@@ -74,15 +90,19 @@ public class MultiPlayerChallengeUser extends AppCompatActivity {
                 }
 
 
+
                 scrollView.removeAllViews();
+                layout.removeAllViews();
                 //Update ScrollView.
 
                 for(int i = 0; i < searchedUsers.size(); i++){
-                    CheckBox checkBox = new CheckBox(scrollView.getContext());
+                    CheckBox checkBox = new CheckBox(layout.getContext());
                     checkBox.setId(i);
-                    checkBox.setText(searchedUsers.get(i).getUsername());
-                    scrollView.addView(checkBox);
+                    checkBox.setText(searchedUsers.get(i).getUsername().toString());
+                    layout.addView(checkBox);
                 }
+
+                scrollView.addView(layout);
             }
         });
 

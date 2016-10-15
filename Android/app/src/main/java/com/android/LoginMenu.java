@@ -25,8 +25,12 @@ public class LoginMenu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_menu);
 
-        client = Client.getInstance(this);
-        prefs = getSharedPreferences(SettingsActivity.PREF_FILE_NAME, MODE_PRIVATE);
+        try {
+            client = Client.getInstance(this);
+        } catch (Exception e) {
+            alert("Error", "Ingen internetanslutning.");
+        }
+        prefs = getSharedPreferences(MainMenu.PREF_FILE_NAME, MODE_PRIVATE);
 
 
         unameField = (EditText) findViewById(R.id.uNameEditText);
@@ -54,7 +58,7 @@ public class LoginMenu extends AppCompatActivity {
 
                             startActivity(new Intent(LoginMenu.this, SettingsActivity.class));
                         } else {
-                            alert();
+                            alert("Error", "Något gick fel");
                         }
                     }
                 });
@@ -70,10 +74,10 @@ public class LoginMenu extends AppCompatActivity {
     }
 
 
-    public void alert() {
+    public void alert(String title, String msg) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(LoginMenu.this);
-        alertDialog.setTitle("Error");
-        alertDialog.setMessage("Något gick fel.");
+        alertDialog.setTitle(title);
+        alertDialog.setMessage(msg);
         alertDialog.setPositiveButton("Okej", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

@@ -23,8 +23,12 @@ public class SignupMenu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_menu);
 
-        client = Client.getInstance(this);
-        prefs = getSharedPreferences(SettingsActivity.PREF_FILE_NAME, MODE_PRIVATE);
+        try {
+            client = Client.getInstance(this);
+        } catch (Exception e) {
+            alert("Error", "Ingen internetanslutning");
+        }
+        prefs = getSharedPreferences(MainMenu.PREF_FILE_NAME, MODE_PRIVATE);
 
         signup = (Button) findViewById(R.id.registerNewUserButton);
         uname = (EditText) findViewById(R.id.signup_unameEditText);
