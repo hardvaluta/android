@@ -270,6 +270,7 @@ public class Client{
         JSONObject body = new JSONObject();
         try {
             body.put("context_id", prefs.getInt("user_id", 0));
+            //Hardcoded type 1 (Sentence game) for now.
             body.put("type", 1);
         } catch (JSONException e) {};
 
@@ -351,7 +352,10 @@ public class Client{
                         currentGames.add( new GameInfo (
                                 t.getInt("id"),
                                 t.getInt("player1"),
-                                t.getInt("player2")
+                                t.getInt("player2"),
+                                t.getInt("state"),
+                                t.getInt("type"),
+                                client
                         ) );
 
                     } catch (JSONException e) { }
