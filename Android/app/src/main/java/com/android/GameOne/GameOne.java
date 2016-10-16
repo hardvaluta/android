@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 
 import com.android.Question;
-import com.android.R;
 import com.android.TextToSpeechEngine;
 import com.android.VolleyCallback;
 
@@ -28,7 +27,8 @@ import java.util.Collections;
 import java.util.Random;
 
 
-public class GameOne extends AppCompatActivity {
+public class GameOne extends AppCompatActivity
+{
     public static final int gameId = 1;
     private boolean isSingleGame = true;
     private String[] preString = {"Hej, jag ", "Erik spelar ", "Mattias sparkar på ", "Varför finns det ", "Vem är var det som ", "Vilken "};
@@ -47,19 +47,20 @@ public class GameOne extends AppCompatActivity {
     private DragZoneListener dropListen;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_one);
 
-        leftSentence= (TextView)findViewById(R.id.leftSentance);
-        rightSentence= (TextView)findViewById(R.id.rightSentance);
+        leftSentence = (TextView) findViewById(R.id.leftSentance);
+        rightSentence = (TextView) findViewById(R.id.rightSentance);
 
-        nextSentenceButton = ((ImageButton)findViewById(R.id.nextSentenceButton));
-        qImage = (ImageView)findViewById(R.id.questionImage);
-        wordButtons= new ArrayList<AnswerButton>();
+        nextSentenceButton = ((ImageButton) findViewById(R.id.nextSentenceButton));
+        qImage = (ImageView) findViewById(R.id.questionImage);
+        wordButtons = new ArrayList<AnswerButton>();
         nextSentenceButton.setClickable(false);
 
-        RelativeLayout sentancePond=(RelativeLayout) findViewById(R.id.sentancePond);
+        RelativeLayout sentancePond = (RelativeLayout) findViewById(R.id.sentancePond);
         RelativeLayout dropZone = (RelativeLayout) findViewById(R.id.dropZone);
         dropListen = new DragZoneListener(nextSentenceButton);
         MainDragListener mainListen = new MainDragListener(wordButtons);
@@ -68,47 +69,52 @@ public class GameOne extends AppCompatActivity {
         sentancePond.setOnDragListener(mainListen);
 
         //Create the Answer-choice buttons
-        for(int n=1;n<5;n++){
-            if(n==1){
+        for (int n = 1; n < 5; n++)
+        {
+            if (n == 1)
+            {
+                wordButtons.add(new AnswerButton(this));
+            } else
+            {
                 wordButtons.add(new AnswerButton(this));
             }
-            else{
-                wordButtons.add(new AnswerButton(this));
-            }
-            wordButtons.get(n-1).setId(n);
-            wordButtons.get(n-1).setText("Placeholder");
+            wordButtons.get(n - 1).setId(n);
+            wordButtons.get(n - 1).setText("Placeholder");
 
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            int width = this.getResources().getDisplayMetrics().widthPixels-400;
+            int width = this.getResources().getDisplayMetrics().widthPixels - 400;
             Random random = new Random();
-            width=random.nextInt(width);
-            lp.leftMargin=width;
-            if(n==1){
-                wordButtons.get(n-1).setYPos(130);
-                lp.topMargin+=130;
+            width = random.nextInt(width);
+            lp.leftMargin = width;
+            if (n == 1)
+            {
+                wordButtons.get(n - 1).setYPos(130);
+                lp.topMargin += 130;
+            } else
+            {
+                wordButtons.get(n - 1).setYPos((150 * n - 1));
+                lp.topMargin += (150 * n - 1);
             }
-            else{
-                wordButtons.get(n-1).setYPos((150*n-1));
-                lp.topMargin+=(150*n-1);
-            }
-            wordButtons.get(n-1).setXPos(width);
-            sentancePond.addView(wordButtons.get(n-1), lp);
-            wordButtons.get(n-1).setOnTouchListener(new DragList(wordButtons.get(n-1)));
+            wordButtons.get(n - 1).setXPos(width);
+            sentancePond.addView(wordButtons.get(n - 1), lp);
+            wordButtons.get(n - 1).setOnTouchListener(new DragList(wordButtons.get(n - 1)));
         }
 
         //Fetch the question data and add it to the screen
         com.android.Client client = com.android.Client.getInstance(this.getApplicationContext());
-        client.requestData(com.android.Client.QUESTION, 4, new VolleyCallback<ArrayList<Question>>() {
+        client.requestData(com.android.Client.QUESTION, 4, new VolleyCallback<ArrayList<Question>>()
+        {
 
-            public void onSuccessResponse(ArrayList<Question> qArray) {
-                Question q=qArray.get(0);
+            public void onSuccessResponse(ArrayList<Question> qArray)
+            {
+                Question q = qArray.get(0);
                 Collections.shuffle(wordButtons);
                 wordButtons.get(0).setText(q.getA());
                 wordButtons.get(0).setRightAnswer(true);
                 wordButtons.get(1).setText(q.getB());
                 wordButtons.get(2).setText(q.getC());
                 wordButtons.get(3).setText(q.getD());
-                String[] sentence=q.getText().split("\\*");
+                String[] sentence = q.getText().split("\\*");
                 leftSentence.setText(sentence[0]);
                 rightSentence.setText(sentence[1]);
                 qImage.setImageBitmap(q.getImg());
@@ -140,69 +146,79 @@ public class GameOne extends AppCompatActivity {
             }
         });*/
 
-        nextSentenceButton.setOnClickListener(new View.OnClickListener() {
+        nextSentenceButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 nextSentence();
             }
         });
     }
 
-    private void nextSentence() {
-            currentSentenceIdx = rand.nextInt(preString.length);
-            
-            RelativeLayout container = (RelativeLayout) findViewById(R.id.sentancePond);
-            if(container.getChildCount()<5){
-                for(AnswerButton b : wordButtons){
-                    if(b.isRightAnswer()){
-                        b.setRightAnswer(false);
-                        View view = (View) b;
-                        ViewGroup owner = (ViewGroup) view.getParent();
-                        owner.removeView(view);
+    private void nextSentence()
+    {
+        currentSentenceIdx = rand.nextInt(preString.length);
 
-                        int x=0,y=0;
-                        for(AnswerButton button : wordButtons){
-                            if(!button.getTaken()){
-                                x=button.getXPos();
-                                y=button.getYPos();
-                            }
+        RelativeLayout container = (RelativeLayout) findViewById(R.id.sentancePond);
+        if (container.getChildCount() < 5)
+        {
+            for (AnswerButton b : wordButtons)
+            {
+                if (b.isRightAnswer())
+                {
+                    b.setRightAnswer(false);
+                    View view = (View) b;
+                    ViewGroup owner = (ViewGroup) view.getParent();
+                    owner.removeView(view);
+
+                    int x = 0, y = 0;
+                    for (AnswerButton button : wordButtons)
+                    {
+                        if (!button.getTaken())
+                        {
+                            x = button.getXPos();
+                            y = button.getYPos();
                         }
-
-                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                        lp.leftMargin+=x;
-                        lp.topMargin+=y;
-                        container.addView(view, lp);
-                        b.setTaken(true);
-                        view.setVisibility(View.VISIBLE);
-                        dropListen.update(null, null);
                     }
+
+                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                    lp.leftMargin += x;
+                    lp.topMargin += y;
+                    container.addView(view, lp);
+                    b.setTaken(true);
+                    view.setVisibility(View.VISIBLE);
+                    dropListen.update(null, null);
                 }
             }
+        }
 
-            nextSentenceButton.setClickable(false);
-            Collections.shuffle(wordButtons);
+        nextSentenceButton.setClickable(false);
+        Collections.shuffle(wordButtons);
 
-            leftSentence.setText(preString[currentSentenceIdx]);
-            rightSentence.setText(postString[currentSentenceIdx]);
-            wordButtons.get(0).setText(words[currentSentenceIdx][0]);
-            wordButtons.get(0).setRightAnswer(true);
-            wordButtons.get(1).setText(words[currentSentenceIdx][1]);
-            wordButtons.get(2).setText(words[currentSentenceIdx][2]);
-            wordButtons.get(3).setText(words[currentSentenceIdx][3]);
-            wordButtons.get(0).setBackgroundColor(Color.LTGRAY);
-            wordButtons.get(1).setBackgroundColor(Color.LTGRAY);
-            wordButtons.get(2).setBackgroundColor(Color.LTGRAY);
-            wordButtons.get(3).setBackgroundColor(Color.LTGRAY);
+        leftSentence.setText(preString[currentSentenceIdx]);
+        rightSentence.setText(postString[currentSentenceIdx]);
+        wordButtons.get(0).setText(words[currentSentenceIdx][0]);
+        wordButtons.get(0).setRightAnswer(true);
+        wordButtons.get(1).setText(words[currentSentenceIdx][1]);
+        wordButtons.get(2).setText(words[currentSentenceIdx][2]);
+        wordButtons.get(3).setText(words[currentSentenceIdx][3]);
+        wordButtons.get(0).setBackgroundColor(Color.LTGRAY);
+        wordButtons.get(1).setBackgroundColor(Color.LTGRAY);
+        wordButtons.get(2).setBackgroundColor(Color.LTGRAY);
+        wordButtons.get(3).setBackgroundColor(Color.LTGRAY);
     }
 
     @Override
-    public void onBackPressed() {
+    public void onBackPressed()
+    {
         //Display alert message when back button has been pressed
         backButtonHandler();
         return;
     }
 
-    public void backButtonHandler() {
+    public void backButtonHandler()
+    {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(
                 GameOne.this);
         // Setting Dialog Title
@@ -213,16 +229,20 @@ public class GameOne extends AppCompatActivity {
         //alertDialog.setIcon(R.drawable.dialog_icon);
 
         alertDialog.setNegativeButton("NEJ",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
+                new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
                         // Write your code here to invoke NO event
                         dialog.cancel();
                     }
                 });
         // Setting Negative "NO" Button
         alertDialog.setPositiveButton("JA",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
+                new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
                         finish();
                     }
                 });
@@ -232,33 +252,41 @@ public class GameOne extends AppCompatActivity {
         alertDialog.show();
     }
 
-    private class DragList implements View.OnTouchListener{
+    private class DragList implements View.OnTouchListener
+    {
         private final float SCROLL_THRESHOLD = 10;
-        private float x,y;
+        private float x, y;
         private boolean clicked;
         private Button button;
         private long timeOfClick;
 
-        public DragList(Button button){
-            this.button=button;
+        public DragList(Button button)
+        {
+            this.button = button;
         }
 
         @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            if (event.getAction() == MotionEvent.ACTION_DOWN){
-                timeOfClick=event.getEventTime();
+        public boolean onTouch(View v, MotionEvent event)
+        {
+            if (event.getAction() == MotionEvent.ACTION_DOWN)
+            {
+                timeOfClick = event.getEventTime();
                 x = event.getX();
                 y = event.getY();
-                clicked=true;
+                clicked = true;
                 return true;
             }
-            if (event.getAction() == MotionEvent.ACTION_UP){
-                if(event.getEventTime()-timeOfClick<350 && (event.getX()-x<50&&event.getY()-y<50)){
+            if (event.getAction() == MotionEvent.ACTION_UP)
+            {
+                if (event.getEventTime() - timeOfClick < 350 && (event.getX() - x < 50 && event.getY() - y < 50))
+                {
                     ttsEngine.speak(button.getText().toString());
                 }
             }
-            if(event.getAction() == MotionEvent.ACTION_MOVE){
-                if(clicked && (Math.abs(x - event.getX()) > SCROLL_THRESHOLD || Math.abs(y - event.getY()) > SCROLL_THRESHOLD)){
+            if (event.getAction() == MotionEvent.ACTION_MOVE)
+            {
+                if (clicked && (Math.abs(x - event.getX()) > SCROLL_THRESHOLD || Math.abs(y - event.getY()) > SCROLL_THRESHOLD))
+                {
                     ClipData data = ClipData.newPlainText("", "");
                     View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(
                             v);
@@ -266,8 +294,8 @@ public class GameOne extends AppCompatActivity {
                     return true;
                 }
                 return false;
-            }
-            else {
+            } else
+            {
                 return false;
             }
         }
