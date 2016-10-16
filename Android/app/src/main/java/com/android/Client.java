@@ -370,6 +370,24 @@ public class Client{
         queue.add(getGamesById);
     }
 
+    public void reportProgress(int game_id, int player_id, int correct){
+        String t_url = url + "game/" + game_id + "/progress";
+
+        JSONObject body = new JSONObject();
+        try {
+            body.put("correct", correct);
+            body.put("player", player_id);
+        } catch(JSONException e) {}
+
+        JsonArrayRequest reportProg = new JsonArrayRequest(Request.Method.POST, t_url, body, new Response.Listener<JSONArray>() {
+            public void onResponse(JSONArray response) {
+                System.out.println("Progress reported.");
+            }
+        }, new Response.ErrorListener() { public void onErrorResponse(VolleyError error) {} });
+
+        queue.add(reportProg);
+    }
+
     private static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();

@@ -9,7 +9,9 @@ public class GameInfo {
     private Client client;
 
     public GameInfo(int game_id, int p1, int p2, int state, int type, Client client){
-        this.p1 = p1; this.p2 = p2; this.game_id = game_id; this.state = state; this.client = client;
+        this.p1 = p1; this.p2 = p2;
+        this.game_id = game_id; this.state = state;
+        this.type = type; this.client = client;
     }
 
     /*
@@ -41,8 +43,8 @@ public class GameInfo {
         }
     }
 
-    public void reportProgress(){
-
+    public void reportProgress(int playerID, int correct){
+        client.reportProgress(game_id, playerID, correct);
     }
 
 
