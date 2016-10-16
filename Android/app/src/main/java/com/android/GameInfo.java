@@ -24,8 +24,9 @@ public class GameInfo {
     }
     /*
     state = 0, the game has not started, ie waiting for user to accept challenge.
-    state = 1, the game is in progress.
-    state = 2, the game has ended.
+    state = 1, player1's turn.
+    state = 2, player2's turn.
+    state = 3, the game has ended.
      */
     public int getState() {
         return state;

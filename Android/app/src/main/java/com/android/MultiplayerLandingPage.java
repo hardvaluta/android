@@ -67,33 +67,68 @@ public class MultiplayerLandingPage extends AppCompatActivity {
             }
         });
 
-        ArrayList<GameInfo> wasChallengedGames = new ArrayList<GameInfo>();
-        ArrayList<GameInfo> youChallengedGames = new ArrayList<GameInfo>();
-        ArrayList<GameInfo> currentGames = new ArrayList<GameInfo>();
+        //GAMES WAITING TO BE ACCEPTED OR DECLINED BEFORE STARTED.
+        ArrayList<GameInfo> toBeAcceptedGames = new ArrayList<GameInfo>();
+
+        //GAMES IN WHICH THERE IS YOUR TURN TO PLAY.
+        ArrayList<GameInfo> yourTurnGames = new ArrayList<GameInfo>();
+
+        //GAMES WHERE IT IS THE OTHER USERS TURN TO PLAY.
+        ArrayList<GameInfo> otherTurnGames = new ArrayList<GameInfo>();
+
+        //FINISHED GAMES.
         ArrayList<GameInfo> finishedGames = new ArrayList<GameInfo>();
 
 
         for(GameInfo g : allGames){
             switch(g.getState()){
+
+                //GAMES TO BE ACCEPTED.
                 case 0:
 
                     if(prefs.getInt("user_id", 0) == g.getOwnerID())
-                        youChallengedGames.add(g);
-                    else
-                        wasChallengedGames.add(g);
-                    
+                        System.out.println("User has not accepted game yet.");
+                    else if(prefs.getInt("user_id", 0) == g.getChallengedUserID())
+                        toBeAcceptedGames.add(g);
+
                     break;
 
-                case 1: currentGames.add(g);
+                //PLAYER 1 TURN.
+                case 1:
+
+                    if(prefs.getInt("user_id", 0) == g.getOwnerID())
+                        yourTurnGames.add(g);
+
+                    else if (prefs.getInt("user_id", 0) == g.getChallengedUserID())
+                        otherTurnGames.add(g);
+
                     break;
 
-                case 2: finishedGames.add(g);
+                //PLAYER 2 TURN.
+                case 2:
+
+                    if(prefs.getInt("user_id", 0) == g.getOwnerID())
+                        otherTurnGames.add(g);
+
+                    else if(prefs.getInt("userd_id", 0) == g.getChallengedUserID())
+                        yourTurnGames.add(g);
+
+                    break;
+
+                // FINISHED GAMES.
+                case 3: finishedGames.add(g);
                     break;
 
                 default: // WHAT?
                     break;
             }
         }
+
+        /*
+
+        SHOW GAMES IN AN APPROPRIATE WAY AND ADD LISTENERS FOR THEM TO START GAMES.
+
+         */
 
         newChallangeButton = (Button)findViewById(R.id.challengeNewUserButton);
         newChallangeButton.setOnClickListener(new View.OnClickListener() {

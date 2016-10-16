@@ -378,7 +378,7 @@ public class Client{
         JSONObject body = new JSONObject();
         try {
             body.put("correct", correct);
-            body.put("player", player_id);
+            body.put("context_id", player_id);
         } catch(JSONException e) {}
 
         JsonArrayRequest reportProg = new JsonArrayRequest(Request.Method.POST, t_url, body, new Response.Listener<JSONArray>() {

@@ -1,5 +1,4 @@
-@@ -1,63 +0,0 @@
-    <?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:id="@+id/activity_multiplayer_landing"
@@ -9,56 +8,53 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
-                tools:context="com.android.MultiplayerLandingPage">
+                tools:context="com.android.MultiplayerLandingPage"
+    android:background="@color/colorPrimary">
 
-    <LinearLayout
-        android:id="@+id/mainLinearLayout"
+
+    <Button
+        android:text="Nytt spel"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/newChallengeButton"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:text="Andra spel"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/newChallengeButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/otherGames"
+        android:layout_width="174dp" />
+
+    <Button
+        android:text="Färdiga spel"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/otherGames"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/doneGames"
+        android:layout_width="174dp" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:orientation="vertical"
-        android:weightSum="10">
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="9">
-
-            <LinearLayout
-                android:id="@+id/gameLayout"
-                android:layout_width="match_parent"
-                android:layout_height="fill_parent"
-                android:layout_gravity="center|top"
-                android:orientation="vertical">
-            </LinearLayout>
-        </ScrollView>
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/otherGames"
+        android:id="@+id/scrollGameList"
+        android:background="@android:color/background_light">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="5dp"
-                android:background="@android:color/darker_gray">
-            </View>
-
-            <Button
-                android:id="@+id/button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center_vertical|center_horizontal"
-                android:text="Utmana ny spelare">
-            </Button>
-        </LinearLayout>
-    </LinearLayout>
-
+            android:orientation="vertical" />
+    </ScrollView>
 
 </RelativeLayout>
