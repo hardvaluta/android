@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 
@@ -20,6 +21,37 @@ public class MultiplayerLandingPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_multiplayer_landing_page);
+
+        String[] but = {
+                "Jimmie\tvs.\tFred",
+                "Jimmie\tvs.\tVictor",
+                "Jimmie\tvs.\tBertil",
+                "Jimmie\tvs.\tStefan",
+                "Jimmie\tvs.\tStefan",
+                "Jimmie\tvs.\tStefan",
+                "Jimmie\tvs.\tStefan",
+                "Jimmie\tvs.\tStefan",
+                "Jimmie\tvs.\tStefan",
+                "Jimmie\tvs.\tStefan",
+                "Jimmie\tvs.\tStefan",
+                "Jimmie\tvs.\tStefan",
+                "Jimmie\tvs.\tWilliam" };
+
+        Button [] buttonArrayReady = new Button[but.length];
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout gameLayout = (LinearLayout) findViewById(R.id.gameLayout);
+
+        for (int i = 0; i < but.length; i++)
+        {
+            buttonArrayReady[i] = new Button(this);
+            buttonArrayReady[i].setLayoutParams(params);
+
+            LinearLayout.LayoutParams Btnparams = (LinearLayout.LayoutParams) buttonArrayReady[i].getLayoutParams();
+            buttonArrayReady[i].setText(but[i]);
+            buttonArrayReady[i].setId(i+1); // Setting the ids
+            gameLayout.addView(buttonArrayReady[i], Btnparams);
+        }
 
         try {
             client = Client.getInstance(this);
