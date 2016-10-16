@@ -1,6 +1,7 @@
 package com.android;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +13,7 @@ public class MultiplayerLandingPage extends AppCompatActivity {
 
     private Button newChallangeButton;
     private Client client;
+    private SharedPreferences prefs;
 
     private ArrayList<GameInfo> allGames;
 
@@ -25,6 +27,7 @@ public class MultiplayerLandingPage extends AppCompatActivity {
             System.out.println("Ingen internetanslutning");
         }
 
+        prefs = getSharedPreferences(MainMenu.PREF_FILE_NAME, MODE_PRIVATE);
 
         client.getCurrGames(new VolleyCallback() {
             public void onSuccessResponse(Object o) {
@@ -32,19 +35,29 @@ public class MultiplayerLandingPage extends AppCompatActivity {
             }
         });
 
-        ArrayList<GameInfo> waitingGames = new ArrayList<GameInfo>();
+        ArrayList<GameInfo> wasChallengedGames = new ArrayList<GameInfo>();
+        ArrayList<GameInfo> youChallengedGames = new ArrayList<GameInfo>();
         ArrayList<GameInfo> currentGames = new ArrayList<GameInfo>();
         ArrayList<GameInfo> finishedGames = new ArrayList<GameInfo>();
 
 
         for(GameInfo g : allGames){
             switch(g.getState()){
-                case 0: waitingGames.add(g);
+                case 0:
+
+                    if(prefs.getInt("user_id", 0) == g.getOwnerID())
+                        youChallengedGames.add(g);
+                    else
+                        wasChallengedGames.add(g);
+                    
                     break;
+
                 case 1: currentGames.add(g);
                     break;
+
                 case 2: finishedGames.add(g);
                     break;
+
                 default: // WHAT?
                     break;
             }

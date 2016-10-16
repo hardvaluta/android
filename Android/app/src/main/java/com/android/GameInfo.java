@@ -14,6 +14,14 @@ public class GameInfo {
         this.type = type; this.client = client;
     }
 
+
+    public int getOwnerID(){
+        return p1;
+    }
+
+    public int getChallengedUserID(){
+        return p2;
+    }
     /*
     state = 0, the game has not started, ie waiting for user to accept challenge.
     state = 1, the game is in progress.
