@@ -360,6 +360,8 @@ public class Client{
 
                     } catch (JSONException e) { }
                 }
+
+                callback.onSuccessResponse(currentGames);
             }
         }, new Response.ErrorListener() {
             public void onErrorResponse(VolleyError error) {
