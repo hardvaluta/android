@@ -23,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
+import com.android.GameInfo;
 import com.android.GameTwo;
 import com.android.Question;
 import com.android.R;
@@ -60,6 +61,9 @@ public class GameOne extends AppCompatActivity implements Observer{
     private TextToSpeechEngine ttsEngine = TextToSpeechEngine.getInstance(this);
     private DragZoneListener dropListen;
 
+    private static GameInfo multiplayerInfo;
+    private ArrayList<Question> questionArray;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +76,7 @@ public class GameOne extends AppCompatActivity implements Observer{
         wordButtons= new ArrayList<AnswerButton>();
         nextSentenceButton.setClickable(false);
         nextSentenceButton.setVisibility(Button.INVISIBLE);
+        questionArray= new ArrayList<Question>();
 
         RelativeLayout sentancePond=(RelativeLayout) findViewById(R.id.sentancePond);
         final RelativeLayout dropZone = (RelativeLayout) findViewById(R.id.dropZone);
@@ -109,8 +114,8 @@ public class GameOne extends AppCompatActivity implements Observer{
 
         ImageButton ttsButton=(ImageButton) findViewById(R.id.TTS);
         ttsButton.setOnClickListener(new SentenceListener(this));
-
-       /* com.android.Client client=null;
+        if(multiplayerInfo==null){
+             com.android.Client client=null;
         try{
            client = com.android.Client.getInstance(this.getApplicationContext());
         }catch(java.lang.Exception e){}
@@ -119,16 +124,25 @@ public class GameOne extends AppCompatActivity implements Observer{
             @Override
             public void onSuccessResponse(ArrayList<Question> qArray) {
                 Question q =qArray.get(0);
-                wordButtons.get(0).setText(q.getA());
-                wordButtons.get(0).setRightAnswer(true);
-                wordButtons.get(1).setText(q.getB());
-                wordButtons.get(2).setText(q.getC());
-                wordButtons.get(3).setText(q.getD());
-                String[] sentence=q.getText().split("\\*");
-                leftSentence.setText(sentence[0]);
-                rightSentence.setText(sentence[1]);
+                for(int n=0;n<4;n++){
+                        questionArray.add(qArray.get(n));
+                }
             }
-        });*/
+        });
+        }
+        else{
+            multiplayerInfo.getRounds(new VolleyCallback<ArrayList<Question>>(){
+                @Override
+                public void onSuccessResponse(ArrayList<Question> qArray) {
+                    Question q = qArray.get(0);
+                    for(int n=0;n<4;n++){
+                        questionArray.add(qArray.get(n));
+                    }
+                }
+            });
+        }
+
+        //nextQuestion(questionArray.get(0));
 
         nextSentence();
         nextSentenceButton.setOnClickListener(new View.OnClickListener() {
@@ -137,6 +151,41 @@ public class GameOne extends AppCompatActivity implements Observer{
                 nextSentence();
             }
         });
+    }
+
+    private void nextQuestion(Question q){
+        RelativeLayout container = (RelativeLayout) findViewById(R.id.sentancePond);
+        if(container.getChildCount()<8){
+            for(AnswerButton b : wordButtons){
+                if(b.isRightAnswer()){
+                    b.setRightAnswer(false);
+                    View view = (View) b;
+                    ViewGroup owner = (ViewGroup) view.getParent();
+                    owner.removeView(view);
+                    container.addView(view);
+                    b.setTaken(true);
+                    view.setVisibility(View.VISIBLE);
+                    dropListen.update(null, "Restore");
+                }
+            }
+        }
+
+        nextSentenceButton.setClickable(false);
+        nextSentenceButton.setVisibility(AnswerButton.INVISIBLE);
+        Collections.shuffle(wordButtons);
+
+        wordButtons.get(0).setText(q.getA());
+        wordButtons.get(0).setRightAnswer(true);
+        wordButtons.get(1).setText(q.getB());
+        wordButtons.get(2).setText(q.getC());
+        wordButtons.get(3).setText(q.getD());
+        String[] sentence=q.getText().split("\\*");
+        leftSentence.setText(sentence[0]);
+        rightSentence.setText(sentence[1]);
+    }
+
+    public static void setMultiplayerInfo(GameInfo mi){
+        multiplayerInfo=mi;
     }
 
     private void nextSentence() {
@@ -238,6 +287,10 @@ public class GameOne extends AppCompatActivity implements Observer{
             nextSentenceButton.setVisibility(AnswerButton.VISIBLE);
         }
         else{   // Here is what happens when the game is finished!
+            if(multiplayerInfo!=null){
+                multiplayerInfo.reportProgress(progressBar.getProgress());
+            }
+
             ImageView image = new ImageView(GameOne.this);
             try{
                 InputStream ims = getAssets().open("good_job_smaller.jpg");

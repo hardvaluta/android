@@ -79,6 +79,7 @@ public class ChooseGameActivity extends AppCompatActivity {
         gameOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
+                GameOne.setMultiplayerInfo(null);
                 startActivity(new Intent(ChooseGameActivity.this, GameOne.class));
             }
         });

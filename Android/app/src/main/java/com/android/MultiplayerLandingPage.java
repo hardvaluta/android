@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.android.GameOne.GameOne;
+
 import java.util.ArrayList;
 
 public class MultiplayerLandingPage extends AppCompatActivity {
