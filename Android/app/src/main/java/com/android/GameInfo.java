@@ -1,10 +1,14 @@
 package com.android;
 
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
 /**
  * Created by victor on 2016-10-15.
  */
 
-public class GameInfo {
+public class GameInfo implements Serializable{
     private int game_id, p1, p2, state, type;
     private Client client;
 

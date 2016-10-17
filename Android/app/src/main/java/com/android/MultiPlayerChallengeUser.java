@@ -90,17 +90,18 @@ public class MultiPlayerChallengeUser extends AppCompatActivity {
                 layout.removeAllViews();
                 //Update ScrollView.
 
-                for(i = 0; i < searchedUsers.size(); i++){
+                for(final User u : searchedUsers){
 
                     Button but = new Button(layout.getContext());
 
-                    but.setText("Utmana " + searchedUsers.get(i).getUsername().toString());
+                    but.setText("Utmana " + u.getUsername().toString());
                     but.setOnClickListener(new View.OnClickListener() {
-                        @Override
+
                         public void onClick(View v) {
-                            client.challengeUser(searchedUsers.get(i-1).getId());
+                            client.challengeUser(u.getId());
                             startActivity(new Intent(MultiPlayerChallengeUser.this, MultiplayerLandingPage.class));
                         }
+
                     });
 
 

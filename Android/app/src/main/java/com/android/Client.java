@@ -347,9 +347,13 @@ public class Client{
 
 
         JsonArrayRequest getGamesById = new JsonArrayRequest(Request.Method.GET, t_url, body, new Response.Listener<JSONArray>() {
+
             public void onResponse(JSONArray response) {
+
                 for(int i = 0; i < response.length(); i++){
+
                     try {
+
                         JSONObject t = response.getJSONObject(i);
                         currentGames.add( new GameInfo (
                                 t.getInt("id"),
@@ -364,6 +368,7 @@ public class Client{
                 }
 
                 callback.onSuccessResponse(currentGames);
+
             }
         }, new Response.ErrorListener() {
             public void onErrorResponse(VolleyError error) {

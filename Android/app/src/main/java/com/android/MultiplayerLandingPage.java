@@ -21,7 +21,10 @@ public class MultiplayerLandingPage extends AppCompatActivity {
     private ScrollView scrollView;
     private LinearLayout layout;
 
-    private GameInfo g;
+    private ArrayList<GameInfo> toBeAcceptedGames;
+    private ArrayList<GameInfo> yourTurnGames;
+    private ArrayList<GameInfo> otherTurnGames;
+    private ArrayList<GameInfo> finishedGames;
 
     private ArrayList<GameInfo> allGames;
 
@@ -46,16 +49,16 @@ public class MultiplayerLandingPage extends AppCompatActivity {
         });
 
         //GAMES WAITING TO BE ACCEPTED OR DECLINED BEFORE STARTED.
-        ArrayList<GameInfo> toBeAcceptedGames = new ArrayList<GameInfo>();
+        toBeAcceptedGames = new ArrayList<GameInfo>();
 
         //GAMES IN WHICH THERE IS YOUR TURN TO PLAY.
-        ArrayList<GameInfo> yourTurnGames = new ArrayList<GameInfo>();
+        yourTurnGames = new ArrayList<GameInfo>();
 
         //GAMES WHERE IT IS THE OTHER USERS TURN TO PLAY.
-        ArrayList<GameInfo> otherTurnGames = new ArrayList<GameInfo>();
+        otherTurnGames = new ArrayList<GameInfo>();
 
         //FINISHED GAMES.
-        ArrayList<GameInfo> finishedGames = new ArrayList<GameInfo>();
+        finishedGames = new ArrayList<GameInfo>();
 
         if(!allGames.isEmpty()){
             for(GameInfo g : allGames){
@@ -113,8 +116,7 @@ public class MultiplayerLandingPage extends AppCompatActivity {
         layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
         if(!toBeAcceptedGames.isEmpty()){
-            for(GameInfo gi : toBeAcceptedGames){
-                g = gi;
+            for(final GameInfo g : toBeAcceptedGames){
 
 
                 LinearLayout tlayout = new LinearLayout(layout.getContext());
@@ -158,14 +160,17 @@ public class MultiplayerLandingPage extends AppCompatActivity {
 
 
         if(!yourTurnGames.isEmpty()){
-            for(GameInfo gi : yourTurnGames){
-                g = gi;
+            for(final GameInfo g : yourTurnGames){
 
                 Button game = new Button(layout.getContext());
                 game.setText("GameId: " + g.getID() + ". Tryck för att spela.");
                 game.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-                        //UNIMPLEMENTED.
+
+                        Intent intent = new Intent(MultiplayerLandingPage.this, GameOne.class);
+                        intent.putExtra("GameInfo", g);
+                        startActivity(intent);
+
                     }
                 });
 
@@ -174,10 +179,7 @@ public class MultiplayerLandingPage extends AppCompatActivity {
         }
 
 
-
         scrollView.addView(layout);
-
-
 
 
         newChallangeButton = (Button)findViewById(R.id.newChallengeButton);
