@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 public class GameInfo implements Serializable{
     private int game_id, p1, p2, state, type;
-    private Client client;
+    private transient Client client;
 
     public GameInfo(int game_id, int p1, int p2, int state, int type, Client client){
         this.p1 = p1; this.p2 = p2;

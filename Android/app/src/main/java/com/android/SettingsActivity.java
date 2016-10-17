@@ -56,4 +56,10 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
     }
+
+    public void onBackPressed(){
+        super.onBackPressed();
+        startActivity(new Intent(this, MainMenu.class));
+        finish();
+    }
 }

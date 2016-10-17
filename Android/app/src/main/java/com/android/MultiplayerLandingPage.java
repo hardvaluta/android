@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class MultiplayerLandingPage extends AppCompatActivity {
 
     private Button newChallangeButton;
@@ -48,6 +50,12 @@ public class MultiplayerLandingPage extends AppCompatActivity {
                 init();
             }
         });
+    }
+
+    public void onBackPressed(){
+        super.onBackPressed();
+        startActivity(new Intent(this, MainMenu.class));
+        finish();
     }
 
     public void init(){
@@ -116,7 +124,7 @@ public class MultiplayerLandingPage extends AppCompatActivity {
         scrollView.removeAllViews();
         layout = new LinearLayout(scrollView.getContext());
         layout.setOrientation(LinearLayout.VERTICAL);
-        layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
 
         if(!toBeAcceptedGames.isEmpty()){
             for(final GameInfo g : toBeAcceptedGames){
@@ -172,6 +180,12 @@ public class MultiplayerLandingPage extends AppCompatActivity {
             for(final GameInfo g : yourTurnGames){
 
                 Button game = new Button(layout.getContext());
+                game.setLayoutParams(
+                        new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT)
+                );
+
                 game.setText("GameId: " + g.getID() + ". Tryck för att spela.");
                 game.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
@@ -182,6 +196,21 @@ public class MultiplayerLandingPage extends AppCompatActivity {
 
                     }
                 });
+
+                layout.addView(game);
+            }
+        }
+
+        if(!otherTurnGames.isEmpty()){
+            for(GameInfo g : otherTurnGames){
+                Button game = new Button(layout.getContext());
+                game.setLayoutParams(
+                        new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT)
+                );
+                game.setText("GameId: " + g.getID());
+                game.setEnabled(false);
 
                 layout.addView(game);
             }
