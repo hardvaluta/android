@@ -154,8 +154,13 @@ public class GameOne extends AppCompatActivity {
             wordButtons.get(n-1).setOnTouchListener(new DragList(wordButtons.get(n-1)));
         }
 
-        com.android.Client client = com.android.Client.getInstance(this.getApplicationContext());
-        client.requestData(com.android.Client.QUESTION, 4, new VolleyCallback<ArrayList<Question>>() {
+        Client client = null;
+        try {
+            client = Client.getInstance(this.getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        client.requestRoundSentenceGame(new VolleyCallback<ArrayList<Question>>() {
 
             public void onSuccessResponse(ArrayList<Question> qArray) {
                 Question q=qArray.get(0);

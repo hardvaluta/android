@@ -14,6 +14,9 @@ public class GameInfo {
         this.type = type; this.client = client;
     }
 
+    public int getID(){
+        return game_id;
+    }
 
     public int getOwnerID(){
         return p1;

@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -15,6 +17,8 @@ public class MultiplayerLandingPage extends AppCompatActivity {
     private Button newChallangeButton;
     private Client client;
     private SharedPreferences prefs;
+    private ScrollView scrollView;
+    private GameInfo g;
 
     private ArrayList<GameInfo> allGames;
 
@@ -22,37 +26,8 @@ public class MultiplayerLandingPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_multiplayer_landing_page);
 
-        String[] but = {
-                "Jimmie\tvs.\tFred",
-                "Jimmie\tvs.\tVictor",
-                "Jimmie\tvs.\tBertil",
-                "Jimmie\tvs.\tStefan",
-                "Jimmie\tvs.\tStefan",
-                "Jimmie\tvs.\tStefan",
-                "Jimmie\tvs.\tStefan",
-                "Jimmie\tvs.\tStefan",
-                "Jimmie\tvs.\tStefan",
-                "Jimmie\tvs.\tStefan",
-                "Jimmie\tvs.\tStefan",
-                "Jimmie\tvs.\tStefan",
-                "Jimmie\tvs.\tWilliam" };
 
-        Button [] buttonArrayReady = new Button[but.length];
-
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        LinearLayout gameLayout = (LinearLayout) findViewById(R.id.gameLayout);
-
-        for (int i = 0; i < but.length; i++)
-        {
-            buttonArrayReady[i] = new Button(this);
-            buttonArrayReady[i].setLayoutParams(params);
-
-            LinearLayout.LayoutParams Btnparams = (LinearLayout.LayoutParams) buttonArrayReady[i].getLayoutParams();
-            buttonArrayReady[i].setText(but[i]);
-            buttonArrayReady[i].setId(i+1); // Setting the ids
-            gameLayout.addView(buttonArrayReady[i], Btnparams);
-        }
-
+        allGames = new ArrayList<>();
         try {
             client = Client.getInstance(this);
         } catch (Exception e) {
@@ -79,58 +54,125 @@ public class MultiplayerLandingPage extends AppCompatActivity {
         //FINISHED GAMES.
         ArrayList<GameInfo> finishedGames = new ArrayList<GameInfo>();
 
+        if(!allGames.isEmpty()){
+            for(GameInfo g : allGames){
+                switch(g.getState()){
 
-        for(GameInfo g : allGames){
-            switch(g.getState()){
+                    //GAMES TO BE ACCEPTED.
+                    case 0:
 
-                //GAMES TO BE ACCEPTED.
-                case 0:
+                        if(prefs.getInt("user_id", 0) == g.getOwnerID())
+                            System.out.println("User has not accepted game yet.");
+                        else if(prefs.getInt("user_id", 0) == g.getChallengedUserID())
+                            toBeAcceptedGames.add(g);
 
-                    if(prefs.getInt("user_id", 0) == g.getOwnerID())
-                        System.out.println("User has not accepted game yet.");
-                    else if(prefs.getInt("user_id", 0) == g.getChallengedUserID())
-                        toBeAcceptedGames.add(g);
+                        break;
 
-                    break;
+                    //PLAYER 1 TURN.
+                    case 1:
 
-                //PLAYER 1 TURN.
-                case 1:
+                        if(prefs.getInt("user_id", 0) == g.getOwnerID())
+                            yourTurnGames.add(g);
 
-                    if(prefs.getInt("user_id", 0) == g.getOwnerID())
-                        yourTurnGames.add(g);
+                        else if (prefs.getInt("user_id", 0) == g.getChallengedUserID())
+                            otherTurnGames.add(g);
 
-                    else if (prefs.getInt("user_id", 0) == g.getChallengedUserID())
-                        otherTurnGames.add(g);
+                        break;
 
-                    break;
+                    //PLAYER 2 TURN.
+                    case 2:
 
-                //PLAYER 2 TURN.
-                case 2:
+                        if(prefs.getInt("user_id", 0) == g.getOwnerID())
+                            otherTurnGames.add(g);
 
-                    if(prefs.getInt("user_id", 0) == g.getOwnerID())
-                        otherTurnGames.add(g);
+                        else if(prefs.getInt("userd_id", 0) == g.getChallengedUserID())
+                            yourTurnGames.add(g);
 
-                    else if(prefs.getInt("userd_id", 0) == g.getChallengedUserID())
-                        yourTurnGames.add(g);
+                        break;
 
-                    break;
+                    // FINISHED GAMES.
+                    case 3: finishedGames.add(g);
+                        break;
 
-                // FINISHED GAMES.
-                case 3: finishedGames.add(g);
-                    break;
-
-                default: // WHAT?
-                    break;
+                    default: // WHAT?
+                        break;
+                }
             }
         }
 
-        /*
 
-        SHOW GAMES IN AN APPROPRIATE WAY AND ADD LISTENERS FOR THEM TO START GAMES.
 
-         */
 
-        newChallangeButton = (Button)findViewById(R.id.challengeNewUserButton);
+
+        LinearLayout layout = new LinearLayout(this);
+        layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        if(!toBeAcceptedGames.isEmpty()){
+            for(GameInfo gi : toBeAcceptedGames){
+                g = gi;
+
+                String t = (g.getOwnerID() + " har utmanat dig!");
+                TextView textView = new TextView(this);
+                textView.setText(t);
+
+                Button accept = new Button(this);
+                Button decline = new Button(this);
+
+                accept.setText("Acceptera");
+                decline.setText("Neka");
+
+                accept.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        client.acceptChallenge(g.getID());
+                    }
+                });
+
+                decline.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        client.declineChallenge(g.getID());
+                    }
+                });
+
+                LinearLayout tlayout = new LinearLayout(this);
+                tlayout.setOrientation(LinearLayout.HORIZONTAL);
+                tlayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT));
+
+                tlayout.addView(textView);
+                tlayout.addView(accept);
+                tlayout.addView(decline);
+                layout.addView(tlayout);
+
+            }
+        }
+
+
+        if(!yourTurnGames.isEmpty()){
+            for(GameInfo gi : yourTurnGames){
+                g = gi;
+
+                Button game = new Button(this);
+                game.setText("GameId: " + g.getID() + ". Tryck för att spela.");
+                game.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        //UNIMPLEMENTED.
+                    }
+                });
+
+                layout.addView(game);
+            }
+        }
+
+
+        scrollView = (ScrollView) findViewById(R.id.scrollGameList);
+        scrollView.addView(layout);
+        
+
+
+
+        newChallangeButton = (Button)findViewById(R.id.newChallengeButton);
         newChallangeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startActivity(new Intent(MultiplayerLandingPage.this, MultiPlayerChallengeUser.class));

@@ -290,7 +290,7 @@ public class Client{
 
     }
 
-    public void declineChallenge(int game_id, final VolleyCallback callback){
+    public void declineChallenge(int game_id){
 
         String t_url = url + "game/" + game_id + "/decline";
         JSONObject body = new JSONObject();
@@ -313,7 +313,7 @@ public class Client{
         queue.add(decline);
     }
 
-    public void acceptChallenge(int game_id, final VolleyCallback callback){
+    public void acceptChallenge(int game_id){
         String t_url = url + "game/" + game_id + "accept";
         JSONObject body = new JSONObject();
         try {
