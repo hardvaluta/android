@@ -45,9 +45,12 @@ public class MultiplayerLandingPage extends AppCompatActivity {
         client.getCurrGames(new VolleyCallback() {
             public void onSuccessResponse(Object o) {
                 allGames.addAll((ArrayList<GameInfo>)o);
+                init();
             }
         });
+    }
 
+    public void init(){
         //GAMES WAITING TO BE ACCEPTED OR DECLINED BEFORE STARTED.
         toBeAcceptedGames = new ArrayList<GameInfo>();
 
@@ -138,6 +141,9 @@ public class MultiplayerLandingPage extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         client.acceptChallenge(g.getID());
+                        Intent intent = getIntent();
+                        finish();
+                        startActivity(intent);
                     }
                 });
 
@@ -145,6 +151,9 @@ public class MultiplayerLandingPage extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         client.declineChallenge(g.getID());
+                        Intent intent = getIntent();
+                        finish();
+                        startActivity(intent);
                     }
                 });
 

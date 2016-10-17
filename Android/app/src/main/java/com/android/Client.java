@@ -315,7 +315,7 @@ public class Client{
     }
 
     public void acceptChallenge(int game_id){
-        String t_url = url + "game/" + game_id + "accept";
+        String t_url = url + "game/" + game_id + "/accept";
         JSONObject body = new JSONObject();
         try {
             body.put("context_id", prefs.getInt("user_id", 0));
@@ -338,18 +338,24 @@ public class Client{
 
     public void getCurrGames(final VolleyCallback callback){
 
-        String t_url = url + "game/list";
+        String t_url = url + "game/list?context_id=" + prefs.getInt("user_id", 0);
+
+        /*
         JSONObject body = new JSONObject();
 
         try {
             body.put("context_id", prefs.getInt("user_id", 0));
         } catch (JSONException e) { }
+        */
 
 
-        JsonArrayRequest getGamesById = new JsonArrayRequest(Request.Method.GET, t_url, body, new Response.Listener<JSONArray>() {
+        //System.out.println(body.toString());
+
+        JsonArrayRequest getGamesById = new JsonArrayRequest(Request.Method.GET, t_url, new Response.Listener<JSONArray>() {
 
             public void onResponse(JSONArray response) {
 
+                currentGames = new ArrayList<GameInfo>();
                 for(int i = 0; i < response.length(); i++){
 
                     try {
