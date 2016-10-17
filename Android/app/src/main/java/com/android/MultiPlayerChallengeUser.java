@@ -20,7 +20,6 @@ import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 
 public class MultiPlayerChallengeUser extends AppCompatActivity {
 
-    private Button challengeButton;
     private EditText searchField;
     private ScrollView scrollView;
     private ArrayList<User> allUsers;
@@ -31,7 +30,6 @@ public class MultiPlayerChallengeUser extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_challenge_user_page);
 
-        challengeButton = (Button)findViewById(R.id.challengeButton);
         searchField = (EditText) findViewById(R.id.search_edittext);
         scrollView = (ScrollView)findViewById(R.id.scrollview_searchp);
         searchedUsers = new ArrayList<User>();
@@ -50,18 +48,6 @@ public class MultiPlayerChallengeUser extends AppCompatActivity {
             //ALERT-DIALOG.
         }
 
-        challengeButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                for(int i = 0; i < scrollView.getChildCount(); i++){
-                    View v = scrollView.getChildAt(i);
-                    if(v instanceof CheckBox){
-                        if(((CheckBox) v).isChecked()){
-
-                        }
-                    }
-                }
-            }
-        });
 
         searchField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -96,10 +82,17 @@ public class MultiPlayerChallengeUser extends AppCompatActivity {
                 //Update ScrollView.
 
                 for(int i = 0; i < searchedUsers.size(); i++){
-                    CheckBox checkBox = new CheckBox(layout.getContext());
-                    checkBox.setId(i);
-                    checkBox.setText(searchedUsers.get(i).getUsername().toString());
-                    layout.addView(checkBox);
+                    Button but = new Button(layout.getContext());
+                    but.setText("Utmana " + searchedUsers.get(i).getUsername().toString());
+                    but.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //CHALLENGE
+                        }
+                    });
+
+
+                    layout.addView(but);
                 }
 
                 scrollView.addView(layout);

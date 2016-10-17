@@ -103,8 +103,8 @@ public class MultiplayerLandingPage extends AppCompatActivity {
 
 
 
-
-        LinearLayout layout = new LinearLayout(this);
+        scrollView = (ScrollView) findViewById(R.id.scrollGameList);
+        LinearLayout layout = new LinearLayout(scrollView.getContext());
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
@@ -112,12 +112,18 @@ public class MultiplayerLandingPage extends AppCompatActivity {
             for(GameInfo gi : toBeAcceptedGames){
                 g = gi;
 
+
+                LinearLayout tlayout = new LinearLayout(layout.getContext());
+                tlayout.setOrientation(LinearLayout.HORIZONTAL);
+                tlayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT));
+
                 String t = (g.getOwnerID() + " har utmanat dig!");
-                TextView textView = new TextView(this);
+                TextView textView = new TextView(tlayout.getContext());
                 textView.setText(t);
 
-                Button accept = new Button(this);
-                Button decline = new Button(this);
+                Button accept = new Button(tlayout.getContext());
+                Button decline = new Button(tlayout.getContext());
 
                 accept.setText("Acceptera");
                 decline.setText("Neka");
@@ -136,10 +142,7 @@ public class MultiplayerLandingPage extends AppCompatActivity {
                     }
                 });
 
-                LinearLayout tlayout = new LinearLayout(this);
-                tlayout.setOrientation(LinearLayout.HORIZONTAL);
-                tlayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT));
+
 
                 tlayout.addView(textView);
                 tlayout.addView(accept);
@@ -154,7 +157,7 @@ public class MultiplayerLandingPage extends AppCompatActivity {
             for(GameInfo gi : yourTurnGames){
                 g = gi;
 
-                Button game = new Button(this);
+                Button game = new Button(layout.getContext());
                 game.setText("GameId: " + g.getID() + ". Tryck för att spela.");
                 game.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
@@ -167,7 +170,7 @@ public class MultiplayerLandingPage extends AppCompatActivity {
         }
 
 
-        scrollView = (ScrollView) findViewById(R.id.scrollGameList);
+
         scrollView.addView(layout);
 
 
