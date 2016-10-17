@@ -266,7 +266,7 @@ public class Client{
 
     }
 
-    public void challengeUser(int id_to_challenge, final VolleyCallback callback){
+    public void challengeUser(int id_to_challenge){
         String t_url = url + "user/" + id_to_challenge + "/challenge";
         JSONObject body = new JSONObject();
         try {

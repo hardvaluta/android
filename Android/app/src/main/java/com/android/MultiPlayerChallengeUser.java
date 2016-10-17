@@ -1,5 +1,6 @@
 package com.android;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -17,6 +18,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
+import static android.os.Build.VERSION_CODES.M;
 
 public class MultiPlayerChallengeUser extends AppCompatActivity {
 
@@ -25,6 +28,9 @@ public class MultiPlayerChallengeUser extends AppCompatActivity {
     private ArrayList<User> allUsers;
     private ArrayList<User> searchedUsers;
     private LinearLayout layout;
+
+    private Client client;
+    private int i;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,15 +44,18 @@ public class MultiPlayerChallengeUser extends AppCompatActivity {
         layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
         try {
-            Client.getInstance(this).getAllUsers(new VolleyCallback() {
-                public void onSuccessResponse(Object o) {
-                    allUsers = (ArrayList<User>) o;
-                }
-            });
+            client =  Client.getInstance(this);
         } catch (Exception e) {
             System.out.println("Ingen internetanslutning.");
             //ALERT-DIALOG.
         }
+
+        client.getAllUsers(new VolleyCallback() {
+            @Override
+            public void onSuccessResponse(Object o) {
+                allUsers = (ArrayList<User>) o;
+            }
+        });
 
 
         searchField.addTextChangedListener(new TextWatcher() {
@@ -81,13 +90,16 @@ public class MultiPlayerChallengeUser extends AppCompatActivity {
                 layout.removeAllViews();
                 //Update ScrollView.
 
-                for(int i = 0; i < searchedUsers.size(); i++){
+                for(i = 0; i < searchedUsers.size(); i++){
+
                     Button but = new Button(layout.getContext());
+
                     but.setText("Utmana " + searchedUsers.get(i).getUsername().toString());
                     but.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            //CHALLENGE
+                            client.challengeUser(searchedUsers.get(i-1).getId());
+                            startActivity(new Intent(MultiPlayerChallengeUser.this, MultiplayerLandingPage.class));
                         }
                     });
 
