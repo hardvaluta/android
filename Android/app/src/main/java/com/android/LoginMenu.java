@@ -56,7 +56,7 @@ public class LoginMenu extends AppCompatActivity {
                             editor.putBoolean("active", true);
                             editor.commit();
 
-                            startActivity(new Intent(LoginMenu.this, SettingsActivity.class));
+                            startActivity(new Intent(LoginMenu.this, MainMenu.class));
                         } else {
                             alert("Error", "Något gick fel");
                         }
