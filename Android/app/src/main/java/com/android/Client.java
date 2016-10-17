@@ -218,8 +218,9 @@ public class Client{
 
                             callback.onSuccessResponse(new User(
                                     jsonQ.getString("username"),
-                                    jsonQ.getInt("id"),
-                                    jsonQ.getInt("score")));
+                                    jsonQ.getInt("score"),
+                                    jsonQ.getInt("id")
+                            ));
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -265,11 +266,12 @@ public class Client{
 
     }
 
-    public void challengeUser(int id_to_challenge, final VolleyCallback callback){
+    public void challengeUser(int id_to_challenge){
         String t_url = url + "user/" + id_to_challenge + "/challenge";
         JSONObject body = new JSONObject();
         try {
             body.put("context_id", prefs.getInt("user_id", 0));
+            //Hardcoded type 1 (Sentence game) for now.
             body.put("type", 1);
         } catch (JSONException e) {};
 
@@ -289,7 +291,7 @@ public class Client{
 
     }
 
-    public void declineChallenge(int game_id, final VolleyCallback callback){
+    public void declineChallenge(int game_id){
 
         String t_url = url + "game/" + game_id + "/decline";
         JSONObject body = new JSONObject();
@@ -312,8 +314,8 @@ public class Client{
         queue.add(decline);
     }
 
-    public void acceptChallenge(int game_id, final VolleyCallback callback){
-        String t_url = url + "game/" + game_id + "accept";
+    public void acceptChallenge(int game_id){
+        String t_url = url + "game/" + game_id + "/accept";
         JSONObject body = new JSONObject();
         try {
             body.put("context_id", prefs.getInt("user_id", 0));
@@ -336,26 +338,43 @@ public class Client{
 
     public void getCurrGames(final VolleyCallback callback){
 
-        String t_url = url + "game/list";
+        String t_url = url + "game/list?context_id=" + prefs.getInt("user_id", 0);
+
+        /*
         JSONObject body = new JSONObject();
+
         try {
             body.put("context_id", prefs.getInt("user_id", 0));
         } catch (JSONException e) { }
+        */
 
 
-        JsonArrayRequest getGamesById = new JsonArrayRequest(Request.Method.GET, t_url, body, new Response.Listener<JSONArray>() {
+        //System.out.println(body.toString());
+
+        JsonArrayRequest getGamesById = new JsonArrayRequest(Request.Method.GET, t_url, new Response.Listener<JSONArray>() {
+
             public void onResponse(JSONArray response) {
+
+                currentGames = new ArrayList<GameInfo>();
                 for(int i = 0; i < response.length(); i++){
+
                     try {
+
                         JSONObject t = response.getJSONObject(i);
                         currentGames.add( new GameInfo (
                                 t.getInt("id"),
                                 t.getInt("player1"),
-                                t.getInt("player2")
+                                t.getInt("player2"),
+                                t.getInt("state"),
+                                t.getInt("type"),
+                                client
                         ) );
 
                     } catch (JSONException e) { }
                 }
+
+                callback.onSuccessResponse(currentGames);
+
             }
         }, new Response.ErrorListener() {
             public void onErrorResponse(VolleyError error) {
@@ -364,6 +383,24 @@ public class Client{
         });
 
         queue.add(getGamesById);
+    }
+
+    public void reportProgress(int game_id, int correct){
+        String t_url = url + "game/" + game_id + "/progress";
+
+        JSONObject body = new JSONObject();
+        try {
+            body.put("correct", correct);
+            body.put("context_id", prefs.getInt("user_id", 0));
+        } catch(JSONException e) {}
+
+        JsonArrayRequest reportProg = new JsonArrayRequest(Request.Method.POST, t_url, body, new Response.Listener<JSONArray>() {
+            public void onResponse(JSONArray response) {
+                System.out.println("Progress reported.");
+            }
+        }, new Response.ErrorListener() { public void onErrorResponse(VolleyError error) {} });
+
+        queue.add(reportProg);
     }
 
     private static boolean isNetworkAvailable(Context context) {

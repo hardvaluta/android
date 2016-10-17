@@ -94,4 +94,10 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
         ttsEngine.tts.setSpeechRate(tempFloat);
         ttsEngine.speak("Detta är ett test");
     }
+
+    public void onBackPressed(){
+        super.onBackPressed();
+        startActivity(new Intent(this, MainMenu.class));
+        finish();
+    }
 }
