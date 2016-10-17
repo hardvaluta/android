@@ -59,8 +59,8 @@ public class GameInfo implements Serializable{
         }
     }
 
-    public void reportProgress(int playerID, int correct){
-        client.reportProgress(game_id, playerID, correct);
+    public void reportProgress(int correct){
+        client.reportProgress(game_id, correct);
     }
 
 

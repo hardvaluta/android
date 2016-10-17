@@ -379,13 +379,13 @@ public class Client{
         queue.add(getGamesById);
     }
 
-    public void reportProgress(int game_id, int player_id, int correct){
+    public void reportProgress(int game_id, int correct){
         String t_url = url + "game/" + game_id + "/progress";
 
         JSONObject body = new JSONObject();
         try {
             body.put("correct", correct);
-            body.put("context_id", player_id);
+            body.put("context_id", prefs.getInt("user_id", 0));
         } catch(JSONException e) {}
 
         JsonArrayRequest reportProg = new JsonArrayRequest(Request.Method.POST, t_url, body, new Response.Listener<JSONArray>() {
