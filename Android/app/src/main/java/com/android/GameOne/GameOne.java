@@ -1,4 +1,4 @@
-package com.android;
+package com.android.GameOne;
 
 import android.content.ClipData;
 import android.content.Context;
@@ -8,7 +8,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.DragEvent;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +18,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
+import com.android.Client;
+import com.android.Question;
+import com.android.R;
+import com.android.TextToSpeechEngine;
+import com.android.VolleyCallback;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 
