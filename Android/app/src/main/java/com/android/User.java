@@ -12,6 +12,7 @@ public class User{
     public User(String username, int score, int id){
         this.username=username;
         this.score=score;
+        this.id = id;
     }
 
     public int getId()  {   return id;  }

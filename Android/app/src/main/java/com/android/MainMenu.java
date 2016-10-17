@@ -33,6 +33,7 @@ public class MainMenu extends AppCompatActivity
         setContentView(R.layout.main_menu);
 
         prefs = getSharedPreferences(PREF_FILE_NAME, MODE_PRIVATE);
+        System.out.println(prefs.getAll());
 
         settingsButton = (ImageButton) findViewById(R.id.settingsButton);
         settingsButton.setOnClickListener(new View.OnClickListener() {

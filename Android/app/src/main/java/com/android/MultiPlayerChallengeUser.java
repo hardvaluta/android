@@ -56,7 +56,7 @@ public class MultiPlayerChallengeUser extends AppCompatActivity {
                     View v = scrollView.getChildAt(i);
                     if(v instanceof CheckBox){
                         if(((CheckBox) v).isChecked()){
-                            //Challange user here
+
                         }
                     }
                 }

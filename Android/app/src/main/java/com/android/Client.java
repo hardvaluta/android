@@ -219,8 +219,9 @@ public class Client{
 
                             callback.onSuccessResponse(new User(
                                     jsonQ.getString("username"),
-                                    jsonQ.getInt("id"),
-                                    jsonQ.getInt("score")));
+                                    jsonQ.getInt("score"),
+                                    jsonQ.getInt("id")
+                            ));
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -339,6 +340,7 @@ public class Client{
 
         String t_url = url + "game/list";
         JSONObject body = new JSONObject();
+
         try {
             body.put("context_id", prefs.getInt("user_id", 0));
         } catch (JSONException e) { }
