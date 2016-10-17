@@ -17,7 +17,10 @@ public class MultiplayerLandingPage extends AppCompatActivity {
     private Button newChallangeButton;
     private Client client;
     private SharedPreferences prefs;
+
     private ScrollView scrollView;
+    private LinearLayout layout;
+
     private GameInfo g;
 
     private ArrayList<GameInfo> allGames;
@@ -104,7 +107,8 @@ public class MultiplayerLandingPage extends AppCompatActivity {
 
 
         scrollView = (ScrollView) findViewById(R.id.scrollGameList);
-        LinearLayout layout = new LinearLayout(scrollView.getContext());
+        scrollView.removeAllViews();
+        layout = new LinearLayout(scrollView.getContext());
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
