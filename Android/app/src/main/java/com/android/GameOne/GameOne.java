@@ -3,6 +3,7 @@ package com.android.GameOne;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -23,9 +24,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
+import com.android.ChooseGameActivity;
 import com.android.Client;
 import com.android.GameInfo;
 import com.android.GameTwo;
+import com.android.MultiplayerLandingPage;
 import com.android.Question;
 import com.android.R;
 import com.android.SpeakerSlave;
@@ -243,7 +246,16 @@ public class GameOne extends AppCompatActivity implements Observer{
         alertDialog.setPositiveButton("JA",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        finish();
+                        if(multiplayerInfo!=null){
+                            ttsEngine.shutdown();
+                            startActivity(new Intent(GameOne.this, MultiplayerLandingPage.class));
+                            finish();
+                        }
+                        else{
+                            ttsEngine.shutdown();
+                            startActivity(new Intent(GameOne.this, ChooseGameActivity.class));
+                            finish();
+                        }
                     }
                 });
         // Setting Positive "Yes" Button
@@ -280,6 +292,8 @@ public class GameOne extends AppCompatActivity implements Observer{
             AlertDialog gameFinished = new AlertDialog.Builder(GameOne.this).
                     setMessage(message).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
+                    ttsEngine.shutdown();
+                    startActivity(new Intent(GameOne.this, MultiplayerLandingPage.class));
                     finish();
                 }
             }).
