@@ -49,9 +49,6 @@ public class Client{
 
     private SharedPreferences prefs;
 
-    public static final int QUESTION = 0x01;
-    public static final int IMAGE = 0x02;
-
     private ArrayList<Question> questionArray;
     private ArrayList<User> users;
     private ArrayList<GameInfo> currentGames;
@@ -59,7 +56,7 @@ public class Client{
     private JSONObject jsonQ;
 
     //frågor att hämta.
-    private final int count = 4;
+    private int count = 4;
 
     private Client(Context context){
 
