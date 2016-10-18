@@ -39,6 +39,8 @@ import java.util.Collections;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class GameOne extends AppCompatActivity implements Observer{
@@ -196,12 +198,8 @@ public class GameOne extends AppCompatActivity implements Observer{
 
         final View view = (View) findViewById(R.id.sentanceGame);
         final Context context = this;
-        view.post( new Runnable() {
-            @Override
-            public void run() {
-                new Thread(new SpeakerSlave(context, leftSentence.getText().toString(), null, rightSentence.getText().toString())).start();
-            }
-        });
+
+        new SpeakerSlave(context, leftSentence.getText().toString(), null, rightSentence.getText().toString());
     }
 
     private void nextSentence() {
@@ -246,12 +244,14 @@ public class GameOne extends AppCompatActivity implements Observer{
 
         final View view = (View) findViewById(R.id.sentanceGame);
         final Context context = this;
-        view.post( new Runnable() {
+        Timer time = new Timer();
+        time.schedule(new TimerTask() {
             @Override
             public void run() {
                 new Thread(new SpeakerSlave(context, leftSentence.getText().toString(), null, rightSentence.getText().toString())).start();
             }
-        });
+        }, 1000);
+
     }
 
     @Override

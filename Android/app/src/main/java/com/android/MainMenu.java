@@ -31,6 +31,8 @@ public class MainMenu extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_menu);
 
+        //ttsEngine = TextToSpeechEngine.getInstance(this);
+
         prefs = getSharedPreferences(PREF_FILE_NAME, MODE_PRIVATE);
         System.out.println(prefs.getAll());
 
