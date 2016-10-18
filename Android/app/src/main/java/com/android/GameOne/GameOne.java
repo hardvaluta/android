@@ -215,57 +215,6 @@ public class GameOne extends AppCompatActivity implements Observer{
         }, 1000);
     }
 
-    private void nextSentence() {
-        currentSentenceIdx = rand.nextInt(preString.length);
-
-        RelativeLayout container = (RelativeLayout) findViewById(R.id.sentancePond);
-        if(container.getChildCount()<8){
-            for(AnswerButton b : wordButtons){
-                if(b.isRightAnswer()){
-                    b.setRightAnswer(false);
-                    View view = (View) b;
-                    ViewGroup owner = (ViewGroup) view.getParent();
-                    owner.removeView(view);
-                    container.addView(view);
-                    b.setTaken(true);
-                    view.setVisibility(View.VISIBLE);
-                    dropListen.update(null, "Restore");
-                }
-            }
-        }
-
-        for(AnswerButton b : wordButtons){
-            b.setDragable(true);
-        }
-
-        nextSentenceButton.setClickable(false);
-        nextSentenceButton.setVisibility(AnswerButton.INVISIBLE);
-        Collections.shuffle(wordButtons);
-
-        leftSentence.setText(preString[currentSentenceIdx]);
-        rightSentence.setText(postString[currentSentenceIdx]);
-        wordButtons.get(0).setText(words[currentSentenceIdx][0]);
-        wordButtons.get(0).setRightAnswer(true);
-        wordButtons.get(1).setText(words[currentSentenceIdx][1]);
-        wordButtons.get(2).setText(words[currentSentenceIdx][2]);
-        wordButtons.get(3).setText(words[currentSentenceIdx][3]);
-        qImage.setImageResource(images[currentSentenceIdx]);
-        wordButtons.get(0).setBackgroundColor(Color.LTGRAY);
-        wordButtons.get(1).setBackgroundColor(Color.LTGRAY);
-        wordButtons.get(2).setBackgroundColor(Color.LTGRAY);
-        wordButtons.get(3).setBackgroundColor(Color.LTGRAY);
-
-        final View view = (View) findViewById(R.id.sentanceGame);
-        final Context context = this;
-        Timer time = new Timer();
-        time.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                new Thread(new SpeakerSlave(context, leftSentence.getText().toString(), null, rightSentence.getText().toString())).start();
-            }
-        }, 1000);
-    }
-
     @Override
     public void onBackPressed() {
         //Display alert message when back button has been pressed
