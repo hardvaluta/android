@@ -65,8 +65,6 @@ public class GameTwo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_two);
 
-        ttsEngine = TextToSpeechEngine.getInstance(this);
-
         timePassedView = (TextView)findViewById(R.id.timePassedView);
         if (isSingleGame) {
             timePassedView.setText("Antal kort vända: " + numberOfCardViews);
@@ -414,4 +412,17 @@ public class GameTwo extends AppCompatActivity {
         // Showing Alert Message
         alertDialog.show();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ttsEngine = TextToSpeechEngine.getInstance(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ttsEngine.shutdown();
+    }
+
 }
