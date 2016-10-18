@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 public class Memory {
     ArrayList<Pair<String, Bitmap>> memArr;
+
     public Memory(){
         memArr = new ArrayList<Pair<String, Bitmap>>();
     }
@@ -21,5 +22,13 @@ public class Memory {
 
     public void add(Pair<String, Bitmap> p){
         memArr.add(p);
+    }
+
+    public int size(){
+        return memArr.size();
+    }
+
+    public Pair<String, Bitmap> get(int i){
+        return memArr.get(i);
     }
 }
