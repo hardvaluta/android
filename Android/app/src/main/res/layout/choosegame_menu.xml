@@ -61,23 +61,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="75dp"
                     android:layout_alignParentLeft="true"
-                    android:text="Game_One" />
+                    android:text="Finn rätt ord"
+                    android:layout_toLeftOf="@+id/Game_One_TTS"
+                    android:layout_toStartOf="@+id/Game_One_TTS" />
+
                 <ImageButton
                     android:id="@+id/Game_One_TTS"
                     android:layout_width="wrap_content"
                     android:layout_height="75dp"
-                    android:layout_centerHorizontal="true"
                     app:srcCompat="@mipmap/texttospeech"
-                    android:background="#FFFFFF"/>
-
-                <ImageView
-                    android:id="@+id/Game_One_Image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:background="#FFFFFF"
+                    android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    app:srcCompat="@mipmap/singleplayericon"
-                    />
+                    android:layout_alignParentEnd="true" />
+
             </RelativeLayout>
 
             <Space
@@ -96,132 +93,41 @@
                     android:layout_width="wrap_content"
                     android:layout_height="75dp"
                     android:layout_alignParentLeft="true"
-                    android:text="Game_Two" />
+                    android:text="Memory"
+                    android:layout_toLeftOf="@+id/Game_Two_TTS"
+                    android:layout_toStartOf="@+id/Game_Two_TTS" />
 
                 <ImageButton
                     android:id="@+id/Game_Two_TTS"
                     android:layout_width="wrap_content"
                     android:layout_height="75dp"
-                    android:layout_centerHorizontal="true"
                     app:srcCompat="@mipmap/texttospeech"
-                    android:background="#FFFFFF"/>
-
-                <ImageView
-                    android:id="@+id/Game_Two_Image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:background="#FFFFFF"
+                    android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    app:srcCompat="@mipmap/singleplayericon"
-                    />
-            </RelativeLayout>
+                    android:layout_alignParentEnd="true" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="0.14" />
+            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal" >
 
-                <Button
-                    android:id="@+id/Game_Three"
-                    android:layout_width="wrap_content"
-                    android:layout_height="75dp"
-                    android:layout_alignParentLeft="true"
-                    android:text="Game_Three" />
-
-                <ImageButton
-                    android:id="@+id/Game_Three_TTS"
-                    android:layout_width="wrap_content"
-                    android:layout_height="75dp"
-                    android:layout_centerHorizontal="true"
-                    app:srcCompat="@mipmap/texttospeech"
-                    android:background="#FFFFFF"/>
-
-                <ImageView
-                    android:id="@+id/Game_Three_Image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    app:srcCompat="@mipmap/singleplayericon"
-                    />
             </RelativeLayout>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="0.14" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal" >
 
-                <Button
-                    android:id="@+id/Game_Four"
-                    android:layout_width="wrap_content"
-                    android:layout_height="75dp"
-                    android:layout_alignParentLeft="true"
-                    android:text="Game_Four" />
-
-                <ImageButton
-                    android:id="@+id/Game_Four_TTS"
-                    android:layout_width="wrap_content"
-                    android:layout_height="75dp"
-                    android:layout_centerHorizontal="true"
-                    app:srcCompat="@mipmap/texttospeech"
-                    android:background="#FFFFFF"/>
-
-                <ImageView
-                    android:id="@+id/Game_Four_Image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    app:srcCompat="@mipmap/singleplayericon"
-                    />
             </RelativeLayout>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="0.14" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal" >
 
-                <Button
-                    android:id="@+id/Game_Five"
-                    android:layout_width="wrap_content"
-                    android:layout_height="75dp"
-                    android:layout_alignParentLeft="true"
-                    android:text="Game_Five" />
-
-                <ImageButton
-                    android:id="@+id/Game_Five_TTS"
-                    android:layout_width="wrap_content"
-                    android:layout_height="75dp"
-                    android:layout_centerHorizontal="true"
-                    app:srcCompat="@mipmap/texttospeech"
-                    android:background="#FFFFFF"/>
-
-                <ImageView
-                    android:id="@+id/Game_Five_Image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    app:srcCompat="@mipmap/singleplayericon"
-                    />
             </RelativeLayout>
         </LinearLayout>
     </ScrollView>

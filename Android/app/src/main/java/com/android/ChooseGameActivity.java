@@ -36,9 +36,9 @@ public class ChooseGameActivity extends AppCompatActivity {
 
         ImageButton ttsOne = (ImageButton) findViewById(R.id.Game_One_TTS);
         ImageButton ttsTwo = (ImageButton) findViewById(R.id.Game_Two_TTS);
-        ImageButton ttsThree = (ImageButton) findViewById(R.id.Game_Three_TTS);
-        ImageButton ttsFour = (ImageButton) findViewById(R.id.Game_Four_TTS);
-        ImageButton ttsFive = (ImageButton) findViewById(R.id.Game_Five_TTS);
+        //ImageButton ttsThree = (ImageButton) findViewById(R.id.Game_Three_TTS);
+        //ImageButton ttsFour = (ImageButton) findViewById(R.id.Game_Four_TTS);
+        //ImageButton ttsFive = (ImageButton) findViewById(R.id.Game_Five_TTS);
 
         ttsOne.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,7 +52,7 @@ public class ChooseGameActivity extends AppCompatActivity {
                 wordButtonPressed(R.id.Game_Two);
             }
         });
-        ttsThree.setOnClickListener(new View.OnClickListener() {
+        /*ttsThree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 wordButtonPressed(R.id.Game_Three);
@@ -69,13 +69,13 @@ public class ChooseGameActivity extends AppCompatActivity {
             public void onClick(View view) {
                 wordButtonPressed(R.id.Game_Five);
             }
-        });
+        });*/
 
         Button gameOne = (Button) findViewById(R.id.Game_One);
         Button gameTwo = (Button) findViewById(R.id.Game_Two);
-        Button gameThree = (Button) findViewById(R.id.Game_Three);
-        Button gameFour = (Button) findViewById(R.id.Game_Four);
-        Button gameFive = (Button) findViewById(R.id.Game_Five);
+        //Button gameThree = (Button) findViewById(R.id.Game_Three);
+        //Button gameFour = (Button) findViewById(R.id.Game_Four);
+        //Button gameFive = (Button) findViewById(R.id.Game_Five);
 
         gameOne.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,7 +89,7 @@ public class ChooseGameActivity extends AppCompatActivity {
                 startActivity(new Intent(ChooseGameActivity.this, GameTwo.class));
             }
         });
-        gameThree.setOnClickListener(new View.OnClickListener() {
+        /*gameThree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
                 // startActivity(new Intent(ChooseGameActivity.this, GameThree.class));
@@ -106,7 +106,7 @@ public class ChooseGameActivity extends AppCompatActivity {
             public void onClick(View view){
                 // startActivity(new Intent(ChooseGameActivity.this, GameFive.class));
             }
-        });
+        });*/
 
     }
 

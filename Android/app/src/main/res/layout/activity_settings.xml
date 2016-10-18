@@ -53,22 +53,23 @@
         android:layout_alignParentEnd="true" />
 
     <TextView
-        android:text="TextView"
+        android:text="placeholder"
         android:layout_width="wrap_content"
         android:layout_height="100dp"
         android:id="@+id/loginInfoTextView"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_toLeftOf="@+id/login_logoutButton"
+        android:layout_toStartOf="@+id/login_logoutButton"
+        android:layout_alignTop="@+id/login_logoutButton" />
 
     <Button
         android:text="Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/login_logoutButton"
-        android:layout_above="@+id/loginInfoTextView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="18dp" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>
