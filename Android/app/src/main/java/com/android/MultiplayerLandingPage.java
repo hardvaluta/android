@@ -179,23 +179,34 @@ public class MultiplayerLandingPage extends AppCompatActivity {
         if(!yourTurnGames.isEmpty()){
             for(final GameInfo g : yourTurnGames){
 
-                Button game = new Button(layout.getContext());
+                final Button game = new Button(layout.getContext());
                 game.setLayoutParams(
                         new LinearLayout.LayoutParams(
                                 LinearLayout.LayoutParams.MATCH_PARENT,
                                 LinearLayout.LayoutParams.WRAP_CONTENT)
                 );
 
-                game.setText("GameId: " + g.getID() + ". Tryck för att spela.");
-                game.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
+                int uid = prefs.getInt("user_id", 0) == g.getOwnerID() ? g.getChallengedUserID() : g.getOwnerID();
 
-                        Intent intent = new Intent(MultiplayerLandingPage.this, GameOne.class);
-                        intent.putExtra("GameInfo", g);
-                        startActivity(intent);
+                client.getUser(uid, new VolleyCallback() {
+                    @Override
+                    public void onSuccessResponse(Object o) {
 
+                        User u = (User)o;
+
+                        game.setText("Spel mot " + u.getUsername() + ". Tryck för att spela.");
+                        game.setOnClickListener(new View.OnClickListener() {
+                            public void onClick(View v) {
+
+                                Intent intent = new Intent(MultiplayerLandingPage.this, GameOne.class);
+                                intent.putExtra("GameInfo", g);
+                                startActivity(intent);
+
+                            }
+                        });
                     }
                 });
+
 
                 layout.addView(game);
             }
@@ -203,14 +214,23 @@ public class MultiplayerLandingPage extends AppCompatActivity {
 
         if(!otherTurnGames.isEmpty()){
             for(GameInfo g : otherTurnGames){
-                Button game = new Button(layout.getContext());
+                final Button game = new Button(layout.getContext());
                 game.setLayoutParams(
                         new LinearLayout.LayoutParams(
                                 LinearLayout.LayoutParams.MATCH_PARENT,
                                 LinearLayout.LayoutParams.WRAP_CONTENT)
                 );
-                game.setText("GameId: " + g.getID());
-                game.setEnabled(false);
+
+                int uid = prefs.getInt("user_id", 0) == g.getOwnerID() ? g.getChallengedUserID() : g.getOwnerID();
+                client.getUser(uid, new VolleyCallback() {
+                    @Override
+                    public void onSuccessResponse(Object o) {
+
+                        User u = (User)o;
+                        game.setText("Spel mot " + u.getUsername() + ". Det är inte din tur.");
+                        game.setEnabled(false);
+                    }
+                });
 
                 layout.addView(game);
             }
