@@ -209,13 +209,10 @@ public class GameOne extends AppCompatActivity implements Observer{
             final View view = (View) findViewById(R.id.sentanceGame);
             final Context context = this;
 
-            Timer time = new Timer();
-            time.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    new Thread(new SpeakerSlave(context, leftSentence.getText().toString(), null, rightSentence.getText().toString())).start();
-                }
-            }, 1000);
+            ttsEngine.speak(leftSentence.getText().toString());
+            ttsEngine.playEarcon("silence");
+            ttsEngine.speakCombo(rightSentence.getText().toString());
+
         }
         else{
             if(multiplayerInfo!=null){
@@ -381,8 +378,15 @@ public class GameOne extends AppCompatActivity implements Observer{
                     }
                 }
             }
-
-            new Thread(new SpeakerSlave(context, sLeft, sChoise, sRight)).start();
+            if(sChoise==null){
+                ttsEngine.speak(leftSentence.getText().toString());
+                ttsEngine.playEarcon("silence");
+                ttsEngine.speakCombo(rightSentence.getText().toString());
+            }
+            else{
+                String sentence = leftSentence.getText()+sChoise+rightSentence.getText();
+                ttsEngine.speak(sentence);
+            }
         }
     }
 

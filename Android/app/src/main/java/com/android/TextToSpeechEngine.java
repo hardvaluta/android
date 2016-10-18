@@ -29,6 +29,7 @@ public class TextToSpeechEngine implements TextToSpeech.OnInitListener {
 
     @Override
     public void onInit(int status){
+        System.out.println("Add earcon: "+tts.addEarcon("silence", "com.android", R.raw.a_tone));
 
     }
 
@@ -36,8 +37,17 @@ public class TextToSpeechEngine implements TextToSpeech.OnInitListener {
         tts.setSpeechRate((float)speechRate/50f);
     }
 
-    public void speak(String string) {
+    public void speak(String string){
+        tts.stop();
         tts.speak(string, TextToSpeech.QUEUE_FLUSH, null);
+    }
+
+    public void speakCombo(String string){
+        tts.speak(string, TextToSpeech.QUEUE_ADD, null);
+    }
+
+    public void playEarcon(String string){
+        tts.playEarcon(string, TextToSpeech.QUEUE_ADD, null);
     }
 
     public void silentSound(){
