@@ -20,6 +20,7 @@ import com.android.GameOne.GameOne;
 
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
@@ -175,7 +176,7 @@ public class MultiplayerLandingPage extends AppCompatActivity {
 
                 Scanner scanner = new Scanner(openFileInput(ProfileActivity.SCORE_FILE_IDS));
                 while(scanner.hasNextInt()) {
-                    finishedGameIds.remove(scanner.nextInt());
+                    finishedGameIds.remove(Integer.valueOf(scanner.nextLine()));
                 }
                 scanner.close();
             } catch (Exception e) {  }
@@ -184,19 +185,22 @@ public class MultiplayerLandingPage extends AppCompatActivity {
                         PrintWriter printer = new PrintWriter(openFileOutput(ProfileActivity.SCORE_FILE_IDS, Context.MODE_APPEND));
                         for (GameInfo gameInfoElement: finishedGameIds.values()) {
                             //Add ID to ID list
-                            printer.write(gameInfoElement.getID());
+                            printer.print("" + gameInfoElement.getID() + "\n");
                             //Add game data to score list
                         }
-                        printer.close();
+                    printer.close();
 
                         FileOutputStream fosGameData = openFileOutput(ProfileActivity.SCORE_FILE_NAME3, Context.MODE_APPEND);
                         for (GameInfo gameInfoElement: finishedGameIds.values()) {
                             //Add ID to ID list
-                            String gameDataString = 
-                                        gameInfoElement.getType()               + ","
+                            String gameDataString =
+                                        "2"                                     + ","
+                                    +   gameInfoElement.getType()               + ","
                                     +   gameInfoElement.getID()                 + ","
                                     +   gameInfoElement.getOwnerID()            + ","
-                                    +   gameInfoElement.getSlaveID()   + "\n";
+                                    +   gameInfoElement.getOwnerScore()         + ","
+                                    +   gameInfoElement.getSlaveID()            + ","
+                                    +   gameInfoElement.getSlaveScore()         + "\n";
                             fosGameData.write(gameDataString.getBytes());
                             //Add game data to score list
                         }
