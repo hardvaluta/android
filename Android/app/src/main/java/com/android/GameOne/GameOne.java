@@ -248,12 +248,16 @@ public class GameOne extends AppCompatActivity implements Observer{
                     public void onClick(DialogInterface dialog, int which) {
                         if(multiplayerInfo!=null){
                             ttsEngine.shutdown();
-                            startActivity(new Intent(GameOne.this, MultiplayerLandingPage.class));
+                            Intent intent = new Intent(GameOne.this, ChooseGameActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
                             finish();
                         }
                         else{
                             ttsEngine.shutdown();
-                            startActivity(new Intent(GameOne.this, ChooseGameActivity.class));
+                            Intent intent = new Intent(GameOne.this, ChooseGameActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
                             finish();
                         }
                     }
@@ -293,7 +297,9 @@ public class GameOne extends AppCompatActivity implements Observer{
                     setMessage(message).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     ttsEngine.shutdown();
-                    startActivity(new Intent(GameOne.this, MultiplayerLandingPage.class));
+                    Intent intent = new Intent(GameOne.this, MultiplayerLandingPage.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
                     finish();
                 }
             }).
