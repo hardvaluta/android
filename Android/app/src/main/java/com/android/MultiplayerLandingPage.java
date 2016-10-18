@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.android.GameOne.GameOne;
+
 import java.util.ArrayList;
 
 import static android.content.Context.MODE_PRIVATE;
