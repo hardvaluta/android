@@ -19,7 +19,7 @@
         android:id="@+id/questionImage"
         android:layout_weight="0.5"
         app:srcCompat="@mipmap/singleplayericon"
-        />
+        android:background="#FFFFFF"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -32,8 +32,8 @@
             android:layout_height="40dp"
             android:layout_alignLeft="@+id/dropLayout"
             android:layout_marginTop="15dp"
-            app:srcCompat="@mipmap/texttospeech"
-            android:background="#FFFFFF"/>
+            app:srcCompat="@mipmap/tts"
+            android:background="?android:selectableItemBackground"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -143,11 +143,11 @@
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@mipmap/forwardarrow"
+            app:srcCompat="@mipmap/forward_arrow"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:id="@+id/nextSentenceButton"
-            android:background="#FFFFFF"/>
+            android:background="?android:selectableItemBackground"/>
 
     </RelativeLayout>
 </LinearLayout>

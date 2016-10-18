@@ -46,7 +46,6 @@ public class TextToSpeechEngine implements TextToSpeech.OnInitListener {
     public boolean isPlaying(){
         return manager.isPlaying();
     }
-    public void stopPlaying(){manager.stop();}
     public boolean isSpeaking() {
         return tts.isSpeaking();
     }

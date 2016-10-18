@@ -165,55 +165,97 @@ public class GameOne extends AppCompatActivity implements Observer{
     }
 
     private void nextQuestion(){
-        Question q = questionArray.get(currentQuestion);
-        RelativeLayout container = (RelativeLayout) findViewById(R.id.sentancePond);
-        if(container.getChildCount()<8){
-            for(AnswerButton b : wordButtons){
-                if(b.isRightAnswer()){
-                    b.setRightAnswer(false);
-                    View view = (View) b;
-                    ViewGroup owner = (ViewGroup) view.getParent();
-                    owner.removeView(view);
-                    container.addView(view);
-                    b.setTaken(true);
-                    view.setVisibility(View.VISIBLE);
-                    dropListen.update(null, "Restore");
+        ProgressBar progressBar=(ProgressBar) findViewById(R.id.progressBar);
+        if(progressBar.getProgress()<nrQuestions){
+            Question q = questionArray.get(currentQuestion);
+            RelativeLayout container = (RelativeLayout) findViewById(R.id.sentancePond);
+            if(container.getChildCount()<8){
+                for(AnswerButton b : wordButtons){
+                    if(b.isRightAnswer()){
+                        b.setRightAnswer(false);
+                        View view = (View) b;
+                        ViewGroup owner = (ViewGroup) view.getParent();
+                        owner.removeView(view);
+                        container.addView(view);
+                        b.setTaken(true);
+                        view.setVisibility(View.VISIBLE);
+                        dropListen.update(null, "Restore");
+                    }
                 }
             }
-        }
 
-        for(AnswerButton b : wordButtons){
-            b.setDragable(true);
-        }
-
-        nextSentenceButton.setClickable(false);
-        nextSentenceButton.setVisibility(AnswerButton.INVISIBLE);
-        Collections.shuffle(wordButtons);
-
-        wordButtons.get(0).setText(q.getA());
-        wordButtons.get(0).setRightAnswer(true);
-        wordButtons.get(1).setText(q.getB());
-        wordButtons.get(2).setText(q.getC());
-        wordButtons.get(3).setText(q.getD());
-        String[] sentence=q.getText().split("\\*");
-        leftSentence.setText(sentence[0]);
-        rightSentence.setText(sentence[1]);
-        qImage.setImageBitmap(q.getImg());
-        wordButtons.get(0).setBackgroundColor(Color.LTGRAY);
-        wordButtons.get(1).setBackgroundColor(Color.LTGRAY);
-        wordButtons.get(2).setBackgroundColor(Color.LTGRAY);
-        wordButtons.get(3).setBackgroundColor(Color.LTGRAY);
-
-        final View view = (View) findViewById(R.id.sentanceGame);
-        final Context context = this;
-
-        Timer time = new Timer();
-        time.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                new Thread(new SpeakerSlave(context, leftSentence.getText().toString(), null, rightSentence.getText().toString())).start();
+            for(AnswerButton b : wordButtons){
+                b.setDragable(true);
             }
-        }, 1000);
+
+            nextSentenceButton.setClickable(false);
+            nextSentenceButton.setVisibility(AnswerButton.INVISIBLE);
+            Collections.shuffle(wordButtons);
+
+            wordButtons.get(0).setText(q.getA());
+            wordButtons.get(0).setRightAnswer(true);
+            wordButtons.get(1).setText(q.getB());
+            wordButtons.get(2).setText(q.getC());
+            wordButtons.get(3).setText(q.getD());
+            String[] sentence=q.getText().split("\\*");
+            leftSentence.setText(sentence[0]);
+            rightSentence.setText(sentence[1]);
+            qImage.setImageBitmap(q.getImg());
+            wordButtons.get(0).setBackgroundColor(Color.LTGRAY);
+            wordButtons.get(1).setBackgroundColor(Color.LTGRAY);
+            wordButtons.get(2).setBackgroundColor(Color.LTGRAY);
+            wordButtons.get(3).setBackgroundColor(Color.LTGRAY);
+
+            final View view = (View) findViewById(R.id.sentanceGame);
+            final Context context = this;
+
+            Timer time = new Timer();
+            time.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    new Thread(new SpeakerSlave(context, leftSentence.getText().toString(), null, rightSentence.getText().toString())).start();
+                }
+            }, 1000);
+        }
+        else{
+            if(multiplayerInfo!=null){
+                multiplayerInfo.reportProgress(client, progressBar.getProgress());
+            }
+
+            ImageView image = new ImageView(GameOne.this);
+            try{
+                InputStream ims = getAssets().open("good_job_smaller.jpg");
+                image.setImageDrawable(Drawable.createFromStream(ims, null));
+                ims.close();
+            }catch(IOException e){}
+            String message = "Bra jobbat!";
+            ttsEngine.speak("Bra Jobbat!");
+            AlertDialog gameFinished = new AlertDialog.Builder(GameOne.this).
+                    setMessage(message).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    ttsEngine.shutdown();
+                    Intent intent;
+                    if(multiplayerInfo!=null){
+                        intent = new Intent(GameOne.this, MultiplayerLandingPage.class);
+                    }
+                    else{
+                        intent = new Intent(GameOne.this, ChooseGameActivity.class);
+                    }
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    finish();
+                }
+            }).
+                    setTitle("Omgång färdig!").
+                    setView(image).show();
+            gameFinished.setCancelable(false);
+            gameFinished.setCanceledOnTouchOutside(false);
+            TextView textView = (TextView) gameFinished.findViewById(android.R.id.message);
+                    /*Typeface face=Typeface.createFromAsset(getAssets(), "Bubblegum.ttf");
+                    textView.setTypeface(face);*/
+            textView.setTextSize(50);
+            textView.setAllCaps(false);
+        }
     }
 
     @Override
@@ -271,50 +313,8 @@ public class GameOne extends AppCompatActivity implements Observer{
         progressText.setText(progressBar.getProgress()+"/"+nrQuestions+" frågor");
         currentQuestion++;
 
-        if(progressBar.getProgress()<nrQuestions){
-            nextSentenceButton.setClickable(true);
-            nextSentenceButton.setVisibility(AnswerButton.VISIBLE);
-        }
-        else{   // Here is what happens when the game is finished!
-
-            if(multiplayerInfo!=null){
-                multiplayerInfo.reportProgress(client, progressBar.getProgress());
-            }
-
-            ImageView image = new ImageView(GameOne.this);
-            try{
-                InputStream ims = getAssets().open("good_job_smaller.jpg");
-                image.setImageDrawable(Drawable.createFromStream(ims, null));
-                ims.close();
-            }catch(IOException e){}
-            String message = "Bra jobbat!";
-            ttsEngine.speak("Bra Jobbat!");
-            AlertDialog gameFinished = new AlertDialog.Builder(GameOne.this).
-                    setMessage(message).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    ttsEngine.shutdown();
-                    Intent intent;
-                    if(multiplayerInfo!=null){
-                        intent = new Intent(GameOne.this, MultiplayerLandingPage.class);
-                    }
-                    else{
-                        intent = new Intent(GameOne.this, ChooseGameActivity.class);
-                    }
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                    finish();
-                }
-            }).
-                    setTitle("Omgång färdig!").
-                    setView(image).show();
-            gameFinished.setCancelable(false);
-            gameFinished.setCanceledOnTouchOutside(false);
-            TextView textView = (TextView) gameFinished.findViewById(android.R.id.message);
-                    /*Typeface face=Typeface.createFromAsset(getAssets(), "Bubblegum.ttf");
-                    textView.setTypeface(face);*/
-            textView.setTextSize(50);
-            textView.setAllCaps(false);
-        }
+        nextSentenceButton.setClickable(true);
+        nextSentenceButton.setVisibility(AnswerButton.VISIBLE);
     }
 
     private class DragList implements View.OnTouchListener{
