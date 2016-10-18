@@ -1,6 +1,7 @@
 package com.android;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -30,7 +31,8 @@ public class MultiPlayerChallengeUser extends AppCompatActivity {
     private LinearLayout layout;
 
     private Client client;
-    private int i;
+
+    private SharedPreferences prefs;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +41,9 @@ public class MultiPlayerChallengeUser extends AppCompatActivity {
         searchField = (EditText) findViewById(R.id.search_edittext);
         scrollView = (ScrollView)findViewById(R.id.scrollview_searchp);
         searchedUsers = new ArrayList<User>();
+
+        prefs = getSharedPreferences(MainMenu.PREF_FILE_NAME, MODE_PRIVATE);
+
         layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
@@ -76,7 +81,8 @@ public class MultiPlayerChallengeUser extends AppCompatActivity {
                 String currText = searchField.getText().toString().trim();
                 if(allUsers != null){
                     for(User u : allUsers){
-                        if(u.getUsername().toLowerCase().contains(currText.toLowerCase()))
+                        if(u.getUsername().toLowerCase().contains(currText.toLowerCase())
+                                && !u.getUsername().equals(prefs.getString("username", null)))
                             searchedUsers.add(u);
 
                     }
