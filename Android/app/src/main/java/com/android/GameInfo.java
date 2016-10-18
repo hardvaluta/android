@@ -17,7 +17,8 @@ public class GameInfo implements Serializable{
         this.p1 = p1; this.p2 = p2;
         this.p1_score = p1_score;
         this.p2_score = p2_score;
-        this.game_id = game_id; this.state = state;
+        this.game_id = game_id;
+        this.state = state;
         this.type = type;
     }
 

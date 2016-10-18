@@ -111,7 +111,7 @@ public class MultiplayerLandingPage extends AppCompatActivity {
                         if(prefs.getInt("user_id", 0) == g.getOwnerID())
                             otherTurnGames.add(g);
 
-                        else if(prefs.getInt("userd_id", 0) == g.getSlaveID())
+                        else if(prefs.getInt("user_id", 0) == g.getSlaveID())
                             yourTurnGames.add(g);
 
                         break;
@@ -271,6 +271,7 @@ public class MultiplayerLandingPage extends AppCompatActivity {
                     public void onSuccessResponse(Object o) {
 
                         User u = (User)o;
+                        System.out.println(u.toString());
                         game.setText("Spel mot " + u.getUsername() + ". Det är inte din tur.");
                         game.setEnabled(false);
                     }

@@ -148,6 +148,7 @@ public class GameOne extends AppCompatActivity implements Observer{
                     for(int n=0;n<4;n++){
                         questionArray.add(qArray.get(n));
                     }
+                    nextQuestion();
                 }
             });
         }
