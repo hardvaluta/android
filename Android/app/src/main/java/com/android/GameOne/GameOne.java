@@ -23,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
+import com.android.Client;
 import com.android.GameInfo;
 import com.android.GameTwo;
 import com.android.Question;
@@ -61,13 +62,19 @@ public class GameOne extends AppCompatActivity implements Observer{
     private TextToSpeechEngine ttsEngine = TextToSpeechEngine.getInstance(this);
     private DragZoneListener dropListen;
 
-    private static GameInfo multiplayerInfo;
+    private static GameInfo multiplayerInfo=null;
     private ArrayList<Question> questionArray;
+    private Client client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_one);
+
+        if(getIntent().getExtras()!=null){
+            Bundle extra = getIntent().getExtras();
+            multiplayerInfo = (GameInfo) extra.get("GameInfo");
+        }
 
         leftSentence= (TextView)findViewById(R.id.leftSentance);
         rightSentence= (TextView)findViewById(R.id.rightSentance);
@@ -114,24 +121,24 @@ public class GameOne extends AppCompatActivity implements Observer{
 
         ImageButton ttsButton=(ImageButton) findViewById(R.id.TTS);
         ttsButton.setOnClickListener(new SentenceListener(this));
-        if(multiplayerInfo==null){
-             com.android.Client client=null;
-        try{
-           client = com.android.Client.getInstance(this.getApplicationContext());
-        }catch(java.lang.Exception e){}
-        client.requestRoundSentenceGame(new VolleyCallback<ArrayList<Question>>(){
 
-            @Override
-            public void onSuccessResponse(ArrayList<Question> qArray) {
-                Question q =qArray.get(0);
-                for(int n=0;n<4;n++){
+        try{
+            client = com.android.Client.getInstance(this.getApplicationContext());
+        }catch(java.lang.Exception e){}
+        if(multiplayerInfo==null){
+            client.requestRoundSentenceGame(new VolleyCallback<ArrayList<Question>>(){
+
+                @Override
+                public void onSuccessResponse(ArrayList<Question> qArray) {
+                    Question q =qArray.get(0);
+                    for(int n=0;n<4;n++){
                         questionArray.add(qArray.get(n));
+                    }
                 }
-            }
-        });
+            });
         }
         else{
-            multiplayerInfo.getRounds(new VolleyCallback<ArrayList<Question>>(){
+            multiplayerInfo.getRounds(client, new VolleyCallback<ArrayList<Question>>(){
                 @Override
                 public void onSuccessResponse(ArrayList<Question> qArray) {
                     Question q = qArray.get(0);
@@ -170,6 +177,10 @@ public class GameOne extends AppCompatActivity implements Observer{
             }
         }
 
+        for(AnswerButton b : wordButtons){
+            b.setDragable(true);
+        }
+
         nextSentenceButton.setClickable(false);
         nextSentenceButton.setVisibility(AnswerButton.INVISIBLE);
         Collections.shuffle(wordButtons);
@@ -182,60 +193,65 @@ public class GameOne extends AppCompatActivity implements Observer{
         String[] sentence=q.getText().split("\\*");
         leftSentence.setText(sentence[0]);
         rightSentence.setText(sentence[1]);
-    }
 
-    public static void setMultiplayerInfo(GameInfo mi){
-        multiplayerInfo=mi;
+        final View view = (View) findViewById(R.id.sentanceGame);
+        final Context context = this;
+        view.post( new Runnable() {
+            @Override
+            public void run() {
+                new Thread(new SpeakerSlave(context, leftSentence.getText().toString(), null, rightSentence.getText().toString())).start();
+            }
+        });
     }
 
     private void nextSentence() {
-            currentSentenceIdx = rand.nextInt(preString.length);
-            
-            RelativeLayout container = (RelativeLayout) findViewById(R.id.sentancePond);
-            if(container.getChildCount()<8){
-                for(AnswerButton b : wordButtons){
-                    if(b.isRightAnswer()){
-                        b.setRightAnswer(false);
-                        View view = (View) b;
-                        ViewGroup owner = (ViewGroup) view.getParent();
-                        owner.removeView(view);
-                        container.addView(view);
-                        b.setTaken(true);
-                        view.setVisibility(View.VISIBLE);
-                        dropListen.update(null, "Restore");
-                    }
-                }
-            }
+        currentSentenceIdx = rand.nextInt(preString.length);
 
+        RelativeLayout container = (RelativeLayout) findViewById(R.id.sentancePond);
+        if(container.getChildCount()<8){
             for(AnswerButton b : wordButtons){
-                b.setDragable(true);
-            }
-
-            nextSentenceButton.setClickable(false);
-            nextSentenceButton.setVisibility(AnswerButton.INVISIBLE);
-            Collections.shuffle(wordButtons);
-
-            leftSentence.setText(preString[currentSentenceIdx]);
-            rightSentence.setText(postString[currentSentenceIdx]);
-            wordButtons.get(0).setText(words[currentSentenceIdx][0]);
-            wordButtons.get(0).setRightAnswer(true);
-            wordButtons.get(1).setText(words[currentSentenceIdx][1]);
-            wordButtons.get(2).setText(words[currentSentenceIdx][2]);
-            wordButtons.get(3).setText(words[currentSentenceIdx][3]);
-            qImage.setImageResource(images[currentSentenceIdx]);
-            wordButtons.get(0).setBackgroundColor(Color.LTGRAY);
-            wordButtons.get(1).setBackgroundColor(Color.LTGRAY);
-            wordButtons.get(2).setBackgroundColor(Color.LTGRAY);
-            wordButtons.get(3).setBackgroundColor(Color.LTGRAY);
-
-            final View view = (View) findViewById(R.id.sentanceGame);
-            final Context context = this;
-            view.post( new Runnable() {
-                @Override
-                public void run() {
-                    new Thread(new SpeakerSlave(context, leftSentence.getText().toString(), null, rightSentence.getText().toString())).start();
+                if(b.isRightAnswer()){
+                    b.setRightAnswer(false);
+                    View view = (View) b;
+                    ViewGroup owner = (ViewGroup) view.getParent();
+                    owner.removeView(view);
+                    container.addView(view);
+                    b.setTaken(true);
+                    view.setVisibility(View.VISIBLE);
+                    dropListen.update(null, "Restore");
                 }
-            });
+            }
+        }
+
+        for(AnswerButton b : wordButtons){
+            b.setDragable(true);
+        }
+
+        nextSentenceButton.setClickable(false);
+        nextSentenceButton.setVisibility(AnswerButton.INVISIBLE);
+        Collections.shuffle(wordButtons);
+
+        leftSentence.setText(preString[currentSentenceIdx]);
+        rightSentence.setText(postString[currentSentenceIdx]);
+        wordButtons.get(0).setText(words[currentSentenceIdx][0]);
+        wordButtons.get(0).setRightAnswer(true);
+        wordButtons.get(1).setText(words[currentSentenceIdx][1]);
+        wordButtons.get(2).setText(words[currentSentenceIdx][2]);
+        wordButtons.get(3).setText(words[currentSentenceIdx][3]);
+        qImage.setImageResource(images[currentSentenceIdx]);
+        wordButtons.get(0).setBackgroundColor(Color.LTGRAY);
+        wordButtons.get(1).setBackgroundColor(Color.LTGRAY);
+        wordButtons.get(2).setBackgroundColor(Color.LTGRAY);
+        wordButtons.get(3).setBackgroundColor(Color.LTGRAY);
+
+        final View view = (View) findViewById(R.id.sentanceGame);
+        final Context context = this;
+        view.post( new Runnable() {
+            @Override
+            public void run() {
+                new Thread(new SpeakerSlave(context, leftSentence.getText().toString(), null, rightSentence.getText().toString())).start();
+            }
+        });
     }
 
     @Override
@@ -288,7 +304,7 @@ public class GameOne extends AppCompatActivity implements Observer{
         }
         else{   // Here is what happens when the game is finished!
             if(multiplayerInfo!=null){
-                multiplayerInfo.reportProgress(progressBar.getProgress());
+                multiplayerInfo.reportProgress(client, progressBar.getProgress());
             }
 
             ImageView image = new ImageView(GameOne.this);

@@ -14,6 +14,8 @@ import com.android.GameOne.GameOne;
 
 import java.util.ArrayList;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class MultiplayerLandingPage extends AppCompatActivity {
 
     private Button newChallangeButton;
@@ -50,6 +52,12 @@ public class MultiplayerLandingPage extends AppCompatActivity {
                 init();
             }
         });
+    }
+
+    public void onBackPressed(){
+        super.onBackPressed();
+        startActivity(new Intent(this, MainMenu.class));
+        finish();
     }
 
     public void init(){
@@ -118,7 +126,7 @@ public class MultiplayerLandingPage extends AppCompatActivity {
         scrollView.removeAllViews();
         layout = new LinearLayout(scrollView.getContext());
         layout.setOrientation(LinearLayout.VERTICAL);
-        layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
 
         if(!toBeAcceptedGames.isEmpty()){
             for(final GameInfo g : toBeAcceptedGames){
@@ -173,15 +181,56 @@ public class MultiplayerLandingPage extends AppCompatActivity {
         if(!yourTurnGames.isEmpty()){
             for(final GameInfo g : yourTurnGames){
 
-                Button game = new Button(layout.getContext());
-                game.setText("GameId: " + g.getID() + ". Tryck för att spela.");
-                game.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
+                final Button game = new Button(layout.getContext());
+                game.setLayoutParams(
+                        new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT)
+                );
 
-                        Intent intent = new Intent(MultiplayerLandingPage.this, GameOne.class);
-                        intent.putExtra("GameInfo", g);
-                        startActivity(intent);
+                int uid = prefs.getInt("user_id", 0) == g.getOwnerID() ? g.getChallengedUserID() : g.getOwnerID();
 
+                client.getUser(uid, new VolleyCallback() {
+                    @Override
+                    public void onSuccessResponse(Object o) {
+
+                        User u = (User)o;
+
+                        game.setText("Spel mot " + u.getUsername() + ". Tryck för att spela.");
+                        game.setOnClickListener(new View.OnClickListener() {
+                            public void onClick(View v) {
+
+                                Intent intent = new Intent(MultiplayerLandingPage.this, GameOne.class);
+                                intent.putExtra("GameInfo", g);
+                                startActivity(intent);
+
+                            }
+                        });
+                    }
+                });
+
+
+                layout.addView(game);
+            }
+        }
+
+        if(!otherTurnGames.isEmpty()){
+            for(GameInfo g : otherTurnGames){
+                final Button game = new Button(layout.getContext());
+                game.setLayoutParams(
+                        new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT)
+                );
+
+                int uid = prefs.getInt("user_id", 0) == g.getOwnerID() ? g.getChallengedUserID() : g.getOwnerID();
+                client.getUser(uid, new VolleyCallback() {
+                    @Override
+                    public void onSuccessResponse(Object o) {
+
+                        User u = (User)o;
+                        game.setText("Spel mot " + u.getUsername() + ". Det är inte din tur.");
+                        game.setEnabled(false);
                     }
                 });
 

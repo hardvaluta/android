@@ -87,7 +87,7 @@ public class Client{
     }
 
     private void requestImage(int image_id, final VolleyCallback callback){
-        String t_url = "data/" + image_id;
+        String t_url = url + "data/" + image_id;
 
         ImageRequest getImageRequest = new ImageRequest(t_url,
                 new Response.Listener<Bitmap>() {
@@ -102,6 +102,30 @@ public class Client{
                 }
         );
         queue.add(getImageRequest);
+    }
+
+    public void getUser(int user_id, final VolleyCallback callback){
+        String t_url = url + "user/" + user_id;
+
+        final JsonArrayRequest requestUser = new JsonArrayRequest(Request.Method.GET, t_url, new Response.Listener<JSONArray>() {
+
+            public void onResponse(JSONArray response) {
+                try {
+                    JSONObject jobj = response.getJSONObject(0);
+
+                    callback.onSuccessResponse(new User(
+                            jobj.getString("username"),
+                            jobj.getInt("score"),
+                            jobj.getInt("id")
+                    ));
+
+                } catch (JSONException e) { }
+            }
+
+        }, new Response.ErrorListener() { public void onErrorResponse(VolleyError error) { }
+        });
+
+        queue.add(requestUser);
     }
 
     public void requestRoundMemoryGame(final VolleyCallback callback){
@@ -366,8 +390,7 @@ public class Client{
                                 t.getInt("player1"),
                                 t.getInt("player2"),
                                 t.getInt("state"),
-                                t.getInt("type"),
-                                client
+                                t.getInt("type")
                         ) );
 
                     } catch (JSONException e) { }
