@@ -64,7 +64,7 @@ public class GameOne extends AppCompatActivity implements Observer{
     private ImageView qImage;
     private int currentSentenceIdx = 0;
     private ArrayList<AnswerButton> wordButtons;
-    private TextToSpeechEngine ttsEngine = TextToSpeechEngine.getInstance(this);
+    private TextToSpeechEngine ttsEngine;
     private DragZoneListener dropListen;
 
     private static GameInfo multiplayerInfo=null;
@@ -403,4 +403,17 @@ public class GameOne extends AppCompatActivity implements Observer{
             new Thread(new SpeakerSlave(context, sLeft, sChoise, sRight)).start();
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ttsEngine = TextToSpeechEngine.getInstance(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ttsEngine.shutdown();
+    }
+
 }

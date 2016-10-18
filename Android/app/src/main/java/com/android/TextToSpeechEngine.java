@@ -51,4 +51,9 @@ public class TextToSpeechEngine implements TextToSpeech.OnInitListener {
     public boolean isSpeaking() {
         return tts.isSpeaking();
     }
+
+    public void shutdown() {
+        instance = null;
+        tts.shutdown();
+    }
 }

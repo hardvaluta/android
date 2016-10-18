@@ -65,8 +65,6 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
             });
         }
 
-        ttsEngine = TextToSpeechEngine.getInstance(this);
-
         speechRateBar = (SeekBar)findViewById(R.id.speechRateBar);
         settings = getSharedPreferences(SettingsActivity.PREF_FILE_NAME, 0);
         currentProgress = settings.getInt("speechRate", 50);
@@ -100,4 +98,17 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
         startActivity(new Intent(this, MainMenu.class));
         finish();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ttsEngine = TextToSpeechEngine.getInstance(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ttsEngine.shutdown();
+    }
+
 }

@@ -22,7 +22,6 @@ public class ChooseGameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.choosegame_menu);
 
-        ttsEngine = TextToSpeechEngine.getInstance(this);
 
         ImageButton mainMenu = (ImageButton) findViewById(R.id.homeButton);
         mainMenu.setOnClickListener(new View.OnClickListener()
@@ -112,5 +111,17 @@ public class ChooseGameActivity extends AppCompatActivity {
 
     private void wordButtonPressed(int buttonIdPressed) {
         ttsEngine.speak(((Button)findViewById(buttonIdPressed)).getText().toString());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ttsEngine = TextToSpeechEngine.getInstance(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ttsEngine.shutdown();
     }
 }

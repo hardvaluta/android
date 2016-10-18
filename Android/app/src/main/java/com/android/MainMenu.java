@@ -18,7 +18,6 @@ public class MainMenu extends AppCompatActivity
 {
     //public final static String EXTRA_MESSAGE = "com.android.GameOne.GameOne";
     public static final String PREF_FILE_NAME = "PreferenceFile";
-    public static final String SCORE_FILE_NAME = "scoreFile";
 
     private ImageButton singlePlayerButton, multiPlayerButton, settingsButton, profileButton;
     private SharedPreferences prefs;
@@ -72,5 +71,17 @@ public class MainMenu extends AppCompatActivity
             }
         });
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ttsEngine = TextToSpeechEngine.getInstance(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ttsEngine.shutdown();
     }
 }
