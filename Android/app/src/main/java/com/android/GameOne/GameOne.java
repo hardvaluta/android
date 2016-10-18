@@ -23,11 +23,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
-<<<<<<< HEAD
-=======
 import com.android.Client;
 import com.android.GameInfo;
->>>>>>> origin/William2
 import com.android.GameTwo;
 import com.android.Question;
 import com.android.R;

@@ -126,18 +126,32 @@ public class Client{
     }
 
     public void requestRoundMemoryGame(final VolleyCallback callback){
-        //TO DO
+        String t_url = url + "type/2?count=6";
+
+
+        JsonArrayRequest requestMemoryRound = new JsonArrayRequest(Request.Method.GET, t_url, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                Memory m = new Memory();
+                for(int i = 0; i < response.length(); i++){
+                    try {
+                        JSONObject obj = response.getJSONObject(i);
+
+
+
+                    } catch (JSONException e) { }
+                }
+            }
+        }, new Response.ErrorListener() { public void onErrorResponse(VolleyError error) { } }
+        );
+
     }
 
     public void requestRoundSentenceGame(final VolleyCallback callback){
-        String t_url = url + "type/1";
-        JSONObject body = new JSONObject();
+        String t_url = url + "type/1?count="+count;
 
-        try {
-            body.put("count", count);
-        } catch (JSONException e) { }
 
-        JsonArrayRequest requestSentenceRound = new JsonArrayRequest(Request.Method.GET, t_url, body, new Response.Listener<JSONArray>() {
+        JsonArrayRequest requestSentenceRound = new JsonArrayRequest(Request.Method.GET, t_url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 try {
