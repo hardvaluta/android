@@ -23,7 +23,8 @@
             android:background="@drawable/iconborder"
             app:srcCompat="@mipmap/homeicon"
             android:id="@+id/homeButton"
-            android:layout_alignParentLeft="true" />
+            android:layout_alignParentLeft="true"
+            />
 
         <TextView
             android:layout_width="wrap_content"
@@ -69,8 +70,13 @@
                     android:id="@+id/Game_One_TTS"
                     android:layout_width="wrap_content"
                     android:layout_height="75dp"
+<<<<<<< HEAD
                     app:srcCompat="@mipmap/speakericon"
                     android:background="#FFFFFF"
+=======
+                    app:srcCompat="@mipmap/tts"
+                    android:background="?android:selectableItemBackground"
+>>>>>>> origin/Development
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true" />
@@ -101,8 +107,13 @@
                     android:id="@+id/Game_Two_TTS"
                     android:layout_width="wrap_content"
                     android:layout_height="75dp"
+<<<<<<< HEAD
                     app:srcCompat="@mipmap/speakericon"
                     android:background="#FFFFFF"
+=======
+                    app:srcCompat="@mipmap/tts"
+                    android:background="?android:selectableItemBackground"
+>>>>>>> origin/Development
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true" />
