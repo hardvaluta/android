@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import org.w3c.dom.Text;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Locale;
@@ -60,10 +62,17 @@ public class GameTwo extends AppCompatActivity {
 
     private TextToSpeechEngine ttsEngine;
 
+    private static GameInfo multiplayerInfo=null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_two);
+        
+        if(getIntent().getExtras()!=null){
+            Bundle extra = getIntent().getExtras();
+            multiplayerInfo = (GameInfo) extra.get("GameInfo");
+        }
 
         timePassedView = (TextView)findViewById(R.id.timePassedView);
         if (isSingleGame) {
