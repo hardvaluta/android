@@ -1,5 +1,6 @@
 package com.android;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +13,13 @@ import android.widget.TextView;
 
 import com.android.GameOne.GameOne;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Scanner;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -73,6 +80,8 @@ public class MultiplayerLandingPage extends AppCompatActivity {
         //FINISHED GAMES.
         finishedGames = new ArrayList<GameInfo>();
 
+        TreeMap<Integer, GameInfo> finishedGameIds = new TreeMap<Integer, GameInfo>();
+
         if(!allGames.isEmpty()){
             for(GameInfo g : allGames){
                 switch(g.getState()){
@@ -110,13 +119,45 @@ public class MultiplayerLandingPage extends AppCompatActivity {
                         break;
 
                     // FINISHED GAMES.
-                    case 3: finishedGames.add(g);
+                    case 3:
+                        finishedGames.add(g);
+                        finishedGameIds.put(g.getID(), g);
                         break;
 
                     default: // WHAT?
                         break;
                 }
             }
+
+            try {
+                Scanner scanner = new Scanner(openFileInput(ProfileActivity.SCORE_FILE_IDS));
+                while(scanner.hasNextInt()) {
+                    finishedGameIds.remove(scanner.nextInt());
+                }
+                scanner.close();
+                if (!finishedGameIds.isEmpty()) {
+                        FileOutputStream fosId = openFileOutput(ProfileActivity.SCORE_FILE_IDS, Context.MODE_APPEND);
+                        for (GameInfo gameInfoElement: finishedGameIds.values()) {
+                            //Add ID to ID list
+                            fosId.write(gameInfoElement.getID());
+                            //Add game data to score list
+                        }
+                        fosId.close();
+
+                        FileOutputStream fosGameData = openFileOutput(ProfileActivity.SCORE_FILE_NAME3, Context.MODE_APPEND);
+                        for (GameInfo gameInfoElement: finishedGameIds.values()) {
+                            //Add ID to ID list
+                            String gameDataString = 
+                                        gameInfoElement.getType()               + ","
+                                    +   gameInfoElement.getID()                 + ","
+                                    +   gameInfoElement.getOwnerID()            + ","
+                                    +   gameInfoElement.getChallengedUserID()   + "\n";
+                            fosGameData.write(gameDataString.getBytes());
+                            //Add game data to score list
+                        }
+                        fosGameData.close();
+                }
+            } catch (Exception e) { e.printStackTrace(); }
         }
 
 

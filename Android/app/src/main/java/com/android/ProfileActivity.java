@@ -22,7 +22,8 @@ import java.util.Collections;
 
 public class ProfileActivity extends AppCompatActivity {
     public static final String SCORE_FILE_NAME = "scoreFile";
-    public static final String SCORE_FILE_NAME3 = "scoreFile6"; // Test
+    public static final String SCORE_FILE_NAME3 = "scoreFile27"; // Test
+    public static final String SCORE_FILE_IDS = "scoreIdFile";
     private NestedScrollView scrollView;
     private TextView staticTextView;
     private float scrolledPercentage = 0f;
