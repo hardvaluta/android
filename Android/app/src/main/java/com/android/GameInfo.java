@@ -41,6 +41,15 @@ public class GameInfo implements Serializable{
     public int getSlaveScore(){
         return p2_score;
     }
+
+    public String getOwnerUserName() {
+        return "Player 1";
+    }
+
+    public String getSlaveUserName(){
+        return "Player 2";
+    }
+
     /*
     state = 0, the game has not started, ie waiting for user to accept challenge.
     state = 1, player1's turn.

@@ -198,8 +198,10 @@ public class MultiplayerLandingPage extends AppCompatActivity {
                                     +   gameInfoElement.getType()               + ","
                                     +   gameInfoElement.getID()                 + ","
                                     +   gameInfoElement.getOwnerID()            + ","
+                                    +   gameInfoElement.getOwnerUserName()      + ","
                                     +   gameInfoElement.getOwnerScore()         + ","
                                     +   gameInfoElement.getSlaveID()            + ","
+                                    +   gameInfoElement.getSlaveUserName()      + ","
                                     +   gameInfoElement.getSlaveScore()         + "\n";
                             fosGameData.write(gameDataString.getBytes());
                             //Add game data to score list

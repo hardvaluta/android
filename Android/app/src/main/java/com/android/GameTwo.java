@@ -75,6 +75,7 @@ public class GameTwo extends AppCompatActivity {
         if(getIntent().getExtras()!=null){
             Bundle extra = getIntent().getExtras();
             multiplayerInfo = (GameInfo) extra.get("GameInfo");
+            isSingleGame = false;
         }
 
         timePassedView = (TextView)findViewById(R.id.timePassedView);
@@ -108,9 +109,13 @@ public class GameTwo extends AppCompatActivity {
                         image.setImageDrawable(Drawable.createFromStream(ims, null));
                         ims.close();
                     }catch(IOException e){}
-
-                    String message = "Du vände på "+numberOfCardViews+" kort\nBra jobbat!";
-                    ttsEngine.speak("Bra Jobbat!");
+                    String message = "";
+                    if (isSingleGame) {
+                        message = "Du vände på " + numberOfCardViews + " kort\nBra jobbat!";
+                    } else {
+                        message = "Det tog " + numberOfCardViews + " sekunder\nBra jobbat!";
+                    }
+                    ttsEngine.speak("Bra jobbat!");
                     AlertDialog gameFinished = new AlertDialog.Builder(GameTwo.this).
                             setMessage(message).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
@@ -302,12 +307,13 @@ public class GameTwo extends AppCompatActivity {
                             timePassedView.setText("Antal kort vända: " + numberOfCardViews);
                         }
                         if (finishedCards.size() >= 12) {
-                            if (!isSingleGame) {
-                                handler.removeCallbacks(runnable);
-                            }
-                            // Save progress.
-                            for (int ajoj = 0; ajoj < 1; ajoj++) {
-                                String string = gameId + "," + isSingleGame + "," + System.currentTimeMillis() + "," + timePassed + "\n";
+                            if (isSingleGame) {
+                                // Save progress.
+                                String string =
+                                        "1"                             + ","
+                                    +   gameId                          + ","
+                                    +   System.currentTimeMillis()      + ","
+                                    +   numberOfCardViews               + "\n";
                                 try {
                                     FileOutputStream fos = openFileOutput(ProfileActivity.SCORE_FILE_NAME3, Context.MODE_APPEND);
                                     fos.write(string.getBytes());
@@ -315,6 +321,8 @@ public class GameTwo extends AppCompatActivity {
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
+                            } else {
+                                handler.removeCallbacks(runnable);
                             }
 
                             nextButton.setClickable(true);
