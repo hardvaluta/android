@@ -390,8 +390,7 @@ public class Client{
                                 t.getInt("player1"),
                                 t.getInt("player2"),
                                 t.getInt("state"),
-                                t.getInt("type"),
-                                client
+                                t.getInt("type")
                         ) );
 
                     } catch (JSONException e) { }

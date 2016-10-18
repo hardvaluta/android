@@ -10,12 +10,11 @@ import java.io.Serializable;
 
 public class GameInfo implements Serializable{
     private int game_id, p1, p2, state, type;
-    private transient Client client;
 
-    public GameInfo(int game_id, int p1, int p2, int state, int type, Client client){
+    public GameInfo(int game_id, int p1, int p2, int state, int type){
         this.p1 = p1; this.p2 = p2;
         this.game_id = game_id; this.state = state;
-        this.type = type; this.client = client;
+        this.type = type;
     }
 
     public int getID(){
@@ -44,14 +43,14 @@ public class GameInfo implements Serializable{
         return type;
     }
 
-    public void getRounds(final VolleyCallback callback){
+    public void getRounds(Client c, final VolleyCallback callback){
         switch(type){
             case 1:
-                client.requestRoundSentenceGame(callback);
+                c.requestRoundSentenceGame(callback);
                 break;
 
             case 2: //DO NOT USE
-                client.requestRoundMemoryGame(callback);
+                c.requestRoundMemoryGame(callback);
                 break;
 
             default:
@@ -59,8 +58,8 @@ public class GameInfo implements Serializable{
         }
     }
 
-    public void reportProgress(int correct){
-        client.reportProgress(game_id, correct);
+    public void reportProgress(Client c, int correct){
+        c.reportProgress(game_id, correct);
     }
 
 
