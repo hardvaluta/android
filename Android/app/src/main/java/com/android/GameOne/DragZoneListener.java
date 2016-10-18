@@ -11,6 +11,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.R;
+import com.android.TextToSpeechEngine;
+
+import org.w3c.dom.Text;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -25,6 +28,7 @@ public class DragZoneListener extends Observable implements View.OnDragListener,
     RelativeLayout container;
     View dragSpot;
     ViewGroup me;
+
     public DragZoneListener(ImageButton nextSentenceButton){
         this.nextSentenceButton=nextSentenceButton;
     }

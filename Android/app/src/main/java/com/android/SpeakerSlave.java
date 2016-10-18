@@ -22,10 +22,8 @@ public class SpeakerSlave implements Runnable{
     public void run() {
         if(s2==null){
             ttsEngine.speak(s1);
-            while(ttsEngine.isSpeaking()){}
-            ttsEngine.silentSound();
-            while(ttsEngine.isPlaying()){}
-            ttsEngine.speak(s3);
+            ttsEngine.playEarcon("silence");
+            ttsEngine.speakCombo(s3);
         }
         else{
             String sentence=s1+" "+s2+" "+s3;

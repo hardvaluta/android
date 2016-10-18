@@ -18,6 +18,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -67,6 +69,7 @@ public class GameTwo extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_game_two);
         
         if(getIntent().getExtras()!=null){
@@ -116,6 +119,8 @@ public class GameTwo extends AppCompatActivity {
                     }).
                             setTitle("Omgång färdig!").
                             setView(image).show();
+                    gameFinished.setCancelable(false);
+                    gameFinished.setCanceledOnTouchOutside(false);
                     TextView textView = (TextView) gameFinished.findViewById(android.R.id.message);
                     /*Typeface face=Typeface.createFromAsset(getAssets(), "Bubblegum.ttf");
                     textView.setTypeface(face);*/

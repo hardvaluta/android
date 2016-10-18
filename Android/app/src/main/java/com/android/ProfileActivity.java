@@ -6,6 +6,8 @@ import android.support.v4.widget.Space;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -22,8 +24,8 @@ import java.util.Collections;
 
 public class ProfileActivity extends AppCompatActivity {
     public static final String SCORE_FILE_NAME = "scoreFile";
-    public static final String SCORE_FILE_NAME3 = "scoreFile276"; // Test
-    public static final String SCORE_FILE_IDS = "scoreIdFile34";
+    public static final String SCORE_FILE_NAME3 = "scoreFile22786"; // Test
+    public static final String SCORE_FILE_IDS = "scoreIdFile2314";
     private NestedScrollView scrollView;
     private TextView staticTextView;
     private float scrolledPercentage = 0f;
