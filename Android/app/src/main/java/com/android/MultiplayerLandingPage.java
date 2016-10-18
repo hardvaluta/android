@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.android.GameOne.GameOne;
 
 import java.io.FileOutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.TreeMap;
@@ -80,6 +81,7 @@ public class MultiplayerLandingPage extends AppCompatActivity {
 
         if(!allGames.isEmpty()){
             for(GameInfo g : allGames){
+                //finishedGameIds.put(g.getID(), g); // Test
                 switch(g.getState()){
 
                     //GAMES TO BE ACCEPTED.
@@ -131,16 +133,17 @@ public class MultiplayerLandingPage extends AppCompatActivity {
                 while(scanner.hasNextInt()) {
                     finishedGameIds.remove(scanner.nextInt());
                 }
-
                 scanner.close();
+            } catch (Exception e) {  }
+            try {
                 if (!finishedGameIds.isEmpty()) {
-                        FileOutputStream fosId = openFileOutput(ProfileActivity.SCORE_FILE_IDS, Context.MODE_APPEND);
+                        PrintWriter printer = new PrintWriter(openFileOutput(ProfileActivity.SCORE_FILE_IDS, Context.MODE_APPEND));
                         for (GameInfo gameInfoElement: finishedGameIds.values()) {
                             //Add ID to ID list
-                            fosId.write(gameInfoElement.getID());
+                            printer.write(gameInfoElement.getID());
                             //Add game data to score list
                         }
-                        fosId.close();
+                        printer.close();
 
                         FileOutputStream fosGameData = openFileOutput(ProfileActivity.SCORE_FILE_NAME3, Context.MODE_APPEND);
                         for (GameInfo gameInfoElement: finishedGameIds.values()) {

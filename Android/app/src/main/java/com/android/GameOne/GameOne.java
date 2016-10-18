@@ -22,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+
 import com.android.Client;
 import com.android.GameInfo;
 import com.android.GameTwo;
