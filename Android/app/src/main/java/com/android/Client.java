@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Pair;
 import android.widget.ImageView;
 import com.android.volley.Cache;
 import com.android.volley.Network;
@@ -132,18 +133,34 @@ public class Client{
         JsonArrayRequest requestMemoryRound = new JsonArrayRequest(Request.Method.GET, t_url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                Memory m = new Memory();
+                final Memory m = new Memory();
                 for(int i = 0; i < response.length(); i++){
+
                     try {
-                        JSONObject obj = response.getJSONObject(i);
+                        final JSONObject obj = response.getJSONObject(i);
 
+                        requestImage(obj.getInt("image"), new VolleyCallback() {
+                            public void onSuccessResponse(Object o) {
 
+                                try {
+                                    m.add(new Pair<String, Bitmap>(obj.getString("text"), (Bitmap) o ));
+                                } catch (JSONException e) { }
+
+                                if(m.size() == 6)
+                                    callback.onSuccessResponse(m);
+
+                            }
+                        });
 
                     } catch (JSONException e) { }
                 }
+
+
             }
         }, new Response.ErrorListener() { public void onErrorResponse(VolleyError error) { } }
         );
+
+        queue.add(requestMemoryRound);
 
     }
 

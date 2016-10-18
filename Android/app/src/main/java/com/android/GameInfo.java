@@ -62,7 +62,7 @@ public class GameInfo implements Serializable{
                 c.requestRoundSentenceGame(callback);
                 break;
 
-            case 2: //DO NOT USE
+            case 2:
                 c.requestRoundMemoryGame(callback);
                 break;
 

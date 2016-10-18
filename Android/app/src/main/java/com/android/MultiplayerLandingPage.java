@@ -16,6 +16,7 @@ import com.android.GameOne.GameOne;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.TreeMap;
 
@@ -162,8 +163,6 @@ public class MultiplayerLandingPage extends AppCompatActivity {
         }
 
 
-
-
         scrollView = (ScrollView) findViewById(R.id.scrollGameList);
         scrollView.removeAllViews();
         layout = new LinearLayout(scrollView.getContext());
@@ -173,48 +172,57 @@ public class MultiplayerLandingPage extends AppCompatActivity {
         if(!toBeAcceptedGames.isEmpty()){
             for(final GameInfo g : toBeAcceptedGames){
 
-
-                LinearLayout tlayout = new LinearLayout(layout.getContext());
-                tlayout.setOrientation(LinearLayout.HORIZONTAL);
-                tlayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT));
-
-                String t = (g.getOwnerID() + " har utmanat dig!");
-                TextView textView = new TextView(tlayout.getContext());
-                textView.setText(t);
-
-                Button accept = new Button(tlayout.getContext());
-                Button decline = new Button(tlayout.getContext());
-
-                accept.setText("Acceptera");
-                decline.setText("Neka");
-
-                accept.setOnClickListener(new View.OnClickListener() {
+                client.getUser(g.getOwnerID(), new VolleyCallback() {
                     @Override
-                    public void onClick(View v) {
-                        client.acceptChallenge(g.getID());
-                        Intent intent = getIntent();
-                        finish();
-                        startActivity(intent);
+                    public void onSuccessResponse(Object o) {
+                        User u = (User)o;
+
+                        LinearLayout tlayout = new LinearLayout(layout.getContext());
+                        tlayout.setOrientation(LinearLayout.HORIZONTAL);
+                        tlayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT));
+
+                        TextView textView = new TextView(tlayout.getContext());
+
+                        Button accept = new Button(tlayout.getContext());
+                        Button decline = new Button(tlayout.getContext());
+
+                        accept.setText("Acceptera");
+                        decline.setText("Neka");
+                        textView.setText(u.getUsername() + " har utmanat dig!");
+
+                        accept.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                client.acceptChallenge(g.getID());
+                                Intent intent = getIntent();
+                                finish();
+                                startActivity(intent);
+                            }
+                        });
+
+                        decline.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                client.declineChallenge(g.getID());
+                                Intent intent = getIntent();
+                                finish();
+                                startActivity(intent);
+                            }
+                        });
+
+                        tlayout.addView(textView);
+                        tlayout.addView(accept);
+                        tlayout.addView(decline);
+                        layout.addView(tlayout);
+
                     }
                 });
 
-                decline.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        client.declineChallenge(g.getID());
-                        Intent intent = getIntent();
-                        finish();
-                        startActivity(intent);
-                    }
-                });
 
 
 
-                tlayout.addView(textView);
-                tlayout.addView(accept);
-                tlayout.addView(decline);
-                layout.addView(tlayout);
+
 
             }
         }
