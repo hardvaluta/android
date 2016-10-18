@@ -41,16 +41,16 @@ public class TextToSpeechEngine implements TextToSpeech.OnInitListener {
     }
 
     public void silentSound(){
-        System.out.println("NOTICCEEEEEEEEEEEEEEEEE");
         manager.start();
     }
     public boolean isPlaying(){
         return manager.isPlaying();
     }
-
+    public void stopPlaying(){manager.stop();}
     public boolean isSpeaking() {
         return tts.isSpeaking();
     }
+
 
     public void shutdown() {
         instance = null;

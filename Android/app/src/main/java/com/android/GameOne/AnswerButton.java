@@ -53,7 +53,6 @@ public class AnswerButton extends Button implements Observer{
 
     @Override
     public void update(Observable o, Object arg) {
-        System.out.println("NOTIIIICE button dragable");
         dragable=false;
     }
 }

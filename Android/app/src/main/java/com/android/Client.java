@@ -55,7 +55,6 @@ public class Client{
     private ArrayList<User> users;
     private ArrayList<GameInfo> currentGames;
 
-    private JSONObject jsonQ;
 
     //frågor att hämta.
     private int count = 4;
@@ -182,14 +181,12 @@ public class Client{
                     questionArray = new ArrayList<Question>();
 
                     for(int i = 0; i < response.length(); i++){
-
-                        jsonQ = response.getJSONObject(i);
+                        final JSONObject jsonQ = response.getJSONObject(i);
 
                         requestImage(jsonQ.getInt("image"), new VolleyCallback() {
 
                             public void onSuccessResponse(Object o) {
                                 try {
-
                                     questionArray.add(new Question(
                                             jsonQ.getString("answer_a"),
                                             jsonQ.getString("answer_b"),
