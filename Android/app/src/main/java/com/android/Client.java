@@ -130,14 +130,17 @@ public class Client{
     }
 
     public void requestRoundSentenceGame(final VolleyCallback callback){
-        String t_url = url + "type/1";
-        JSONObject body = new JSONObject();
+        String t_url = url + "type/1?count=" + count;
+        //JSONObject body = new JSONObject();
 
+        /*
         try {
             body.put("count", count);
         } catch (JSONException e) { }
 
-        JsonArrayRequest requestSentenceRound = new JsonArrayRequest(Request.Method.GET, t_url, body, new Response.Listener<JSONArray>() {
+        */
+
+        JsonArrayRequest requestSentenceRound = new JsonArrayRequest(Request.Method.GET, t_url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 try {
@@ -413,8 +416,8 @@ public class Client{
 
         JSONObject body = new JSONObject();
         try {
-            body.put("correct", correct);
             body.put("context_id", prefs.getInt("user_id", 0));
+            body.put("score", correct);
         } catch(JSONException e) {}
 
         JsonArrayRequest reportProg = new JsonArrayRequest(Request.Method.POST, t_url, body, new Response.Listener<JSONArray>() {

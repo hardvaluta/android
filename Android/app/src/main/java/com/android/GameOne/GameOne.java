@@ -22,12 +22,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-
-<<<<<<< HEAD
-=======
 import com.android.Client;
 import com.android.GameInfo;
->>>>>>> origin/William2
 import com.android.GameTwo;
 import com.android.Question;
 import com.android.R;
@@ -136,10 +132,10 @@ public class GameOne extends AppCompatActivity implements Observer{
 
                 @Override
                 public void onSuccessResponse(ArrayList<Question> qArray) {
-                    Question q =qArray.get(0);
                     for(int n=0;n<4;n++){
                         questionArray.add(qArray.get(n));
                     }
+                    nextQuestion();
                 }
             });
         }
@@ -155,18 +151,18 @@ public class GameOne extends AppCompatActivity implements Observer{
             });
         }
 
-        //nextQuestion(questionArray.get(0));
-
-        nextSentence();
+        //nextSentence();
         nextSentenceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                nextSentence();
+                nextQuestion();
             }
         });
     }
 
-    private void nextQuestion(Question q){
+    private void nextQuestion(){
+        currentSentenceIdx = rand.nextInt(questionArray.size());
+        Question q = questionArray.get(currentSentenceIdx);
         RelativeLayout container = (RelativeLayout) findViewById(R.id.sentancePond);
         if(container.getChildCount()<8){
             for(AnswerButton b : wordButtons){
@@ -199,11 +195,22 @@ public class GameOne extends AppCompatActivity implements Observer{
         String[] sentence=q.getText().split("\\*");
         leftSentence.setText(sentence[0]);
         rightSentence.setText(sentence[1]);
+        qImage.setImageBitmap(q.getImg());
+        wordButtons.get(0).setBackgroundColor(Color.LTGRAY);
+        wordButtons.get(1).setBackgroundColor(Color.LTGRAY);
+        wordButtons.get(2).setBackgroundColor(Color.LTGRAY);
+        wordButtons.get(3).setBackgroundColor(Color.LTGRAY);
 
         final View view = (View) findViewById(R.id.sentanceGame);
         final Context context = this;
 
-        new SpeakerSlave(context, leftSentence.getText().toString(), null, rightSentence.getText().toString());
+        Timer time = new Timer();
+        time.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                new Thread(new SpeakerSlave(context, leftSentence.getText().toString(), null, rightSentence.getText().toString())).start();
+            }
+        }, 1000);
     }
 
     private void nextSentence() {
