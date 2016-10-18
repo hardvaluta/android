@@ -3,10 +3,13 @@ package com.android;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -24,6 +27,7 @@ import java.util.TreeMap;
 public class MultiplayerLandingPage extends AppCompatActivity {
 
     private Button newChallangeButton;
+    private ImageButton updateButton;
     private Client client;
     private SharedPreferences prefs;
 
@@ -34,7 +38,7 @@ public class MultiplayerLandingPage extends AppCompatActivity {
     private ArrayList<GameInfo> yourTurnGames;
     private ArrayList<GameInfo> otherTurnGames;
     private ArrayList<GameInfo> finishedGames;
-
+    private ArrayList<GameInfo> toBeAcceptedByOtherUser;
     private ArrayList<GameInfo> allGames;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +55,40 @@ public class MultiplayerLandingPage extends AppCompatActivity {
 
         prefs = getSharedPreferences(MainMenu.PREF_FILE_NAME, MODE_PRIVATE);
 
+
+        newChallangeButton = (Button)findViewById(R.id.newChallengeButton);
+        newChallangeButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startActivity(new Intent(MultiplayerLandingPage.this, MultiPlayerChallengeUser.class));
+            }
+        });
+
+        updateButton = (ImageButton) findViewById(R.id.updateButton);
+        updateButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                layout.removeAllViews();
+                scrollView.removeAllViews();
+
+                toBeAcceptedGames.clear();
+                yourTurnGames.clear();
+                otherTurnGames.clear();
+                finishedGames.clear();
+                toBeAcceptedByOtherUser.clear();
+                allGames.clear();
+                init();
+            }
+        });
+
+
+        init();
+
+    }
+
+    public void init(){
         client.getCurrGames(new VolleyCallback() {
             public void onSuccessResponse(Object o) {
                 allGames.addAll((ArrayList<GameInfo>)o);
-                init();
+                initGUI();
             }
         });
     }
@@ -65,9 +99,10 @@ public class MultiplayerLandingPage extends AppCompatActivity {
         finish();
     }
 
-    public void init(){
+    public void initGUI(){
         //GAMES WAITING TO BE ACCEPTED OR DECLINED BEFORE STARTED.
         toBeAcceptedGames = new ArrayList<GameInfo>();
+        toBeAcceptedByOtherUser = new ArrayList<GameInfo>();
 
         //GAMES IN WHICH THERE IS YOUR TURN TO PLAY.
         yourTurnGames = new ArrayList<GameInfo>();
@@ -80,6 +115,12 @@ public class MultiplayerLandingPage extends AppCompatActivity {
 
         TreeMap<Integer, GameInfo> finishedGameIds = new TreeMap<Integer, GameInfo>();
 
+        scrollView = (ScrollView) findViewById(R.id.scrollGameList);
+        scrollView.removeAllViews();
+        layout = new LinearLayout(scrollView.getContext());
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+
         if(!allGames.isEmpty()){
             for(GameInfo g : allGames){
                 //finishedGameIds.put(g.getID(), g); // Test
@@ -89,7 +130,7 @@ public class MultiplayerLandingPage extends AppCompatActivity {
                     case 0:
 
                         if(prefs.getInt("user_id", 0) == g.getOwnerID())
-                            System.out.println("User has not accepted game yet.");
+                            toBeAcceptedByOtherUser.add(g);
                         else if(prefs.getInt("user_id", 0) == g.getSlaveID())
                             toBeAcceptedGames.add(g);
 
@@ -160,32 +201,55 @@ public class MultiplayerLandingPage extends AppCompatActivity {
                         fosGameData.close();
                 }
             } catch (Exception e) { e.printStackTrace(); }
+        } else {
+            TextView noGamesInfo = new TextView(layout.getContext());
+            noGamesInfo.setText("Här var det tomt :(");
+            layout.addView(noGamesInfo);
         }
 
-
-        scrollView = (ScrollView) findViewById(R.id.scrollGameList);
-        scrollView.removeAllViews();
-        layout = new LinearLayout(scrollView.getContext());
-        layout.setOrientation(LinearLayout.VERTICAL);
-        layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-
         if(!toBeAcceptedGames.isEmpty()){
+
             for(final GameInfo g : toBeAcceptedGames){
 
+                View v = new View(this);
+                v.setLayoutParams(new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT, 10
+                ));
+                v.setBackgroundColor(Color.BLACK);
+                layout.addView(v);
+
+                final LinearLayout tlayout = new LinearLayout(layout.getContext());
+                tlayout.setOrientation(LinearLayout.HORIZONTAL);
+                tlayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT));
+                tlayout.setGravity(Gravity.RIGHT);
+
+
+
+                final TextView textView = new TextView(tlayout.getContext());
+
+                View v1 = new View(this);
+                v1.setLayoutParams(new LinearLayout.LayoutParams(
+                        10, LinearLayout.LayoutParams.MATCH_PARENT
+                ));
+                v1.setBackgroundColor(Color.BLACK);
+
+                final Button accept = new Button(tlayout.getContext());
+                accept.setBackgroundColor(Color.GREEN);
+
+                View v2 = new View(this);
+                v2.setLayoutParams(new LinearLayout.LayoutParams(
+                        10, LinearLayout.LayoutParams.MATCH_PARENT
+                ));
+                v2.setBackgroundColor(Color.BLACK);
+
+                final Button decline = new Button(tlayout.getContext());
+                decline.setBackgroundColor(Color.RED);
+
                 client.getUser(g.getOwnerID(), new VolleyCallback() {
-                    @Override
+
                     public void onSuccessResponse(Object o) {
                         User u = (User)o;
-
-                        LinearLayout tlayout = new LinearLayout(layout.getContext());
-                        tlayout.setOrientation(LinearLayout.HORIZONTAL);
-                        tlayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                                LinearLayout.LayoutParams.WRAP_CONTENT));
-
-                        TextView textView = new TextView(tlayout.getContext());
-
-                        Button accept = new Button(tlayout.getContext());
-                        Button decline = new Button(tlayout.getContext());
 
                         accept.setText("Acceptera");
                         decline.setText("Neka");
@@ -210,25 +274,31 @@ public class MultiplayerLandingPage extends AppCompatActivity {
                                 startActivity(intent);
                             }
                         });
-
-                        tlayout.addView(textView);
-                        tlayout.addView(accept);
-                        tlayout.addView(decline);
-                        layout.addView(tlayout);
-
                     }
                 });
 
 
-
-
-
-
+                tlayout.addView(textView);
+                tlayout.addView(v1);
+                tlayout.addView(accept);
+                tlayout.addView(v2);
+                tlayout.addView(decline);
+                layout.addView(tlayout);
             }
         }
 
 
+
         if(!yourTurnGames.isEmpty()){
+
+            View v = new View(this);
+            v.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, 10
+            ));
+            v.setBackgroundColor(Color.BLACK);
+
+            layout.addView(v);
+
             for(final GameInfo g : yourTurnGames){
 
                 final Button game = new Button(layout.getContext());
@@ -259,12 +329,20 @@ public class MultiplayerLandingPage extends AppCompatActivity {
                     }
                 });
 
-
+                game.setBackgroundColor(Color.GREEN);
                 layout.addView(game);
             }
         }
 
         if(!otherTurnGames.isEmpty()){
+
+            View v = new View(this);
+            v.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, 10
+            ));
+            v.setBackgroundColor(Color.BLACK);
+            layout.addView(v);
+
             for(GameInfo g : otherTurnGames){
                 final Button game = new Button(layout.getContext());
                 game.setLayoutParams(
@@ -281,23 +359,56 @@ public class MultiplayerLandingPage extends AppCompatActivity {
                         User u = (User)o;
                         System.out.println(u.toString());
                         game.setText("Spel mot " + u.getUsername() + ". Det är inte din tur.");
-                        game.setEnabled(false);
+
                     }
                 });
 
+                game.setEnabled(false);
+                game.setBackgroundColor(Color.RED);
                 layout.addView(game);
             }
         }
 
 
-        scrollView.addView(layout);
+
+        if(!toBeAcceptedByOtherUser.isEmpty()){
+
+            View v = new View(this);
+            v.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, 10
+            ));
+            v.setBackgroundColor(Color.BLACK);
+            layout.addView(v);
+
+            for(GameInfo g : toBeAcceptedByOtherUser){
 
 
-        newChallangeButton = (Button)findViewById(R.id.newChallengeButton);
-        newChallangeButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                startActivity(new Intent(MultiplayerLandingPage.this, MultiPlayerChallengeUser.class));
+                final Button buttonNotResponded = new Button(layout.getContext());
+                buttonNotResponded.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT));
+
+                client.getUser(g.getSlaveID(), new VolleyCallback() {
+                    @Override
+                    public void onSuccessResponse(Object o) {
+                        User u = (User)o;
+                        buttonNotResponded.setText("Väntar på svar från "+u.getUsername());
+                    }
+                });
+
+                buttonNotResponded.setEnabled(false);
+                buttonNotResponded.setBackgroundColor(Color.RED);
+                layout.addView(buttonNotResponded);
             }
-        });
+
+            View v2 = new View(this);
+            v2.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, 10
+            ));
+            v2.setBackgroundColor(Color.BLACK);
+            layout.addView(v2);
+
+        }
+
+        scrollView.addView(layout);
     }
 }

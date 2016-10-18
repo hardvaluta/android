@@ -18,6 +18,8 @@ public class SignupMenu extends AppCompatActivity {
 
     private Client client;
     private SharedPreferences prefs;
+
+    private boolean quit;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +37,8 @@ public class SignupMenu extends AppCompatActivity {
 
         pwd1 = (EditText) findViewById(R.id.signup_password1);
         pwd2 = (EditText) findViewById(R.id.signup_password2);
+
+        quit = false;
 
 
 
@@ -56,7 +60,10 @@ public class SignupMenu extends AppCompatActivity {
                                     editor.putString("username", u.getUsername());
                                     editor.putBoolean("active", true);
                                     editor.commit();
-                                    startActivity(new Intent(SignupMenu.this, SettingsActivity.class));
+
+                                    quit = true;
+                                    alert("Woho!", "Du är nu inloggad som " + u.getUsername() + " och kan spela mot andra!");
+
 
                                 } else {
                                     alert("Error", "Något gick fel.");
@@ -81,10 +88,15 @@ public class SignupMenu extends AppCompatActivity {
         alertDialog.setPositiveButton("Okej", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
                 dialog.cancel();
+                if(quit)
+                    startActivity(new Intent(SignupMenu.this, MainMenu.class));
+
             }
         });
         alertDialog.show();
+
     }
 }
 
