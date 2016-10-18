@@ -87,7 +87,7 @@ public class MultiplayerLandingPage extends AppCompatActivity {
 
                         if(prefs.getInt("user_id", 0) == g.getOwnerID())
                             System.out.println("User has not accepted game yet.");
-                        else if(prefs.getInt("user_id", 0) == g.getChallengedUserID())
+                        else if(prefs.getInt("user_id", 0) == g.getSlaveID())
                             toBeAcceptedGames.add(g);
 
                         break;
@@ -98,7 +98,7 @@ public class MultiplayerLandingPage extends AppCompatActivity {
                         if(prefs.getInt("user_id", 0) == g.getOwnerID())
                             yourTurnGames.add(g);
 
-                        else if (prefs.getInt("user_id", 0) == g.getChallengedUserID())
+                        else if (prefs.getInt("user_id", 0) == g.getSlaveID())
                             otherTurnGames.add(g);
 
                         break;
@@ -109,7 +109,7 @@ public class MultiplayerLandingPage extends AppCompatActivity {
                         if(prefs.getInt("user_id", 0) == g.getOwnerID())
                             otherTurnGames.add(g);
 
-                        else if(prefs.getInt("userd_id", 0) == g.getChallengedUserID())
+                        else if(prefs.getInt("userd_id", 0) == g.getSlaveID())
                             yourTurnGames.add(g);
 
                         break;
@@ -149,7 +149,7 @@ public class MultiplayerLandingPage extends AppCompatActivity {
                                         gameInfoElement.getType()               + ","
                                     +   gameInfoElement.getID()                 + ","
                                     +   gameInfoElement.getOwnerID()            + ","
-                                    +   gameInfoElement.getChallengedUserID()   + "\n";
+                                    +   gameInfoElement.getSlaveID()   + "\n";
                             fosGameData.write(gameDataString.getBytes());
                             //Add game data to score list
                         }
@@ -227,7 +227,7 @@ public class MultiplayerLandingPage extends AppCompatActivity {
                                 LinearLayout.LayoutParams.WRAP_CONTENT)
                 );
 
-                int uid = prefs.getInt("user_id", 0) == g.getOwnerID() ? g.getChallengedUserID() : g.getOwnerID();
+                int uid = prefs.getInt("user_id", 0) == g.getOwnerID() ? g.getSlaveID() : g.getOwnerID();
 
                 client.getUser(uid, new VolleyCallback() {
                     @Override
@@ -262,7 +262,7 @@ public class MultiplayerLandingPage extends AppCompatActivity {
                                 LinearLayout.LayoutParams.WRAP_CONTENT)
                 );
 
-                int uid = prefs.getInt("user_id", 0) == g.getOwnerID() ? g.getChallengedUserID() : g.getOwnerID();
+                int uid = prefs.getInt("user_id", 0) == g.getOwnerID() ? g.getSlaveID() : g.getOwnerID();
                 client.getUser(uid, new VolleyCallback() {
                     @Override
                     public void onSuccessResponse(Object o) {

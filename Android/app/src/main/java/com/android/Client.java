@@ -296,6 +296,7 @@ public class Client{
             body.put("type", 1);
         } catch (JSONException e) {};
 
+        System.out.println(body.toString());
         JsonArrayRequest challenge = new JsonArrayRequest(Request.Method.POST, t_url, body, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -386,6 +387,8 @@ public class Client{
                                 t.getInt("id"),
                                 t.getInt("player1"),
                                 t.getInt("player2"),
+                                t.getInt("player1_score"),
+                                t.getInt("player2_score"),
                                 t.getInt("state"),
                                 t.getInt("type")
                         ) );
