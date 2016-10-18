@@ -70,6 +70,7 @@ public class GameOne extends AppCompatActivity implements Observer{
     private static GameInfo multiplayerInfo=null;
     private ArrayList<Question> questionArray;
     private Client client;
+    private int currentQuestion=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,7 +148,6 @@ public class GameOne extends AppCompatActivity implements Observer{
             multiplayerInfo.getRounds(client, new VolleyCallback<ArrayList<Question>>(){
                 @Override
                 public void onSuccessResponse(ArrayList<Question> qArray) {
-                    Question q = qArray.get(0);
                     for(int n=0;n<4;n++){
                         questionArray.add(qArray.get(n));
                     }
@@ -156,7 +156,6 @@ public class GameOne extends AppCompatActivity implements Observer{
             });
         }
 
-        //nextSentence();
         nextSentenceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -166,8 +165,7 @@ public class GameOne extends AppCompatActivity implements Observer{
     }
 
     private void nextQuestion(){
-        currentSentenceIdx = rand.nextInt(questionArray.size());
-        Question q = questionArray.get(currentSentenceIdx);
+        Question q = questionArray.get(currentQuestion);
         RelativeLayout container = (RelativeLayout) findViewById(R.id.sentancePond);
         if(container.getChildCount()<8){
             for(AnswerButton b : wordButtons){
@@ -246,20 +244,17 @@ public class GameOne extends AppCompatActivity implements Observer{
         alertDialog.setPositiveButton("JA",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        ttsEngine.shutdown();
+                        Intent intent;
                         if(multiplayerInfo!=null){
-                            ttsEngine.shutdown();
-                            Intent intent = new Intent(GameOne.this, ChooseGameActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
-                            finish();
+                            intent = new Intent(GameOne.this, MultiplayerLandingPage.class);
                         }
                         else{
-                            ttsEngine.shutdown();
-                            Intent intent = new Intent(GameOne.this, ChooseGameActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
-                            finish();
+                            intent = new Intent(GameOne.this, ChooseGameActivity.class);
                         }
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish();
                     }
                 });
         // Setting Positive "Yes" Button
@@ -274,6 +269,7 @@ public class GameOne extends AppCompatActivity implements Observer{
         TextView progressText = (TextView) findViewById(R.id.progressText);
         progressBar.setProgress(progressBar.getProgress()+1);
         progressText.setText(progressBar.getProgress()+"/"+nrQuestions+" frågor");
+        currentQuestion++;
 
         if(progressBar.getProgress()<nrQuestions){
             nextSentenceButton.setClickable(true);
@@ -297,7 +293,13 @@ public class GameOne extends AppCompatActivity implements Observer{
                     setMessage(message).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     ttsEngine.shutdown();
-                    Intent intent = new Intent(GameOne.this, MultiplayerLandingPage.class);
+                    Intent intent;
+                    if(multiplayerInfo!=null){
+                        intent = new Intent(GameOne.this, MultiplayerLandingPage.class);
+                    }
+                    else{
+                        intent = new Intent(GameOne.this, ChooseGameActivity.class);
+                    }
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                     finish();
@@ -305,6 +307,8 @@ public class GameOne extends AppCompatActivity implements Observer{
             }).
                     setTitle("Omgång färdig!").
                     setView(image).show();
+            gameFinished.setCancelable(false);
+            gameFinished.setCanceledOnTouchOutside(false);
             TextView textView = (TextView) gameFinished.findViewById(android.R.id.message);
                     /*Typeface face=Typeface.createFromAsset(getAssets(), "Bubblegum.ttf");
                     textView.setTypeface(face);*/

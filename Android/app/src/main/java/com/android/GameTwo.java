@@ -116,6 +116,8 @@ public class GameTwo extends AppCompatActivity {
                     }).
                             setTitle("Omgång färdig!").
                             setView(image).show();
+                    gameFinished.setCancelable(false);
+                    gameFinished.setCanceledOnTouchOutside(false);
                     TextView textView = (TextView) gameFinished.findViewById(android.R.id.message);
                     /*Typeface face=Typeface.createFromAsset(getAssets(), "Bubblegum.ttf");
                     textView.setTypeface(face);*/
