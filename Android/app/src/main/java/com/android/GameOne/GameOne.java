@@ -56,8 +56,6 @@ public class GameOne extends AppCompatActivity implements Observer{
     private int[] images = {R.mipmap.klattrar, R.mipmap.simmar, R.mipmap.ater, R.mipmap.dansar, R.mipmap.fotboll};
 
     private Random rand = new Random();
-    private int currentScore = 0;
-    private int maxScore = 0;
     private TextView leftSentence;
     private TextView rightSentence;
     private ImageButton nextSentenceButton;
@@ -71,6 +69,7 @@ public class GameOne extends AppCompatActivity implements Observer{
     private ArrayList<Question> questionArray;
     private Client client;
     private int currentQuestion=0;
+    private int score=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -216,7 +215,7 @@ public class GameOne extends AppCompatActivity implements Observer{
         }
         else{
             if(multiplayerInfo!=null){
-                multiplayerInfo.reportProgress(client, progressBar.getProgress());
+                multiplayerInfo.reportProgress(client, score);
             }
 
             ImageView image = new ImageView(GameOne.this);
@@ -225,7 +224,7 @@ public class GameOne extends AppCompatActivity implements Observer{
                 image.setImageDrawable(Drawable.createFromStream(ims, null));
                 ims.close();
             }catch(IOException e){}
-            String message = "Bra jobbat!";
+            String message = "Bra jobbat!\nDu fick "+score+" poäng";
             ttsEngine.speak("Bra Jobbat!");
             AlertDialog gameFinished = new AlertDialog.Builder(GameOne.this).
                     setMessage(message).setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -304,6 +303,11 @@ public class GameOne extends AppCompatActivity implements Observer{
 
     @Override
     public void update(Observable o, Object arg) {
+        int points=0;
+        if(arg instanceof Integer){
+            points=(Integer)arg;
+        }
+        score+=points;
         ProgressBar progressBar=(ProgressBar) findViewById(R.id.progressBar);
         TextView progressText = (TextView) findViewById(R.id.progressText);
         progressBar.setProgress(progressBar.getProgress()+1);

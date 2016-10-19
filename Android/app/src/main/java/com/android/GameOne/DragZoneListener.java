@@ -28,6 +28,7 @@ public class DragZoneListener extends Observable implements View.OnDragListener,
     RelativeLayout container;
     View dragSpot;
     ViewGroup me;
+    private int points=4;
 
     public DragZoneListener(ImageButton nextSentenceButton){
         this.nextSentenceButton=nextSentenceButton;
@@ -54,11 +55,13 @@ public class DragZoneListener extends Observable implements View.OnDragListener,
                     me.addView(view);
                     if(b.isRightAnswer()){
                         setChanged();
-                        notifyObservers();
+                        notifyObservers(points);
                         b.setBackgroundColor(Color.GREEN);
+                        points=4;
                     }
                     else{
                         b.setBackgroundColor(Color.RED);
+                        points--;
                     }
                 }
                 break;
