@@ -91,25 +91,29 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/choice1"
                 android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/leftSentencePond"/>
+                android:layout_toRightOf="@+id/leftSentencePond"
+                android:background="@mipmap/quarterwidthbutton"/>
             <com.android.GameOne.AnswerButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/choice2"
                 android:layout_alignParentTop="true"
-                android:layout_toLeftOf="@+id/rightSentencePond"/>
+                android:layout_toLeftOf="@+id/rightSentencePond"
+                android:background="@mipmap/quarterwidthbutton"/>
             <com.android.GameOne.AnswerButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/choice3"
                 android:layout_above="@+id/bottomSentencePond"
-                android:layout_toRightOf="@+id/leftSentencePond"/>
+                android:layout_toRightOf="@+id/leftSentencePond"
+                android:background="@mipmap/quarterwidthbutton"/>
             <com.android.GameOne.AnswerButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/choice4"
                 android:layout_above="@+id/bottomSentencePond"
-                android:layout_toLeftOf="@+id/rightSentencePond"/>
+                android:layout_toLeftOf="@+id/rightSentencePond"
+                android:background="@mipmap/quarterwidthbutton"/>
 
         </RelativeLayout>
 
