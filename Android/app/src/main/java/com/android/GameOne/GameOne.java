@@ -199,9 +199,16 @@ public class GameOne extends AppCompatActivity implements Observer{
             wordButtons.get(1).setText(q.getB());
             wordButtons.get(2).setText(q.getC());
             wordButtons.get(3).setText(q.getD());
+            ArrayList<String> aSentence = new ArrayList<String>();
             String[] sentence=q.getText().split("\\*");
-            leftSentence.setText(sentence[0]);
-            rightSentence.setText(sentence[1]);
+            for(String  s : sentence){
+                aSentence.add(s);
+            }
+            leftSentence.setText(aSentence.get(0));
+            if(sentence.length==1){
+                aSentence.add("");
+            }
+            rightSentence.setText(aSentence.get(1));
             qImage.setImageBitmap(q.getImg());
             wordButtons.get(0).setBackgroundColor(Color.LTGRAY);
             wordButtons.get(1).setBackgroundColor(Color.LTGRAY);
@@ -211,10 +218,13 @@ public class GameOne extends AppCompatActivity implements Observer{
             final View view = (View) findViewById(R.id.sentanceGame);
             final Context context = this;
 
-            ttsEngine.speak(leftSentence.getText().toString());
-            ttsEngine.playEarcon("silence");
-            ttsEngine.speakCombo(rightSentence.getText().toString());
-
+            /*Timer time = new Timer();
+            time.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    new Thread(new SpeakerSlave(context, leftSentence.getText().toString(), null, rightSentence.getText().toString())).start();
+                }
+            }, 1000);*/
         }
         else{
             if(multiplayerInfo!=null){
@@ -399,15 +409,7 @@ public class GameOne extends AppCompatActivity implements Observer{
                     }
                 }
             }
-            if(sChoise==null){
-                ttsEngine.speak(leftSentence.getText().toString());
-                ttsEngine.playEarcon("silence");
-                ttsEngine.speakCombo(rightSentence.getText().toString());
-            }
-            else{
-                String sentence = leftSentence.getText()+sChoise+rightSentence.getText();
-                ttsEngine.speak(sentence);
-            }
+            new Thread(new SpeakerSlave(context, sLeft, sChoise, sRight)).start();
         }
     }
 
