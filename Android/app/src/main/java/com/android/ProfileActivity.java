@@ -27,7 +27,6 @@ public class ProfileActivity extends AppCompatActivity {
     public static final String SCORE_FILE_NAME3 = "scoreFile226786"; // Test
     public static final String SCORE_FILE_IDS = "scoreIdFile26314";
     private NestedScrollView scrollView;
-    private TextView staticTextView;
     private float scrolledPercentage = 0f;
     private String[] gameStrings;
     private int gameEntriesToLoadEachTime = 75;
@@ -38,8 +37,6 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         scrollView = (NestedScrollView) findViewById(R.id.nestedScrollView);
-        staticTextView = (TextView)findViewById(R.id.staticTextView);
-        staticTextView.setText("DET HÄR ÄR TOPPEN!\nDET HÄR ÄR TOPPEN!\nDET HÄR ÄR TOPPEN!\nDET HÄR ÄR TOPPEN!\nDET HÄR ÄR TOPPEN!\nDET HÄR ÄR TOPPEN!\nDET HÄR ÄR TOPPEN!\nDET HÄR ÄR TOPPEN!\nDET HÄR ÄR TOPPEN!\n");
         scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
