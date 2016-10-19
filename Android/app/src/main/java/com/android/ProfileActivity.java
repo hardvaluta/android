@@ -5,6 +5,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.Space;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -134,16 +135,11 @@ public class ProfileActivity extends AppCompatActivity {
             case "1": // Single player
                 switch (gameDataStringArray[1]) {
                     case "1": // GameOne
-
-
-/*
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/questionImage"*/
-
                         gameEntryTextView.setText("Singleplayer gameone: " + gameDataStringArray[3]);
                         break;
                     case "2": // GameTwo
+                        gameEntryTextView.setBackgroundResource(R.mipmap.single_memory_scoreview);
+                        gameEntryTextView.setGravity(Gravity.CENTER);
                         gameEntryTextView.setText("Singleplayer gametwo: " + gameDataStringArray[3]);
                         break;
                     default:
