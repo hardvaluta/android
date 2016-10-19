@@ -85,6 +85,7 @@ public class ProfileActivity extends AppCompatActivity {
                     Button tempButton = new Button(this);
                     buttons.add(i, tempButton);
                     tempButton.setText(i + ": " + gameStrings[i] + "\n\n");
+                    tempButton.setBackgroundResource(R.mipmap.fullwidthbutton);
                     linearLayout.addView(tempButton);
 
                     Space tempSpace = new Space(this);
