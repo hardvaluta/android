@@ -394,7 +394,7 @@ public class GameTwo extends AppCompatActivity {
 
     private void hideCard(int cardId) {
         cards[cardId].setText("");
-        cards[cardId].setBackgroundColor(Color.LTGRAY);
+        cards[cardId].setBackgroundResource(R.mipmap.quarterwidthbutton);
     }
 
 

@@ -22,7 +22,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_toLeftOf="@+id/updateButton"
-        android:layout_toStartOf="@+id/updateButton" />
+        android:layout_toStartOf="@+id/updateButton"
+        android:background="@mipmap/fullwidthbutton"/>
 
     <ScrollView
         android:layout_width="match_parent"

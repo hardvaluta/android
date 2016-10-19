@@ -17,15 +17,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/homeButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:background="@drawable/iconborder"
-            app:srcCompat="@mipmap/homeicon"
-            />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -65,7 +56,9 @@
                     android:layout_alignParentLeft="true"
                     android:layout_toLeftOf="@+id/Game_One_TTS"
                     android:layout_toStartOf="@+id/Game_One_TTS"
+                    android:background="@mipmap/halfwidthbutton"
                     android:text="Finn rätt ord"/>
+
 
                 <ImageButton
                     android:id="@+id/Game_One_TTS"
@@ -97,6 +90,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_toLeftOf="@+id/Game_Two_TTS"
                     android:layout_toStartOf="@+id/Game_Two_TTS"
+                    android:background="@mipmap/halfwidthbutton"
                     android:text="Memory"/>
 
                 <ImageButton
