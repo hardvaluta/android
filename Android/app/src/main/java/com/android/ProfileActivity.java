@@ -24,8 +24,8 @@ import java.util.Collections;
 
 public class ProfileActivity extends AppCompatActivity {
     public static final String SCORE_FILE_NAME = "scoreFile";
-    public static final String SCORE_FILE_NAME3 = "scoreFile22786"; // Test
-    public static final String SCORE_FILE_IDS = "scoreIdFile2314";
+    public static final String SCORE_FILE_NAME3 = "scoreFile226786"; // Test
+    public static final String SCORE_FILE_IDS = "scoreIdFile26314";
     private NestedScrollView scrollView;
     private TextView staticTextView;
     private float scrolledPercentage = 0f;
@@ -75,13 +75,19 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * The different csv formats:
+     *
+     */
     private void loadMoreGameEntries() {
 
             if (gameStrings != null) {
                 LinearLayout linearLayout = (LinearLayout)scrollView.getChildAt(0);
                 int i;
+                View tempView = null;
                 int gameEntriesToLoad = Math.min(gameStrings.length-lastGameEntryShowing, gameEntriesToLoadEachTime);
                 for (i = lastGameEntryShowing; i < lastGameEntryShowing + gameEntriesToLoad; ++i) {
+<<<<<<< HEAD
                     Button tempButton = new Button(this);
                     buttons.add(i, tempButton);
                     tempButton.setText(i + ": " + gameStrings[i] + "\n\n");
@@ -94,8 +100,78 @@ public class ProfileActivity extends AppCompatActivity {
                     Space tempSpace = new Space(this);
                     tempSpace.setMinimumHeight(20);
                     linearLayout.addView(tempSpace);
+=======
+                    if ((tempView = parseGameEntry(gameStrings[i])) != null) {
+                        linearLayout.addView(tempView);
+                        Space tempSpace = new Space(this);
+                        tempSpace.setMinimumHeight(20);
+                        linearLayout.addView(tempSpace);
+                    }
+>>>>>>> origin/Development
                 }
                 lastGameEntryShowing = i;
             }
     }
+
+    /**
+     * Game data from the csv strings
+     *  GameOne Singleplayer:
+     *  Score is based on how many words you tried before getting the right one. Max is 16. Min is 4.
+     *  1,1,<(long) UNIQUE ID/SYSTEM TIME WHEN SAVED>,<(int) SCORE (more is more)>
+     *  GameTwo Singleplayer:
+     *  Score is number of cards you had to flip to find all pairs. Less flips is better. Min is 12. Max is infinite.
+     *  1,2,<(long) UNIQUE ID/SYSTEM TIME WHEN SAVED>,<(int) SCORE (less is more)>
+     *  GameOne Multiplayer:
+     *  Score is based on how many words you tried before getting the right one. Max is 16. Min is 4.
+     *  2,1,<DATABASE-WIDE UNIQUE ID>,<OWNER ID>,<OWNER USER NAME>,<OWNER SCORE(more is more)>,<SLAVE ID>,<SLAVE USER NAME>,<SLAVE SCORE(more is more)>
+     *  GameTwo Multiplayer:
+     *  Score is time. Fewer seconds is better.
+     *  2,2,<DATABASE-WIDE UNIQUE ID>,<OWNER ID>,<OWNER USER NAME>,<OWNER SCORE(less is more)>,<SLAVE ID>,<SLAVE USER NAME>,<SLAVE SCORE(less is more)>
+     */
+    private View parseGameEntry(String gameEntryString) {
+        RelativeLayout gameEntryLayout = new RelativeLayout(this);
+        TextView gameEntryTextView = new TextView(this);
+        gameEntryLayout.addView(gameEntryTextView);
+        String[] gameDataStringArray = gameEntryString.split(",");
+        switch (gameDataStringArray[0]) {
+            case "1": // Single player
+                switch (gameDataStringArray[1]) {
+                    case "1": // GameOne
+                        gameEntryTextView.setText("Singleplayer gameone: " + gameDataStringArray[3]);
+                        break;
+                    case "2": // GameTwo
+                        gameEntryTextView.setText("Singleplayer gametwo: " + gameDataStringArray[3]);
+                        break;
+                    default:
+                        return null;
+                }
+                break;
+            case "2": // Multiplayer
+                switch (gameDataStringArray[1]) {
+                    case "1": // GameOne
+                        gameEntryTextView.setText(
+                                                    "Multiplayer gameone:\n"
+                                                    + gameDataStringArray[4] + " got score "
+                                                    + gameDataStringArray[5] + "\n"
+                                                    + gameDataStringArray[7] + " got score "
+                                                    + gameDataStringArray[8]);
+                        break;
+                    case "2": // GameTwo
+                        gameEntryTextView.setText(
+                                "Multiplayer gametwo:\n"
+                                        + gameDataStringArray[4] + " got score "
+                                        + gameDataStringArray[5] + "\n"
+                                        + gameDataStringArray[7] + " got score "
+                                        + gameDataStringArray[8]);
+                        break;
+                    default:
+                        return null;
+                }
+                break;
+            default:
+                return null;
+        }
+        return gameEntryLayout;
+    }
+
 }

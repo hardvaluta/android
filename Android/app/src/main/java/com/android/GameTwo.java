@@ -113,7 +113,7 @@ public class GameTwo extends AppCompatActivity {
                     if (isSingleGame) {
                         message = "Du vände på " + numberOfCardViews + " kort\nBra jobbat!";
                     } else {
-                        message = "Det tog " + numberOfCardViews + " sekunder\nBra jobbat!";
+                        message = "Det tog " + timePassed + " sekunder\nBra jobbat!";
                     }
                     ttsEngine.speak("Bra jobbat!");
                     AlertDialog gameFinished = new AlertDialog.Builder(GameTwo.this).

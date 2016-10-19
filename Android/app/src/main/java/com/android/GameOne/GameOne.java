@@ -29,12 +29,14 @@ import com.android.Client;
 import com.android.GameInfo;
 import com.android.GameTwo;
 import com.android.MultiplayerLandingPage;
+import com.android.ProfileActivity;
 import com.android.Question;
 import com.android.R;
 import com.android.SpeakerSlave;
 import com.android.TextToSpeechEngine;
 import com.android.VolleyCallback;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -79,6 +81,7 @@ public class GameOne extends AppCompatActivity implements Observer{
         if(getIntent().getExtras()!=null){
             Bundle extra = getIntent().getExtras();
             multiplayerInfo = (GameInfo) extra.get("GameInfo");
+            isSingleGame = false;
         }
 
         leftSentence= (TextView)findViewById(R.id.leftSentance);
@@ -216,6 +219,20 @@ public class GameOne extends AppCompatActivity implements Observer{
         else{
             if(multiplayerInfo!=null){
                 multiplayerInfo.reportProgress(client, score);
+            } else {
+                // Save progress.
+                String string =
+                                    "1"                             + ","
+                                +   gameId                          + ","
+                                +   System.currentTimeMillis()      + ","
+                                +   score                           + "\n";
+                try {
+                    FileOutputStream fos = openFileOutput(ProfileActivity.SCORE_FILE_NAME3, Context.MODE_APPEND);
+                    fos.write(string.getBytes());
+                    fos.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             ImageView image = new ImageView(GameOne.this);
