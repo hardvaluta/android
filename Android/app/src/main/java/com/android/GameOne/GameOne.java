@@ -199,9 +199,16 @@ public class GameOne extends AppCompatActivity implements Observer{
             wordButtons.get(1).setText(q.getB());
             wordButtons.get(2).setText(q.getC());
             wordButtons.get(3).setText(q.getD());
+            ArrayList<String> aSentence = new ArrayList<String>();
             String[] sentence=q.getText().split("\\*");
-            leftSentence.setText(sentence[0]);
-            rightSentence.setText(sentence[1]);
+            for(String  s : sentence){
+                aSentence.add(s);
+            }
+            leftSentence.setText(aSentence.get(0));
+            if(sentence.length==1){
+                aSentence.add("");
+            }
+            rightSentence.setText(aSentence.get(1));
             qImage.setImageBitmap(q.getImg());
             wordButtons.get(0).setBackgroundColor(Color.LTGRAY);
             wordButtons.get(1).setBackgroundColor(Color.LTGRAY);
@@ -284,7 +291,7 @@ public class GameOne extends AppCompatActivity implements Observer{
         // Setting Dialog Title
         alertDialog.setTitle("Lämna spelet?");
         // Setting Dialog Message
-        alertDialog.setMessage("Är du sker på att du vill lämna spelet?");
+        alertDialog.setMessage("Är du säker på att du vill lämna spelet?");
         // Setting Icon to Dialog
         //alertDialog.setIcon(R.drawable.dialog_icon);
 
