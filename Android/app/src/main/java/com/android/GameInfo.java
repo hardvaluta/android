@@ -83,7 +83,7 @@ public class GameInfo implements Serializable{
     public void getRounds(Client c, final VolleyCallback callback){
         switch(type){
             case 1:
-                c.requestRoundSentenceGame(true, game_id, callback);
+                c.requestRoundSentenceGame(callback);
                 break;
 
             case 2:

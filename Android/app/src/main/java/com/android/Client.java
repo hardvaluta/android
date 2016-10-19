@@ -125,13 +125,9 @@ public class Client{
         queue.add(requestUser);
     }
 
-    public void requestRoundMemoryGame(boolean multi, int game_id, final VolleyCallback callback){
+    public void requestRoundMemoryGame(final VolleyCallback callback){
         
-        String t_url;
-        if(multi)
-            t_url = url + "game/" + game_id + "/rounds";
-        else
-            t_url = url + "type/2?count=6";
+        String t_url = url + "type/2?count=6";
 
 
         JsonArrayRequest requestMemoryRound = new JsonArrayRequest(Request.Method.GET, t_url, new Response.Listener<JSONArray>() {
