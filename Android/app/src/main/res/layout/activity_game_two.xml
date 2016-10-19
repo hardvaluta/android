@@ -17,7 +17,8 @@ tools:context="com.android.GameTwo"
     android:id="@+id/card12"
     android:layout_alignTop="@+id/card11"
     android:layout_alignRight="@+id/card22"
-    android:layout_alignEnd="@+id/card22" />
+    android:layout_alignEnd="@+id/card22"
+    android:background="@mipmap/quarterwidthbutton"/>
 
 <Button
     android:layout_width="100dp"
@@ -26,7 +27,8 @@ tools:context="com.android.GameTwo"
     android:id="@+id/card13"
     android:layout_alignTop="@+id/card12"
     android:layout_alignParentRight="true"
-    android:layout_alignParentEnd="true" />
+    android:layout_alignParentEnd="true"
+    android:background="@mipmap/quarterwidthbutton"/>
 
 <Button
     android:layout_width="100dp"
@@ -35,7 +37,8 @@ tools:context="com.android.GameTwo"
     android:id="@+id/card21"
     android:layout_below="@+id/space"
     android:layout_alignParentLeft="true"
-    android:layout_alignParentStart="true" />
+    android:layout_alignParentStart="true"
+    android:background="@mipmap/quarterwidthbutton"/>
 
 <Space
     android:layout_width="match_parent"
@@ -59,7 +62,8 @@ tools:context="com.android.GameTwo"
     android:text="card22"
     android:id="@+id/card22"
     android:layout_alignBottom="@+id/card21"
-    android:layout_centerHorizontal="true" />
+    android:layout_centerHorizontal="true"
+    android:background="@mipmap/quarterwidthbutton"/>
 
 <Button
     android:layout_width="100dp"
@@ -68,7 +72,8 @@ tools:context="com.android.GameTwo"
     android:id="@+id/card23"
     android:layout_alignBottom="@+id/card22"
     android:layout_alignParentRight="true"
-    android:layout_alignParentEnd="true" />
+    android:layout_alignParentEnd="true"
+    android:background="@mipmap/quarterwidthbutton"/>
 
 <Space
     android:layout_width="match_parent"
@@ -76,7 +81,7 @@ tools:context="com.android.GameTwo"
     android:id="@+id/space2"
     android:layout_below="@+id/card21"
     android:layout_alignParentLeft="true"
-    android:layout_alignParentStart="true" />
+    android:layout_alignParentStart="true"/>
 
 <Button
     android:layout_width="100dp"
@@ -85,7 +90,8 @@ tools:context="com.android.GameTwo"
     android:id="@+id/card31"
     android:layout_below="@+id/space2"
     android:layout_alignParentLeft="true"
-    android:layout_alignParentStart="true" />
+    android:layout_alignParentStart="true"
+    android:background="@mipmap/quarterwidthbutton"/>
 
 <Button
     android:layout_width="100dp"
@@ -93,7 +99,8 @@ tools:context="com.android.GameTwo"
     android:text="card32"
     android:id="@+id/card32"
     android:layout_alignBottom="@+id/card31"
-    android:layout_centerHorizontal="true" />
+    android:layout_centerHorizontal="true"
+    android:background="@mipmap/quarterwidthbutton"/>
 
 <Button
     android:layout_width="100dp"
@@ -102,7 +109,8 @@ tools:context="com.android.GameTwo"
     android:id="@+id/card33"
     android:layout_alignBottom="@+id/card32"
     android:layout_alignParentRight="true"
-    android:layout_alignParentEnd="true" />
+    android:layout_alignParentEnd="true"
+    android:background="@mipmap/quarterwidthbutton"/>
 
 <Space
     android:layout_width="match_parent"
@@ -118,7 +126,8 @@ tools:context="com.android.GameTwo"
     android:id="@+id/card41"
     android:layout_below="@+id/space3"
     android:layout_alignParentLeft="true"
-    android:layout_alignParentStart="true" />
+    android:layout_alignParentStart="true"
+    android:background="@mipmap/quarterwidthbutton"/>
 
 <Button
     android:layout_width="100dp"
@@ -127,7 +136,8 @@ tools:context="com.android.GameTwo"
     android:id="@+id/card42"
     android:layout_below="@+id/space3"
     android:layout_alignLeft="@+id/card32"
-    android:layout_alignStart="@+id/card32" />
+    android:layout_alignStart="@+id/card32"
+    android:background="@mipmap/quarterwidthbutton"/>
 
 <Button
     android:layout_width="100dp"
@@ -136,7 +146,8 @@ tools:context="com.android.GameTwo"
     android:id="@+id/card43"
     android:layout_below="@+id/space3"
     android:layout_alignLeft="@+id/card33"
-    android:layout_alignStart="@+id/card33" />
+    android:layout_alignStart="@+id/card33"
+    android:background="@mipmap/quarterwidthbutton"/>
 
 <RelativeLayout
     android:layout_width="match_parent"
@@ -162,7 +173,8 @@ tools:context="com.android.GameTwo"
     android:id="@+id/listenButton"
     android:layout_alignParentBottom="true"
     android:layout_alignParentLeft="true"
-    android:layout_alignParentStart="true" />
+    android:layout_alignParentStart="true"
+    android:background="@mipmap/quarterwidthbutton"/>
 
 <Button
     android:layout_width="100dp"
@@ -171,7 +183,8 @@ tools:context="com.android.GameTwo"
     android:id="@+id/nextButton"
     android:layout_alignParentBottom="true"
     android:layout_alignParentRight="true"
-    android:layout_alignParentEnd="true" />
+    android:layout_alignParentEnd="true"
+    android:background="@mipmap/quarterwidthbutton"/>
 
     <TextView
         android:text="TextView"
@@ -192,5 +205,6 @@ tools:context="com.android.GameTwo"
         android:layout_below="@+id/timePassedView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="13dp" />
+        android:layout_marginTop="13dp"
+        android:background="@mipmap/quarterwidthbutton"/>
 </RelativeLayout>

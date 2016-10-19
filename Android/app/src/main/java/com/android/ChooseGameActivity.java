@@ -24,17 +24,6 @@ public class ChooseGameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.choosegame_menu);
 
-
-        ImageButton mainMenu = (ImageButton) findViewById(R.id.homeButton);
-        mainMenu.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                startActivity(new Intent(ChooseGameActivity.this, MainMenu.class));
-            }
-        });
-
         ImageButton ttsOne = (ImageButton) findViewById(R.id.Game_One_TTS);
         ImageButton ttsTwo = (ImageButton) findViewById(R.id.Game_Two_TTS);
         //ImageButton ttsThree = (ImageButton) findViewById(R.id.Game_Three_TTS);

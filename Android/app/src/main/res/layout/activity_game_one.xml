@@ -89,25 +89,25 @@
             <com.android.GameOne.AnswerButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/choise1"
+                android:id="@+id/choice1"
                 android:layout_alignParentTop="true"
                 android:layout_toRightOf="@+id/leftSentencePond"/>
             <com.android.GameOne.AnswerButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/choise2"
+                android:id="@+id/choice2"
                 android:layout_alignParentTop="true"
                 android:layout_toLeftOf="@+id/rightSentencePond"/>
             <com.android.GameOne.AnswerButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/choise3"
+                android:id="@+id/choice3"
                 android:layout_above="@+id/bottomSentencePond"
                 android:layout_toRightOf="@+id/leftSentencePond"/>
             <com.android.GameOne.AnswerButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/choise4"
+                android:id="@+id/choice4"
                 android:layout_above="@+id/bottomSentencePond"
                 android:layout_toLeftOf="@+id/rightSentencePond"/>
 

@@ -111,10 +111,10 @@ public class GameOne extends AppCompatActivity implements Observer{
         dropZone.setOnDragListener(dropListen);
         sentancePond.setOnDragListener(mainListen);
 
-        AnswerButton choise1 = (AnswerButton) findViewById(R.id.choise1);
-        AnswerButton choise2 = (AnswerButton) findViewById(R.id.choise2);
-        AnswerButton choise3 = (AnswerButton) findViewById(R.id.choise3);
-        AnswerButton choise4 = (AnswerButton) findViewById(R.id.choise4);
+        AnswerButton choise1 = (AnswerButton) findViewById(R.id.choice1);
+        AnswerButton choise2 = (AnswerButton) findViewById(R.id.choice2);
+        AnswerButton choise3 = (AnswerButton) findViewById(R.id.choice3);
+        AnswerButton choise4 = (AnswerButton) findViewById(R.id.choice4);
         wordButtons.add(choise1);wordButtons.add(choise2);wordButtons.add(choise3);wordButtons.add(choise4);
         dropListen.addObserver(choise1);
         dropListen.addObserver(choise2);
