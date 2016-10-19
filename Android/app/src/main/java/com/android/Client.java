@@ -417,7 +417,7 @@ public class Client{
 
                     try {
 
-                        JSONObject t = response.getJSONObject(i);
+                        final JSONObject t = response.getJSONObject(i);
                         currentGames.add( new GameInfo (
                                 t.getInt("id"),
                                 t.getInt("player1"),
@@ -425,7 +425,8 @@ public class Client{
                                 t.getInt("player1_score"),
                                 t.getInt("player2_score"),
                                 t.getInt("state"),
-                                t.getInt("type")
+                                t.getInt("type"),
+                                client
                         ) );
 
                     } catch (JSONException e) { }
