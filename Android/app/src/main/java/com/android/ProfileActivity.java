@@ -84,7 +84,7 @@ public class ProfileActivity extends AppCompatActivity {
                 View tempView = null;
                 int gameEntriesToLoad = Math.min(gameStrings.length-lastGameEntryShowing, gameEntriesToLoadEachTime);
                 for (i = lastGameEntryShowing; i < lastGameEntryShowing + gameEntriesToLoad; ++i) {
-<<<<<<< HEAD
+/*
                     Button tempButton = new Button(this);
                     buttons.add(i, tempButton);
                     tempButton.setText(i + ": " + gameStrings[i] + "\n\n");
@@ -96,15 +96,13 @@ public class ProfileActivity extends AppCompatActivity {
 
                     Space tempSpace = new Space(this);
                     tempSpace.setMinimumHeight(20);
-                    linearLayout.addView(tempSpace);
-=======
+                    linearLayout.addView(tempSpace);*/
                     if ((tempView = parseGameEntry(gameStrings[i])) != null) {
                         linearLayout.addView(tempView);
                         Space tempSpace = new Space(this);
                         tempSpace.setMinimumHeight(20);
                         linearLayout.addView(tempSpace);
                     }
->>>>>>> origin/Development
                 }
                 lastGameEntryShowing = i;
             }
@@ -129,11 +127,20 @@ public class ProfileActivity extends AppCompatActivity {
         RelativeLayout gameEntryLayout = new RelativeLayout(this);
         TextView gameEntryTextView = new TextView(this);
         gameEntryLayout.addView(gameEntryTextView);
+
+        //ImageView iv = new ImageView()
         String[] gameDataStringArray = gameEntryString.split(",");
         switch (gameDataStringArray[0]) {
             case "1": // Single player
                 switch (gameDataStringArray[1]) {
                     case "1": // GameOne
+
+
+/*
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/questionImage"*/
+
                         gameEntryTextView.setText("Singleplayer gameone: " + gameDataStringArray[3]);
                         break;
                     case "2": // GameTwo
