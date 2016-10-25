@@ -25,7 +25,6 @@ import java.util.Observer;
 
 public class DragZoneListener extends Observable implements View.OnDragListener, Observer{
     ImageButton nextSentenceButton;
-    RelativeLayout container;
     View dragSpot;
     ViewGroup me;
     private int points=4;
@@ -36,10 +35,8 @@ public class DragZoneListener extends Observable implements View.OnDragListener,
 
     @Override
     public boolean onDrag(View v, DragEvent event){
-        int action = event.getAction();
         switch (event.getAction()) {
             case DragEvent.ACTION_DROP:
-                container = (RelativeLayout) v;
                 if(dragSpot==null){
                     dragSpot = v.findViewById(R.id.dragSpot);
                 }
@@ -47,7 +44,6 @@ public class DragZoneListener extends Observable implements View.OnDragListener,
                 AnswerButton b = (AnswerButton)view;
                 ViewGroup owner = (ViewGroup) view.getParent();
                 me = (ViewGroup) v;
-                ViewGroup mainView = (ViewGroup) owner.getParent();
 
                 if(!owner.equals(v) && dragSpot.getParent()!=null){
                     me.removeView(dragSpot);
@@ -75,7 +71,7 @@ public class DragZoneListener extends Observable implements View.OnDragListener,
     public void update(Observable o, Object arg) {
         if(arg instanceof String){
             String message = (String)arg;
-            if(message.toString()=="Restore"){
+            if("Restore".equals(message.toString())){
                 me.addView(dragSpot);
             }
         }

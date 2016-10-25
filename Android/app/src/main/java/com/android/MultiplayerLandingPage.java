@@ -19,6 +19,8 @@ import android.widget.TextView;
 
 import com.android.GameOne.GameOne;
 
+import java.io.DataInputStream;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.nio.ByteBuffer;
@@ -41,9 +43,9 @@ public class MultiplayerLandingPage extends AppCompatActivity {
     private ArrayList<GameInfo> toBeAcceptedGames;
     private ArrayList<GameInfo> yourTurnGames;
     private ArrayList<GameInfo> otherTurnGames;
-    private ArrayList<GameInfo> finishedGames;
     private ArrayList<GameInfo> toBeAcceptedByOtherUser;
     private ArrayList<GameInfo> allGames;
+    private ArrayList<GameInfo> finishedGames;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -175,21 +177,25 @@ public class MultiplayerLandingPage extends AppCompatActivity {
 
             try {
 
-                Scanner scanner = new Scanner(openFileInput(ProfileActivity.SCORE_FILE_IDS));
-                while(scanner.hasNextInt()) {
-                    finishedGameIds.remove(Integer.valueOf(scanner.nextLine()));
-                }
-                scanner.close();
+                FileInputStream fileInputStream = openFileInput(ProfileActivity.SCORE_FILE_IDS);
+                DataInputStream dataInputStream = new DataInputStream(fileInputStream);
+
+                while(dataInputStream.available() > 0)
+                    finishedGameIds.remove(dataInputStream.readInt());
+
+                dataInputStream.close();
+                fileInputStream.close();
+
             } catch (Exception e) {  }
             try {
                 if (!finishedGameIds.isEmpty()) {
-                        PrintWriter printer = new PrintWriter(openFileOutput(ProfileActivity.SCORE_FILE_IDS, Context.MODE_APPEND));
-                        for (GameInfo gameInfoElement: finishedGameIds.values()) {
+                        FileOutputStream fileOutputStream = openFileOutput(ProfileActivity.SCORE_FILE_IDS, Context.MODE_APPEND);
+                        for (GameInfo gameInfoElement: finishedGameIds.values())
                             //Add ID to ID list
-                            printer.print("" + gameInfoElement.getID() + "\n");
+                            fileOutputStream.write(gameInfoElement.getID());
                             //Add game data to score list
-                        }
-                    printer.close();
+
+                        fileOutputStream.close();
 
                         FileOutputStream fosGameData = openFileOutput(ProfileActivity.SCORE_FILE_NAME3, Context.MODE_APPEND);
                         for (GameInfo gameInfoElement: finishedGameIds.values()) {

@@ -24,7 +24,6 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class ProfileActivity extends AppCompatActivity {
-    public static final String SCORE_FILE_NAME = "scoreFile";
     public static final String SCORE_FILE_NAME3 = "scoreFile226786"; // Test
     public static final String SCORE_FILE_IDS = "scoreIdFile26314";
     private NestedScrollView scrollView;
