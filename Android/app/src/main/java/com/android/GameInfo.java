@@ -12,7 +12,6 @@ import static android.R.attr.type;
 
 public class GameInfo implements Serializable{
     private int game_id, p1, p2, p1_score, p2_score, state, type;
-    private String ownerUsername, slaveUsername;
 
     public GameInfo(int game_id, int p1, int p2, int p1_score, int p2_score, int state, int type, Client client){
         this.p1 = p1; this.p2 = p2;
@@ -21,20 +20,6 @@ public class GameInfo implements Serializable{
         this.game_id = game_id;
         this.state = state;
         this.type = type;
-
-        client.getUser(p1, new VolleyCallback() {
-            @Override
-            public void onSuccessResponse(Object o) {
-                ownerUsername = (String)o;
-            }
-        });
-
-        client.getUser(p2, new VolleyCallback() {
-            @Override
-            public void onSuccessResponse(Object o) {
-                slaveUsername = (String)o;
-            }
-        });
     }
 
     public int getID(){
@@ -58,11 +43,11 @@ public class GameInfo implements Serializable{
     }
 
     public String getOwnerUserName() {
-        return ownerUsername;
+        return "player 1";
     }
 
     public String getSlaveUserName(){
-        return slaveUsername;
+        return "player 2";
     }
 
     /*
