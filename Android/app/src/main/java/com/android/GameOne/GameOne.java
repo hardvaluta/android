@@ -253,10 +253,10 @@ public class GameOne extends AppCompatActivity implements Observer{
                     ttsEngine.shutdown();
                     Intent intent;
                     if(multiplayerInfo!=null){
-                        intent = new Intent(GameOne.this, MultiplayerLandingPage.class);
+                        intent = new Intent(GameOne.this, ChooseGameActivity.class);
                     }
                     else{
-                        intent = new Intent(GameOne.this, ChooseGameActivity.class);
+                        intent = new Intent(GameOne.this, MultiplayerLandingPage.class);
                     }
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
