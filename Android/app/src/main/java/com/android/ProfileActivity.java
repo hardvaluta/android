@@ -19,6 +19,7 @@ import android.widget.TextView;
 import org.w3c.dom.Text;
 
 import java.io.FileInputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,7 +32,6 @@ public class ProfileActivity extends AppCompatActivity {
     private String[] gameStrings;
     private int gameEntriesToLoadEachTime = 75;
     private int lastGameEntryShowing = 0;
-    private ArrayList<Button> buttons = new ArrayList<Button>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +61,7 @@ public class ProfileActivity extends AppCompatActivity {
                 if (readNrOfBytes < gameEntriesToLoadEachTime * 100) {
                     buffer = Arrays.copyOf(buffer, readNrOfBytes);
                 }
-                string += new String(buffer);
+                string = string.concat(new String(buffer, Charset.defaultCharset()));
             }
         } catch (Exception e) { e.printStackTrace(); }
 

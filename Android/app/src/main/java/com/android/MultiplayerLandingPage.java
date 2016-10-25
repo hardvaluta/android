@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
@@ -210,7 +211,7 @@ public class MultiplayerLandingPage extends AppCompatActivity {
                                     +   gameInfoElement.getSlaveID()            + ","
                                     +   gameInfoElement.getSlaveUserName()      + ","
                                     +   gameInfoElement.getSlaveScore()         + "\n";
-                            fosGameData.write(gameDataString.getBytes());
+                            fosGameData.write(gameDataString.getBytes(Charset.defaultCharset()));
                             //Add game data to score list
                         }
                         fosGameData.close();

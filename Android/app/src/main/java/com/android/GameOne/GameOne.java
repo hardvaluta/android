@@ -39,6 +39,7 @@ import com.android.VolleyCallback;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Observable;
@@ -49,25 +50,19 @@ import java.util.TimerTask;
 
 
 public class GameOne extends AppCompatActivity implements Observer{
-    private final int nrQuestions = 4;
+    private static int nrQuestions = 4;
     public static final int gameId = 1;
-    private boolean isSingleGame = true;
-    private String[] preString={"Barnet", "Han", "Hon", "Dem", "Dem spelar"};
-    private String[] postString = {"i träd", "i bassängen", "vattenmelon", "tillsammans", ""};
-    private String[][] words = {{"klättrar", "dansar", "sjunger", "kör"},{"simmar", "skjuter", "pratar", "trollar"},{"äter", "sitter", "skriker", "gråter"},{"dansar", "tittar", "äter", "hoppar"},{"fotboll", "bowling", "datorspel", "tennis"}};
-    private int[] images = {R.mipmap.klattrar, R.mipmap.simmar, R.mipmap.ater, R.mipmap.dansar, R.mipmap.fotboll};
 
-    private Random rand = new Random();
+
     private TextView leftSentence;
     private TextView rightSentence;
     private ImageButton nextSentenceButton;
     private ImageView qImage;
-    private int currentSentenceIdx = 0;
     private ArrayList<AnswerButton> wordButtons;
     private TextToSpeechEngine ttsEngine;
     private DragZoneListener dropListen;
 
-    private static GameInfo multiplayerInfo=null;
+    private GameInfo multiplayerInfo=null;
     private ArrayList<Question> questionArray;
     private Client client;
     private int currentQuestion=0;
@@ -81,7 +76,6 @@ public class GameOne extends AppCompatActivity implements Observer{
         if(getIntent().getExtras()!=null){
             Bundle extra = getIntent().getExtras();
             multiplayerInfo = (GameInfo) extra.get("GameInfo");
-            isSingleGame = false;
         }
 
         leftSentence= (TextView)findViewById(R.id.leftSentance);
@@ -107,9 +101,9 @@ public class GameOne extends AppCompatActivity implements Observer{
             }
         });
 
-        dropListen = new DragZoneListener(nextSentenceButton);
+        dropListen = new DragZoneListener();
         dropListen.addObserver(this);
-        MainDragListener mainListen = new MainDragListener(wordButtons);
+        MainDragListener mainListen = new MainDragListener();
         mainListen.addObserver(dropListen);
         dropZone.setOnDragListener(dropListen);
         sentancePond.setOnDragListener(mainListen);
@@ -129,11 +123,14 @@ public class GameOne extends AppCompatActivity implements Observer{
         choise4.setOnTouchListener(new DragList(choise4));
 
         ImageButton ttsButton=(ImageButton) findViewById(R.id.TTS);
-        ttsButton.setOnClickListener(new SentenceListener(this));
+        ttsButton.setOnClickListener(new SentenceListener());
 
         try{
             client = com.android.Client.getInstance(this.getApplicationContext());
-        }catch(java.lang.Exception e){}
+        } catch(Exception e){
+            System.out.println("Ingen internetanslutning.");
+        }
+
         if(multiplayerInfo==null){
             client.requestRoundSentenceGame(new VolleyCallback<ArrayList<Question>>(){
 
@@ -215,8 +212,6 @@ public class GameOne extends AppCompatActivity implements Observer{
             wordButtons.get(2).setBackgroundColor(Color.LTGRAY);
             wordButtons.get(3).setBackgroundColor(Color.LTGRAY);
 
-            final View view = (View) findViewById(R.id.sentanceGame);
-            final Context context = this;
 
             ttsEngine.speak(leftSentence.getText().toString());
             ttsEngine.playEarcon("silence");
@@ -235,7 +230,7 @@ public class GameOne extends AppCompatActivity implements Observer{
                                 +   score                           + "\n";
                 try {
                     FileOutputStream fos = openFileOutput(ProfileActivity.SCORE_FILE_NAME3, Context.MODE_APPEND);
-                    fos.write(string.getBytes());
+                    fos.write(string.getBytes(Charset.defaultCharset()));
                     fos.close();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -247,7 +242,9 @@ public class GameOne extends AppCompatActivity implements Observer{
                 InputStream ims = getAssets().open("good_job_smaller.jpg");
                 image.setImageDrawable(Drawable.createFromStream(ims, null));
                 ims.close();
-            }catch(IOException e){}
+            }catch(IOException e){
+                System.out.println("Image not found");
+            }
             String message = "Bra jobbat!\nDu fick "+score+" poäng";
             ttsEngine.speak("Bra Jobbat!");
             AlertDialog gameFinished = new AlertDialog.Builder(GameOne.this).
@@ -343,7 +340,7 @@ public class GameOne extends AppCompatActivity implements Observer{
     }
 
     private class DragList implements View.OnTouchListener{
-        private final float SCROLL_THRESHOLD = 10;
+        private float SCROLL_THRESHOLD = 10;
         private float x,y;
         private boolean clicked;
         private AnswerButton button;
@@ -383,20 +380,13 @@ public class GameOne extends AppCompatActivity implements Observer{
         }
     }
     private class SentenceListener implements View.OnClickListener{
-        private Context context;
-        public SentenceListener(Context context){
-            this.context=context;
-        }
         @Override
         public void onClick(View v) {
             boolean finishedSpeaking=false;
-            TextView left = (TextView) findViewById(R.id.leftSentance);
-            TextView right = (TextView) findViewById(R.id.rightSentance);
             RelativeLayout dropLayout = (RelativeLayout) findViewById(R.id.dropZone);
 
-            String sLeft=left.getText().toString();
+
             String sChoise=null;
-            String sRight=right.getText().toString();
 
             if(dropLayout.findViewById(R.id.dragSpot)==null){
                 for(int n=0 ; n<dropLayout.getChildCount();n++){

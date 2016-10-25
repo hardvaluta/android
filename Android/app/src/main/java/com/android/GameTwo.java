@@ -32,6 +32,7 @@ import org.w3c.dom.Text;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -64,7 +65,7 @@ public class GameTwo extends AppCompatActivity {
 
     private TextToSpeechEngine ttsEngine;
 
-    private static GameInfo multiplayerInfo=null;
+    private GameInfo multiplayerInfo=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +109,9 @@ public class GameTwo extends AppCompatActivity {
                         InputStream ims = getAssets().open("good_job_smaller.jpg");
                         image.setImageDrawable(Drawable.createFromStream(ims, null));
                         ims.close();
-                    }catch(IOException e){}
+                    }catch(IOException e){
+                        System.out.println("Image not found");
+                    }
                     String message = "";
                     if (isSingleGame) {
                         message = "Du vände på " + numberOfCardViews + " kort\nBra jobbat!";
@@ -316,7 +319,7 @@ public class GameTwo extends AppCompatActivity {
                                     +   numberOfCardViews               + "\n";
                                 try {
                                     FileOutputStream fos = openFileOutput(ProfileActivity.SCORE_FILE_NAME3, Context.MODE_APPEND);
-                                    fos.write(string.getBytes());
+                                    fos.write(string.getBytes(Charset.defaultCharset()));
                                     fos.close();
                                 } catch (Exception e) {
                                     e.printStackTrace();

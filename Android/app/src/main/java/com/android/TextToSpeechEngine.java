@@ -10,9 +10,7 @@ import android.speech.tts.TextToSpeech;
 
 public class TextToSpeechEngine implements TextToSpeech.OnInitListener {
     public TextToSpeech tts;
-    private float DEFAULTSPEECHRATE = 1f;
-    private float MINSPEECHRATE = 0.2f;
-    private float MAXSPEECHRATE = 1.8f;
+
     private static TextToSpeechEngine instance = null;
     private static MediaPlayer manager = null;
     private TextToSpeechEngine(Context context) {
@@ -25,6 +23,10 @@ public class TextToSpeechEngine implements TextToSpeech.OnInitListener {
             manager = MediaPlayer.create(context, R.raw.a_tone);
         }
         return instance;
+    }
+
+    private static void kill(){
+        instance = null;
     }
 
     @Override
@@ -62,7 +64,7 @@ public class TextToSpeechEngine implements TextToSpeech.OnInitListener {
 
 
     public void shutdown() {
-        instance = null;
+        kill();
         tts.shutdown();
     }
 }

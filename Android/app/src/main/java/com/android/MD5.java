@@ -1,5 +1,6 @@
 package com.android;
 
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -18,7 +19,7 @@ public class MD5 {
             MessageDigest md = MessageDigest.getInstance("MD5");
 
             //Add password bytes to digest
-            md.update(password.getBytes());
+            md.update(password.getBytes(Charset.defaultCharset()));
 
             //Get the hash's bytes
             byte[] bytes = md.digest();

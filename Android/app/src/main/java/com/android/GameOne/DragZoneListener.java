@@ -24,14 +24,10 @@ import java.util.Observer;
  */
 
 public class DragZoneListener extends Observable implements View.OnDragListener, Observer{
-    ImageButton nextSentenceButton;
     View dragSpot;
     ViewGroup me;
     private int points=4;
 
-    public DragZoneListener(ImageButton nextSentenceButton){
-        this.nextSentenceButton=nextSentenceButton;
-    }
 
     @Override
     public boolean onDrag(View v, DragEvent event){
