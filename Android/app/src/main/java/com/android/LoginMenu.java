@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -23,10 +25,15 @@ public class LoginMenu extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_login_menu);
 
-        client = Client.getInstance(this);
-        prefs = getSharedPreferences(SettingsActivity.PREF_FILE_NAME, MODE_PRIVATE);
+        try {
+            client = Client.getInstance(this);
+        } catch (Exception e) {
+            alert("Error", "Ingen internetanslutning.");
+        }
+        prefs = getSharedPreferences(MainMenu.PREF_FILE_NAME, MODE_PRIVATE);
 
 
         unameField = (EditText) findViewById(R.id.uNameEditText);
@@ -39,10 +46,9 @@ public class LoginMenu extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 uname = unameField.getText().toString().trim();
-                pwd = unameField.getText().toString().trim();
+                pwd = pwdField.getText().toString().trim();
 
-                //TO DO
-                client.getUser(uname, pwd, new VolleyCallback() {
+                client.loginUser(uname, pwd, new VolleyCallback() {
                     @Override
                     public void onSuccessResponse(Object o) {
                         if(o instanceof User){
@@ -52,8 +58,10 @@ public class LoginMenu extends AppCompatActivity {
                             editor.putString("username", u.getUsername());
                             editor.putBoolean("active", true);
                             editor.commit();
+
+                            startActivity(new Intent(LoginMenu.this, MainMenu.class));
                         } else {
-                            alert();
+                            alert("Error", "Något gick fel");
                         }
                     }
                 });
@@ -69,10 +77,10 @@ public class LoginMenu extends AppCompatActivity {
     }
 
 
-    public void alert() {
+    public void alert(String title, String msg) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(LoginMenu.this);
-        alertDialog.setTitle("Error");
-        alertDialog.setMessage("Något gick fel.");
+        alertDialog.setTitle(title);
+        alertDialog.setMessage(msg);
         alertDialog.setPositiveButton("Okej", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

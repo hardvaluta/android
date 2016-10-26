@@ -9,11 +9,12 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.android.ProfileActivity">
+    tools:context="com.android.ProfileActivity"
+    android:background="@drawable/bg">
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="match_parent"
         android:id="@+id/nestedScrollView"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
@@ -29,32 +30,4 @@
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_below="@+id/overallView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/space4" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:id="@+id/overallView"
-        android:layout_height="120dp"
-        android:background="@android:color/holo_orange_light"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
-
-        <TextView
-            android:text="Totalt antal spelade spel: 7\n"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/staticTextView"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-
-    </RelativeLayout>
 </RelativeLayout>
