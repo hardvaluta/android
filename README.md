@@ -2,7 +2,7 @@
 
 For Hand-off:
 
-The repo contains 2 folders, Android and Backlog. The android folder contains the application's code. The backlog repo contains the code for the database and server. All of our sprint reflections are available, so are the D1A and D2 documents. The app's apk is named app-release-unsigned.apk. Not any work has been done on the applicatin since the final presentation except some minor bugfixes. The out put from gitinspector and findbugs are most easily viewed using
+The repo contains 2 folders, Android and Backlog. The android folder contains the application's code. The backlog repo contains the code for the database and server. All of our sprint reflections are available, so are the D1A and D2 documents. The app's apk is named app-release-unsigned.apk. Not any work has been done on the applicatin since the final presentation except some minor bugfixes. The output from gitinspector and findbugs are most easily viewed using
 
 https://htmlpreview.github.io/?https://github.com/hardvaluta/android/blob/master/gitinspectorstats.html
 for gitinspector
