@@ -10,7 +10,7 @@ for gitinspector
 https://htmlpreview.github.io/?https://github.com/hardvaluta/android/blob/master/findbugs_filter_r_file.html
 for findbugs.
 
-The name for the findbugs output is incorrectly named actually doesn't filter out R.java file.
+The name for the findbugs output is incorrectly named it actually doesn't filter out R.java file.
 There is therefore also an image provided in the repo named findbugs_no_filter.png which is showing the output when the R.java file is filtered out. Note that the name for this file is also misleading.
 
 DAT255_prototype_description.pdf generally discusses the application and how we solved some technincal difficulties.
